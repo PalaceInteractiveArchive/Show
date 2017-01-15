@@ -1,8 +1,0 @@
-name: Show
-version: 1.0-SNAPSHOT
-depend: [Core, Audio]
-main: com.palacemc.show.ShowPlugin
-commands:
-  show:
-    description: Start and stop shows
-    permission: show.manage
