@@ -1,6 +1,5 @@
 package network.palace.show;
 
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import lombok.Getter;
 import network.palace.audio.Audio;
 import network.palace.audio.handlers.AudioArea;
@@ -491,7 +490,7 @@ public class Show {
                 }
                 if (tokens[1].contains("Particle")) {
                     // 0 Particle type x,y,z oX oY oZ speed amount
-                    EnumWrappers.Particle effect = EnumWrappers.Particle.getByName(tokens[2]);
+                    Particle effect = Particle.valueOf(tokens[2]);
                     Location location = strToLoc(world.getName() + "," + tokens[3]);
                     double offsetX = Float.parseFloat(tokens[4]);
                     double offsetY = Float.parseFloat(tokens[5]);

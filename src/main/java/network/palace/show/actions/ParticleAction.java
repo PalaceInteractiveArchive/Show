@@ -1,10 +1,10 @@
 package network.palace.show.actions;
 
-import com.comphenix.protocol.wrappers.EnumWrappers.Particle;
 import network.palace.core.Core;
 import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 
 import java.util.UUID;
 

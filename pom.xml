@@ -9,12 +9,20 @@
     <version>1.0.1</version>
     <repositories>
         <repository>
-            <id>mcmagic</id>
-            <url>http://198.24.160.106:81/nexus/content/repositories/releases/</url>
+            <id>palace</id>
+            <url>https://repo.palace.network/nexus/content/repositories/releases/</url>
         </repository>
         <repository>
-            <id>md_5</id>
-            <url>http://repo.md-5.net/content/groups/public/</url>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>dmulloy2-releases</id>
+            <url>http://repo.dmulloy2.net/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>dmulloy2-snapshots</id>
+            <url>http://repo.dmulloy2.net/content/repositories/snapshots/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -27,13 +35,13 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.11.1-R0.1-SNAPSHOT</version>
+            <version>1.11.2-R0.1-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>network.palace</groupId>
             <artifactId>core</artifactId>
-            <version>1.5.3</version>
+            <version>1.6.5</version>
             <type>jar</type>
         </dependency>
         <dependency>
