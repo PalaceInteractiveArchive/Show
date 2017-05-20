@@ -3,6 +3,7 @@ package network.palace.show;
 import lombok.Getter;
 import network.palace.audio.Audio;
 import network.palace.audio.handlers.AudioArea;
+import network.palace.core.player.CPlayer;
 import network.palace.core.utils.HeadUtil;
 import network.palace.show.actions.*;
 import network.palace.show.actions.armor.*;
@@ -90,14 +91,14 @@ public class Show {
                     continue;
                 }
                 if (tokens[1].equals("Name")) {
-                    String name = "";
+                    StringBuilder name = new StringBuilder();
                     for (int i = 2; i < tokens.length; i++) {
-                        name += tokens[i] + " ";
+                        name.append(tokens[i]).append(" ");
                     }
                     if (name.length() > 1) {
-                        name = name.substring(0, name.length() - 1);
+                        name = new StringBuilder(name.substring(0, name.length() - 1));
                     }
-                    showName = name;
+                    showName = name.toString();
                     continue;
                 }
                 // Set Show Location
@@ -168,12 +169,12 @@ public class Show {
                 }
                 // Text
                 if (tokens[1].contains("Text")) {
-                    String text = "";
+                    StringBuilder text = new StringBuilder();
                     for (int i = 2; i < tokens.length; i++)
-                        text += tokens[i] + " ";
+                        text.append(tokens[i]).append(" ");
                     if (text.length() > 1)
-                        text = text.substring(0, text.length() - 1);
-                    actions.add(new TextAction(this, time, text));
+                        text = new StringBuilder(text.substring(0, text.length() - 1));
+                    actions.add(new TextAction(this, time, text.toString()));
                     continue;
                 }
                 // Music
@@ -481,12 +482,12 @@ public class Show {
                     int fadeIn = Integer.parseInt(tokens[3]);
                     int fadeOut = Integer.parseInt(tokens[4]);
                     int stay = Integer.parseInt(tokens[5]);
-                    String text = "";
+                    StringBuilder text = new StringBuilder();
                     for (int i = 6; i < tokens.length; i++)
-                        text += tokens[i] + " ";
+                        text.append(tokens[i]).append(" ");
                     if (text.length() > 1)
-                        text = text.substring(0, text.length() - 1);
-                    actions.add(new TitleAction(this, time, type, text, fadeIn, fadeOut, stay));
+                        text = new StringBuilder(text.substring(0, text.length() - 1));
+                    actions.add(new TitleAction(this, time, type, text.toString(), fadeIn, fadeOut, stay));
                     continue;
                 }
                 if (tokens[1].contains("Particle")) {
@@ -821,7 +822,7 @@ public class Show {
         return FireworkEffect.builder().with(shape).withColor(colors).withFade(fades).flicker(flicker).trail(trail).build();
     }
 
-    public void syncAudioForPlayer(final Player tp) {
+    public void syncAudioForPlayer(final CPlayer tp) {
         final AudioArea area = Audio.getInstance().getByName(areaName);
         if (area == null) {
             return;

@@ -1,6 +1,7 @@
 package network.palace.show.listeners;
 
 import network.palace.core.Core;
+import network.palace.core.player.CPlayer;
 import network.palace.core.player.Rank;
 import network.palace.show.ShowPlugin;
 import org.bukkit.ChatColor;
@@ -23,6 +24,7 @@ public class PlayerInteract implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        CPlayer cplayer = Core.getPlayerManager().getPlayer(player);
         Action action = event.getAction();
         Rank rank = Core.getPlayerManager().getPlayer(player.getUniqueId()).getRank();
         final ItemStack hand = player.getInventory().getItemInMainHand();
@@ -33,7 +35,7 @@ public class PlayerInteract implements Listener {
                 if (s.getLine(0).equals(show)) {
                     String show = ChatColor.stripColor(s.getLine(3));
                     ShowPlugin.getShows().values().stream().filter(sh -> sh.getName().equals(show)).forEach(sh -> {
-                        sh.syncAudioForPlayer(player);
+                        sh.syncAudioForPlayer(cplayer);
                         player.sendMessage(ChatColor.GREEN + "Syncing your audio for " + show + "!");
                     });
                 }
