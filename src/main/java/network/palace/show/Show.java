@@ -87,6 +87,7 @@ public class Show {
                 String[] tokens = strLine.split("\\s+");
                 if (tokens.length < 2) {
                     System.out.println("Invalid Show Line [" + strLine + "]");
+                    continue;
                 }
                 if (tokens[1].equals("Name")) {
                     String name = "";

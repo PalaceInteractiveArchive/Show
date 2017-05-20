@@ -3,6 +3,8 @@ package network.palace.show;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import lombok.Getter;
 import network.palace.core.Core;
+import network.palace.core.player.CPlayer;
+import network.palace.core.player.Rank;
 import network.palace.core.plugin.Plugin;
 import network.palace.core.plugin.PluginInfo;
 import network.palace.show.actions.SchematicAction;
@@ -10,6 +12,7 @@ import network.palace.show.commands.Commandshow;
 import network.palace.show.listeners.PlayerInteract;
 import network.palace.show.listeners.SignChange;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import java.io.File;
 import java.util.HashMap;
@@ -18,7 +21,7 @@ import java.util.Map;
 /**
  * Created by Marc on 12/6/16.
  */
-@PluginInfo(name = "Show", version = "1.0.1", depend = {"Audio", "Core"})
+@PluginInfo(name = "Show", version = "1.0.2", depend = {"Audio", "Core"}, canReload = true)
 public class ShowPlugin extends Plugin {
     @Getter private ArmorStandManager armorStandManager;
     @Getter private FountainManager fountainManager;
@@ -55,7 +58,7 @@ public class ShowPlugin extends Plugin {
             Core.logMessage("Show", "Error finding WorldEdit!");
         }
         taskid = Bukkit.getScheduler().runTaskTimer(this, () -> {
-            for (Map.Entry<String, Show> entry : shows.entrySet()) {
+            for (Map.Entry<String, Show> entry : new HashMap<>(shows).entrySet()) {
                 if (entry.getValue().update()) {
                     entry.getValue().stop();
                     shows.remove(entry.getKey());
@@ -66,6 +69,16 @@ public class ShowPlugin extends Plugin {
 
     @Override
     protected void onPluginDisable() throws Exception {
+        int size = shows.size();
+        if (size > 0) {
+            for (CPlayer p : Core.getPlayerManager().getOnlinePlayers()) {
+                if (p.getRank().getRankId() < Rank.SQUIRE.getRankId()) {
+                    continue;
+                }
+                p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Reloading Show plugin, there are currently " +
+                        size + " shows running!");
+            }
+        }
         Bukkit.getScheduler().cancelTask(taskid);
         for (Show s : shows.values()) {
             s.stop();

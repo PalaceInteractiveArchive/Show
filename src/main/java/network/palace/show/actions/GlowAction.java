@@ -1,12 +1,23 @@
 package network.palace.show.actions;
 
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import network.palace.core.Core;
+import network.palace.core.packets.AbstractPacket;
+import network.palace.core.packets.server.entity.WrapperPlayServerEntityEquipment;
+import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
-import org.bukkit.*;
-import org.bukkit.entity.Player;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Marc on 9/6/15
@@ -30,12 +41,15 @@ public class GlowAction extends ShowAction {
 
     @Override
     public void play() {
-        for (Player tp : Bukkit.getOnlinePlayers()) {
-//            PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
-//            new PacketPlayOutEntityEquipment(((CraftPlayer)tp).getHandle().getId(),1,new net.minecraft.server.v1_11_R1.ItemStack(Item.getById(298),));
-            if (tp.getLocation().distance(loc) <= radius) {
-                tp.getInventory().setHelmet(helm);
-            }
-        }
+        List<AbstractPacket> packets = new ArrayList<>();
+        Collection<CPlayer> collection = Core.getPlayerManager().getOnlinePlayers().stream().filter(tp -> tp.getLocation().distance(loc) <= radius).collect(Collectors.toList());
+        collection.forEach(tp -> {
+            WrapperPlayServerEntityEquipment p = new WrapperPlayServerEntityEquipment();
+            p.setEntityID(tp.getEntityId());
+            p.setSlot(EnumWrappers.ItemSlot.HEAD);
+            p.setItem(helm);
+            packets.add(p);
+        });
+        collection.forEach(tp -> packets.stream().forEach(tp::sendPacket));
     }
 }
