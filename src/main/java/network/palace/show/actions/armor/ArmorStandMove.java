@@ -32,6 +32,9 @@ public class ArmorStandMove extends ShowAction {
             return;
         }
         Location l = stand.getStand().getLocation();
+        if (loc == null || l == null) {
+            return;
+        }
         double x = ((float) (((float) (loc.getX() - l.getX())) / (20 * speed)));
         double y = ((float) (((float) (loc.getY() - l.getY())) / (20 * speed)));
         double z = ((float) (((float) (loc.getZ() - l.getZ())) / (20 * speed)));

@@ -6,7 +6,7 @@
 
     <groupId>network.palace</groupId>
     <artifactId>Show</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.5</version>
     <repositories>
         <repository>
             <id>palace</id>
@@ -15,14 +15,6 @@
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>dmulloy2-releases</id>
-            <url>http://repo.dmulloy2.net/content/repositories/releases/</url>
-        </repository>
-        <repository>
-            <id>dmulloy2-snapshots</id>
-            <url>http://repo.dmulloy2.net/content/repositories/snapshots/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -41,13 +33,13 @@
         <dependency>
             <groupId>network.palace</groupId>
             <artifactId>core</artifactId>
-            <version>1.7.6</version>
+            <version>1.8.7</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>network.palace</groupId>
             <artifactId>audio</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.9</version>
             <type>jar</type>
         </dependency>
         <dependency>

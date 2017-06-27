@@ -36,6 +36,9 @@ public class ParticleAction extends ShowAction {
 
     @Override
     public void play() {
+        if (effect == null) {
+            return;
+        }
         for (UUID uuid : show.getNearPlayers()) {
             CPlayer tp = Core.getPlayerManager().getPlayer(uuid);
             if (tp == null) {

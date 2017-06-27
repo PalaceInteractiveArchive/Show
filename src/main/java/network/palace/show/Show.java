@@ -492,7 +492,7 @@ public class Show {
                 }
                 if (tokens[1].contains("Particle")) {
                     // 0 Particle type x,y,z oX oY oZ speed amount
-                    Particle effect = Particle.valueOf(tokens[2]);
+                    Particle effect = getParticle(tokens[2]);
                     Location location = strToLoc(world.getName() + "," + tokens[3]);
                     double offsetX = Float.parseFloat(tokens[4]);
                     double offsetY = Float.parseFloat(tokens[5]);
@@ -526,6 +526,88 @@ public class Show {
             Bukkit.broadcast(ChatColor.GOLD + invalidLines.get(cur) + " @ " + ChatColor.WHITE + cur.replaceAll("\t", " "),
                     "arcade.bypass");
         }
+    }
+
+    private Particle getParticle(String s) {
+        switch (s.toLowerCase()) {
+            case "barrier":
+                return Particle.BARRIER;
+            case "bubble":
+                return Particle.WATER_BUBBLE;
+            case "cloud":
+                return Particle.CLOUD;
+            case "crit":
+                return Particle.CRIT;
+            case "depthsuspend":
+                return Particle.SUSPENDED_DEPTH;
+            case "dragonbreath":
+                return Particle.DRAGON_BREATH;
+            case "driplava":
+                return Particle.DRIP_LAVA;
+            case "dripwater":
+                return Particle.DRIP_WATER;
+            case "enchantmenttable":
+                return Particle.ENCHANTMENT_TABLE;
+            case "explode":
+                return Particle.EXPLOSION_NORMAL;
+            case "fireworksspark":
+                return Particle.FIREWORKS_SPARK;
+            case "flame":
+                return Particle.FLAME;
+            case "footstep":
+                return Particle.FOOTSTEP;
+            case "happyvillager":
+                return Particle.VILLAGER_HAPPY;
+            case "heart":
+                return Particle.HEART;
+            case "hugeexplosion":
+                return Particle.EXPLOSION_HUGE;
+            case "instantspell":
+                return Particle.SPELL_INSTANT;
+            case "largeexplode":
+                return Particle.EXPLOSION_LARGE;
+            case "largesmoke":
+                return Particle.SMOKE_LARGE;
+            case "lava":
+                return Particle.LAVA;
+            case "magiccrit":
+                return Particle.CRIT_MAGIC;
+            case "mobspell":
+                return Particle.SPELL_MOB;
+            case "mobspellambient":
+                return Particle.SPELL_MOB_AMBIENT;
+            case "note":
+                return Particle.NOTE;
+            case "portal":
+                return Particle.PORTAL;
+            case "reddust":
+                return Particle.REDSTONE;
+            case "slime":
+                return Particle.SLIME;
+            case "smoke":
+                return Particle.SMOKE_NORMAL;
+            case "snowballpoof":
+                return Particle.SNOWBALL;
+            case "snowshovel":
+                return Particle.SNOW_SHOVEL;
+            case "spell":
+                return Particle.SPELL;
+            case "spit":
+                return Particle.SPIT;
+            case "splash":
+                return Particle.WATER_SPLASH;
+            case "suspend":
+                return Particle.SUSPENDED;
+            case "totem":
+                return Particle.TOTEM;
+            case "townaura":
+                return Particle.TOWN_AURA;
+            case "wake":
+                return Particle.WATER_WAKE;
+            case "witchmagic":
+                return Particle.SPELL_WITCH;
+        }
+        return Particle.valueOf(s);
     }
 
     private TitleType getTitleType(String s) {
