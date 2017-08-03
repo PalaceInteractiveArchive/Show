@@ -1,20 +1,17 @@
 package network.palace.show.actions;
 
 import network.palace.show.Show;
+import network.palace.show.exceptions.ShowParseException;
+import network.palace.show.utils.WorldUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 public class PulseAction extends ShowAction {
-    public Location loc;
-    private Show show;
-    private long time;
+    private Location loc;
 
-    public PulseAction(Show show, long time, Location loc) {
+    public PulseAction(Show show, long time) {
         super(show, time);
-        this.show = show;
-        this.time = time;
-        this.loc = loc;
     }
 
     @SuppressWarnings("deprecation")
@@ -25,5 +22,14 @@ public class PulseAction extends ShowAction {
         final byte data = pre.getData();
         loc.getBlock().setType(Material.REDSTONE_BLOCK);
         show.actions.add(new BlockAction(show, time + 100, loc, id, data));
+    }
+
+    @Override
+    public ShowAction load(String line, String... args) throws ShowParseException {
+        Location loc = WorldUtil.strToLoc(show.getWorld().getName() + "," + args[2]);
+        if (loc == null) {
+            throw new ShowParseException("Invalid Location");
+        }
+        return this;
     }
 }

@@ -1,5 +1,6 @@
 package network.palace.show;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import lombok.Getter;
 import network.palace.core.Core;
@@ -8,25 +9,25 @@ import network.palace.core.player.Rank;
 import network.palace.core.plugin.Plugin;
 import network.palace.core.plugin.PluginInfo;
 import network.palace.show.actions.SchematicAction;
-import network.palace.show.commands.Commandshow;
+import network.palace.show.commands.CommandShow;
 import network.palace.show.listeners.PlayerInteract;
 import network.palace.show.listeners.SignChange;
+import network.palace.show.utils.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Marc on 12/6/16.
  */
-@PluginInfo(name = "Show", version = "1.0.4", depend = {"Audio", "Core"}, canReload = true)
+@PluginInfo(name = "Show", version = "1.0.6", depend = {"Audio", "Core"}, canReload = true)
 public class ShowPlugin extends Plugin {
     @Getter private ArmorStandManager armorStandManager;
     @Getter private FountainManager fountainManager;
     private static ShowPlugin instance;
-    @Getter private static HashMap<String, Show> shows = new HashMap<>();
+    private static HashMap<String, Show> shows = new HashMap<>();
     private int taskid = 0;
 
     public static ShowPlugin getInstance() {
@@ -38,15 +39,8 @@ public class ShowPlugin extends Plugin {
         instance = this;
         armorStandManager = new ArmorStandManager();
         fountainManager = new FountainManager();
-        File file = new File("plugins/Show/");
-        if (!file.exists()) {
-            file.mkdir();
-        }
-        File file2 = new File("plugins/Show/shows/");
-        if (!file2.exists()) {
-            file2.mkdir();
-        }
-        registerCommand(new Commandshow());
+        FileUtil.setupFiles();
+        registerCommand(new CommandShow());
         registerListener(new FountainManager());
         registerListener(new PlayerInteract());
         registerListener(new SignChange());
@@ -69,6 +63,7 @@ public class ShowPlugin extends Plugin {
 
     @Override
     protected void onPluginDisable() throws Exception {
+        ProtocolLibrary.getProtocolManager().removePacketListeners(this);
         int size = shows.size();
         if (size > 0) {
             for (CPlayer p : Core.getPlayerManager().getOnlinePlayers()) {
@@ -83,5 +78,18 @@ public class ShowPlugin extends Plugin {
         for (Show s : shows.values()) {
             s.stop();
         }
+        shows.clear();
+    }
+
+    public static HashMap<String, Show> getShows() {
+        return new HashMap<>(shows);
+    }
+
+    public static void startShow(String name, Show show) {
+        shows.put(name, show);
+    }
+
+    public static void stopShow(String name) {
+        shows.remove(name);
     }
 }

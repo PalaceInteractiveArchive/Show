@@ -1,6 +1,10 @@
 package network.palace.show.actions;
 
 import network.palace.show.Show;
+import network.palace.show.exceptions.ShowParseException;
+import network.palace.show.handlers.BlockData;
+import network.palace.show.utils.ShowUtil;
+import network.palace.show.utils.WorldUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -10,44 +14,41 @@ import java.util.UUID;
 /**
  * Created by Marc on 7/1/15
  */
+@SuppressWarnings("deprecation")
 public class FakeBlockAction extends ShowAction {
-    private final Show show;
-    private final Location loc;
-    private final int id;
-    private final byte data;
-//    private PacketContainer packet;
+    private Location loc;
+    private int id;
+    private byte data;
 
-    @SuppressWarnings("deprecation")
-    public FakeBlockAction(Show show, long time, Location loc, int id, byte data) {
+    public FakeBlockAction(Show show, long time) {
         super(show, time);
-        this.show = show;
-        this.loc = loc;
-        this.id = id;
-        this.data = data;
-//        BlockPosition pos = new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
-//        packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.BLOCK_CHANGE);
-//        StructureModifier<WrappedBlockData> m = packet.getBlockData();
-//        packet.getBlockPositionModifier().write(0, pos);
-//        m.getValues().get(0).setTypeAndData(Material.getMaterial(id), data);
     }
 
     @Override
     public void play() {
-//        if (packet == null) {
-//            return;
-//        }
-//        ProtocolManager pm = ProtocolLibrary.getProtocolManager();
         for (UUID uuid : show.getNearPlayers()) {
             Player tp = Bukkit.getPlayer(uuid);
             if (tp == null) {
                 continue;
             }
             tp.sendBlockChange(loc, id, data);
-//            try {
-//                pm.sendServerPacket(tp, packet);
-//            } catch (InvocationTargetException e) {
-//                e.printStackTrace();
-//            }
         }
+    }
+
+    @Override
+    public ShowAction load(String line, String... args) throws ShowParseException {
+        Location loc = WorldUtil.strToLoc(show.getWorld().getName() + "," + args[3]);
+        if (loc == null) {
+            throw new ShowParseException("Invalid Location " + line);
+        }
+        try {
+            BlockData data = ShowUtil.getBlockData(args[2]);
+            this.loc = loc;
+            this.id = data.getId();
+            this.data = data.getData();
+        } catch (ShowParseException e) {
+            throw new ShowParseException(e.getReason());
+        }
+        return this;
     }
 }

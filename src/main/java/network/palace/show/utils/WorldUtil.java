@@ -34,8 +34,5 @@ public class WorldUtil {
         doublelist[1] = Double.parseDouble(tokens[2]);
         doublelist[2] = Double.parseDouble(tokens[3]);
         return doublelist;
-        // return new location(cur, Double.parseDouble(tokens[1]),
-        // Double.parseDouble(tokens[2]),
-        // Double.parseDouble(tokens[3]));
     }
 }

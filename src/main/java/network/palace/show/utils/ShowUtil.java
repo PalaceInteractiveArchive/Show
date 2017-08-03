@@ -1,0 +1,282 @@
+package network.palace.show.utils;
+
+import network.palace.show.exceptions.ShowParseException;
+import network.palace.show.handlers.BlockData;
+import network.palace.show.handlers.TitleType;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Particle;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Marc
+ * @since 8/2/17
+ */
+public class ShowUtil {
+
+    public static BlockData getBlockData(String s) throws ShowParseException {
+        String[] list;
+        if (s.contains(":")) {
+            list = s.split(":");
+        } else {
+            list = null;
+        }
+        try {
+            int id;
+            byte data;
+            if (list != null) {
+                id = Integer.parseInt(list[0]);
+                data = Byte.parseByte(list[1]);
+            } else {
+                id = Integer.parseInt(s);
+                data = (byte) 0;
+            }
+            return new BlockData(id, data);
+        } catch (Exception ignored) {
+            throw new ShowParseException("Invalid Block ID or Block data");
+        }
+    }
+
+    public static int getInt(String s) {
+        return Integer.parseInt(s);
+    }
+
+    public static boolean isInt(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
+    public static TitleType getTitleType(String s) {
+        switch (s.toLowerCase()) {
+            case "subtitle":
+                return TitleType.SUBTITLE;
+        }
+        return TitleType.TITLE;
+    }
+
+    public static Color colorFromString(String s) throws ShowParseException {
+        switch (s.toLowerCase()) {
+            case "red":
+                return Color.fromRGB(170, 0, 0);
+            case "orange":
+                return Color.fromRGB(255, 102, 0);
+            case "yellow":
+                return Color.fromRGB(255, 222, 0);
+            case "green":
+                return Color.fromRGB(0, 153, 0);
+            case "aqua":
+                return Color.fromRGB(0, 255, 255);
+            case "blue":
+                return Color.fromRGB(51, 51, 255);
+            case "purple":
+                return Color.fromRGB(39, 31, 155);
+            case "pink":
+                return Color.fromRGB(255, 0, 255);
+            case "white":
+                return Color.fromRGB(255, 255, 255);
+            case "black":
+                return Color.fromRGB(0, 0, 0);
+        }
+        throw new ShowParseException("Unknown color " + s);
+    }
+
+    public static FireworkEffect parseEffect(String effect) throws ShowParseException {
+        String[] tokens = effect.split(",");
+
+        // Shape
+        FireworkEffect.Type shape;
+        try {
+            shape = FireworkEffect.Type.valueOf(tokens[0]);
+        } catch (Exception e) {
+            throw new ShowParseException("Invalid type [" + tokens[0] + "] for effect " + effect);
+        }
+
+        // Color
+        List<Color> colors = new ArrayList<>();
+        for (String color : tokens[1].split("&")) {
+            if (color.equalsIgnoreCase("AQUA")) {
+                colors.add(Color.AQUA);
+            } else if (color.equalsIgnoreCase("BLACK")) {
+                colors.add(Color.BLACK);
+            } else if (color.equalsIgnoreCase("BLUE")) {
+                colors.add(Color.BLUE);
+            } else if (color.equalsIgnoreCase("FUCHSIA")) {
+                colors.add(Color.FUCHSIA);
+            } else if (color.equalsIgnoreCase("GRAY")) {
+                colors.add(Color.GRAY);
+            } else if (color.equalsIgnoreCase("GREEN")) {
+                colors.add(Color.GREEN);
+            } else if (color.equalsIgnoreCase("LIME")) {
+                colors.add(Color.LIME);
+            } else if (color.equalsIgnoreCase("MAROON")) {
+                colors.add(Color.MAROON);
+            } else if (color.equalsIgnoreCase("NAVY")) {
+                colors.add(Color.NAVY);
+            } else if (color.equalsIgnoreCase("OLIVE")) {
+                colors.add(Color.OLIVE);
+            } else if (color.equalsIgnoreCase("ORANGE")) {
+                colors.add(Color.ORANGE);
+            } else if (color.equalsIgnoreCase("PURPLE")) {
+                colors.add(Color.PURPLE);
+            } else if (color.equalsIgnoreCase("RED")) {
+                colors.add(Color.RED);
+            } else if (color.equalsIgnoreCase("SILVER")) {
+                colors.add(Color.SILVER);
+            } else if (color.equalsIgnoreCase("TEAL")) {
+                colors.add(Color.TEAL);
+            } else if (color.equalsIgnoreCase("WHITE")) {
+                colors.add(Color.WHITE);
+            } else if (color.equalsIgnoreCase("YELLOW")) {
+                colors.add(Color.YELLOW);
+            } else if (color.contains(";")) {
+                String[] list = color.split(";");
+                colors.add(Color.fromRGB(getInt(list[0]), getInt(list[1]), getInt(list[2])));
+            } else {
+                throw new ShowParseException("Invalid color [" + tokens[0] + "] for effect " + effect);
+            }
+        }
+        if (colors.isEmpty()) {
+            throw new ShowParseException("No valid colors " + effect);
+        }
+        // Fade
+        List<Color> fades = new ArrayList<>();
+        if (tokens.length > 2) {
+            for (String color : tokens[2].split("&")) {
+                if (color.equalsIgnoreCase("AQUA")) {
+                    fades.add(Color.AQUA);
+                } else if (color.equalsIgnoreCase("BLACK")) {
+                    fades.add(Color.BLACK);
+                } else if (color.equalsIgnoreCase("BLUE")) {
+                    fades.add(Color.BLUE);
+                } else if (color.equalsIgnoreCase("FUCHSIA")) {
+                    fades.add(Color.FUCHSIA);
+                } else if (color.equalsIgnoreCase("GRAY")) {
+                    fades.add(Color.GRAY);
+                } else if (color.equalsIgnoreCase("GREEN")) {
+                    fades.add(Color.GREEN);
+                } else if (color.equalsIgnoreCase("LIME")) {
+                    fades.add(Color.LIME);
+                } else if (color.equalsIgnoreCase("MAROON")) {
+                    fades.add(Color.MAROON);
+                } else if (color.equalsIgnoreCase("NAVY")) {
+                    fades.add(Color.NAVY);
+                } else if (color.equalsIgnoreCase("OLIVE")) {
+                    fades.add(Color.OLIVE);
+                } else if (color.equalsIgnoreCase("ORANGE")) {
+                    fades.add(Color.ORANGE);
+                } else if (color.equalsIgnoreCase("PURPLE")) {
+                    fades.add(Color.PURPLE);
+                } else if (color.equalsIgnoreCase("RED")) {
+                    fades.add(Color.RED);
+                } else if (color.equalsIgnoreCase("SILVER")) {
+                    fades.add(Color.SILVER);
+                } else if (color.equalsIgnoreCase("TEAL")) {
+                    fades.add(Color.TEAL);
+                } else if (color.equalsIgnoreCase("WHITE")) {
+                    fades.add(Color.WHITE);
+                } else if (color.equalsIgnoreCase("YELLOW")) {
+                    fades.add(Color.YELLOW);
+                } else if (color.contains(";")) {
+                    String[] list = color.split(";");
+                    colors.add(Color.fromRGB(getInt(list[0]), getInt(list[1]), getInt(list[2])));
+                } else if (color.equalsIgnoreCase("FLICKER") || color.equalsIgnoreCase("TRAIL")) {
+                    break;
+                } else {
+                    throw new ShowParseException("Invalid fade color [" + color + "] for effect " + effect);
+                }
+            }
+        }
+        boolean flicker = effect.toLowerCase().contains("flicker");
+        boolean trail = effect.toLowerCase().contains("trail");
+        // Firework
+        return FireworkEffect.builder().with(shape).withColor(colors).withFade(fades).flicker(flicker).trail(trail).build();
+    }
+
+    public static Particle getParticle(String s) {
+        switch (s.toLowerCase()) {
+            case "barrier":
+                return Particle.BARRIER;
+            case "bubble":
+                return Particle.WATER_BUBBLE;
+            case "cloud":
+                return Particle.CLOUD;
+            case "crit":
+                return Particle.CRIT;
+            case "depthsuspend":
+                return Particle.SUSPENDED_DEPTH;
+            case "dragonbreath":
+                return Particle.DRAGON_BREATH;
+            case "driplava":
+                return Particle.DRIP_LAVA;
+            case "dripwater":
+                return Particle.DRIP_WATER;
+            case "enchantmenttable":
+                return Particle.ENCHANTMENT_TABLE;
+            case "explode":
+                return Particle.EXPLOSION_NORMAL;
+            case "fireworksspark":
+                return Particle.FIREWORKS_SPARK;
+            case "flame":
+                return Particle.FLAME;
+            case "footstep":
+                return Particle.FOOTSTEP;
+            case "happyvillager":
+                return Particle.VILLAGER_HAPPY;
+            case "heart":
+                return Particle.HEART;
+            case "hugeexplosion":
+                return Particle.EXPLOSION_HUGE;
+            case "instantspell":
+                return Particle.SPELL_INSTANT;
+            case "largeexplode":
+                return Particle.EXPLOSION_LARGE;
+            case "largesmoke":
+                return Particle.SMOKE_LARGE;
+            case "lava":
+                return Particle.LAVA;
+            case "magiccrit":
+                return Particle.CRIT_MAGIC;
+            case "mobspell":
+                return Particle.SPELL_MOB;
+            case "mobspellambient":
+                return Particle.SPELL_MOB_AMBIENT;
+            case "note":
+                return Particle.NOTE;
+            case "portal":
+                return Particle.PORTAL;
+            case "reddust":
+                return Particle.REDSTONE;
+            case "slime":
+                return Particle.SLIME;
+            case "smoke":
+                return Particle.SMOKE_NORMAL;
+            case "snowballpoof":
+                return Particle.SNOWBALL;
+            case "snowshovel":
+                return Particle.SNOW_SHOVEL;
+            case "spell":
+                return Particle.SPELL;
+            case "spit":
+                return Particle.SPIT;
+            case "splash":
+                return Particle.WATER_SPLASH;
+            case "suspend":
+                return Particle.SUSPENDED;
+            case "totem":
+                return Particle.TOTEM;
+            case "townaura":
+                return Particle.TOWN_AURA;
+            case "wake":
+                return Particle.WATER_WAKE;
+            case "witchmagic":
+                return Particle.SPELL_WITCH;
+        }
+        return Particle.valueOf(s);
+    }
+}

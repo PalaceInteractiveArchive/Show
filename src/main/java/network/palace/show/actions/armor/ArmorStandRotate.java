@@ -3,6 +3,7 @@ package network.palace.show.actions.armor;
 import network.palace.show.Show;
 import network.palace.show.ShowPlugin;
 import network.palace.show.actions.ShowAction;
+import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.armorstand.Rotation;
 import network.palace.show.handlers.armorstand.ShowStand;
 import network.palace.show.handlers.armorstand.StandAction;
@@ -26,7 +27,7 @@ public class ArmorStandRotate extends ShowAction {
 
     @Override
     public void play() {
-        if (!stand.hasSpawned()) {
+        if (!stand.isHasSpawned()) {
             Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has not spawned", "arcade.bypass");
             return;
         }
@@ -34,5 +35,10 @@ public class ArmorStandRotate extends ShowAction {
         float yaw = (float) (((armor.getLocation().getYaw() + this.yaw) / speed) / 20);
         stand.setRotation(new Rotation(yaw, speed * 20));
         ShowPlugin.getInstance().getArmorStandManager().addStand(stand, StandAction.ROTATION);
+    }
+
+    @Override
+    public ShowAction load(String line, String... args) throws ShowParseException {
+        return this;
     }
 }

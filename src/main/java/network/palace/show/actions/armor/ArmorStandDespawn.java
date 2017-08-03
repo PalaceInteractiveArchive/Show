@@ -2,6 +2,7 @@ package network.palace.show.actions.armor;
 
 import network.palace.show.Show;
 import network.palace.show.actions.ShowAction;
+import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.armorstand.ShowStand;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.ArmorStand;
@@ -19,7 +20,7 @@ public class ArmorStandDespawn extends ShowAction {
 
     @Override
     public void play() {
-        if (!stand.hasSpawned()) {
+        if (!stand.isHasSpawned()) {
             Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has not spawned", "arcade.bypass");
             return;
         }
@@ -27,5 +28,10 @@ public class ArmorStandDespawn extends ShowAction {
         armor.remove();
         stand.setStand(null);
         stand.despawn();
+    }
+
+    @Override
+    public ShowAction load(String line, String... args) throws ShowParseException {
+        return this;
     }
 }

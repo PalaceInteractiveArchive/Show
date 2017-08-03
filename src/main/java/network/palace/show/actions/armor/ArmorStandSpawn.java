@@ -3,6 +3,7 @@ package network.palace.show.actions.armor;
 import network.palace.show.Show;
 import network.palace.show.ShowPlugin;
 import network.palace.show.actions.ShowAction;
+import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.ArmorData;
 import network.palace.show.handlers.armorstand.ShowStand;
 import org.bukkit.Bukkit;
@@ -25,7 +26,7 @@ public class ArmorStandSpawn extends ShowAction {
 
     @Override
     public void play() {
-        if (stand.hasSpawned()) {
+        if (stand.isHasSpawned()) {
             Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has spawned already", "arcade.bypass");
             return;
         }
@@ -35,14 +36,6 @@ public class ArmorStandSpawn extends ShowAction {
         armor.setBasePlate(false);
         armor.setGravity(false);
         armor.setSmall(stand.isSmall());
-//        try {
-//            EntityArmorStand nmsStand = ((CraftArmorStand) armor).getHandle();
-//            Field f = nmsStand.getClass().getDeclaredField("bi");
-//            f.setAccessible(true);
-//            f.setInt(nmsStand, 2039583);
-//        } catch (NoSuchFieldException | IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
         armor.setMetadata("show", new FixedMetadataValue(ShowPlugin.getInstance(), true));
         ArmorData data = stand.getArmorData();
         if (data != null) {
@@ -60,5 +53,10 @@ public class ArmorStandSpawn extends ShowAction {
             }
         }
         stand.setStand(armor);
+    }
+
+    @Override
+    public ShowAction load(String line, String... args) throws ShowParseException {
+        return this;
     }
 }

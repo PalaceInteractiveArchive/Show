@@ -1,10 +1,12 @@
 package network.palace.show.actions;
 
+import lombok.Getter;
 import network.palace.show.Show;
+import network.palace.show.exceptions.ShowParseException;
 
 public abstract class ShowAction {
-    public Show show;
-    public long time;
+    @Getter protected Show show;
+    @Getter protected long time;
 
     public ShowAction(Show show, long time) {
         this.show = show;
@@ -12,4 +14,6 @@ public abstract class ShowAction {
     }
 
     public abstract void play();
+
+    public abstract ShowAction load(String line, String... args) throws ShowParseException;
 }

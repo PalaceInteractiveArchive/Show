@@ -1,6 +1,7 @@
 package network.palace.show.actions;
 
 import network.palace.show.Show;
+import network.palace.show.exceptions.ShowParseException;
 import org.bukkit.entity.Firework;
 
 /**
@@ -17,5 +18,10 @@ public class FireworkExplodeAction extends ShowAction {
     @Override
     public void play() {
         fw.detonate();
+    }
+
+    @Override
+    public ShowAction load(String line, String... args) throws ShowParseException {
+        return this;
     }
 }

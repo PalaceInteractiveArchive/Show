@@ -1,8 +1,10 @@
 package network.palace.show.actions;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import network.palace.show.Show;
 import network.palace.show.TerrainManager;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import network.palace.show.exceptions.ShowParseException;
+import network.palace.show.utils.ShowUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -13,11 +15,8 @@ public class SchematicAction extends ShowAction {
     private String fname;
     private boolean noAir;
 
-    public SchematicAction(Show show, long time, Location loc, String fname, boolean noAir) {
+    public SchematicAction(Show show, long time) {
         super(show, time);
-        this.loc = loc;
-        this.fname = fname;
-        this.noAir = noAir;
     }
 
     public static void setWorldEdit(WorldEditPlugin pl) {
@@ -26,12 +25,33 @@ public class SchematicAction extends ShowAction {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public void play() {
         try {
             tm.loadSchematic(wep, fname, loc, noAir);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public ShowAction load(String line, String... args) throws ShowParseException {
+        if (ShowUtil.isInt(args[3]) && ShowUtil.isInt(args[4]) && ShowUtil.isInt(args[5])) {
+            try {
+                int x = Integer.parseInt(args[3]);
+                int y = Integer.parseInt(args[4]);
+                int z = Integer.parseInt(args[5]);
+                Location pasteLoc = new Location(Bukkit.getWorld(args[6]), x, y, z);
+                boolean noAir = !args[7].toLowerCase().contains("false");
+                this.loc = pasteLoc;
+                this.fname = args[2];
+                this.noAir = noAir;
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new ShowParseException("Error creating Schematic Action!");
+            }
+        } else {
+            throw new ShowParseException("Invalid X, Y, or Z Coordinates!");
+        }
+        return this;
     }
 }
