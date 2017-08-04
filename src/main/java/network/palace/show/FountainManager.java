@@ -1,7 +1,5 @@
 package network.palace.show;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import network.palace.show.handlers.Fountain;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -26,7 +24,6 @@ public class FountainManager implements Listener {
 
     @SuppressWarnings("deprecation")
     private void start() {
-        final ProtocolManager manager = ProtocolLibrary.getProtocolManager();
         Bukkit.getScheduler().runTaskTimer(ShowPlugin.getInstance(), () -> {
             for (Fountain fon : new ArrayList<>(fountains)) {
                 double duration = fon.getDuration();

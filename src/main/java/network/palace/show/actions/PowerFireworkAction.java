@@ -34,8 +34,8 @@ public class PowerFireworkAction extends ShowAction {
         }
         fw.setFireworkMeta(meta);
         fw.setVelocity(motion);
-        FireworkExplodeAction action = new FireworkExplodeAction(show, time + 50, fw);
-        show.actions.add(action);
+        FireworkExplodeAction action = new FireworkExplodeAction(show, time + 1, fw);
+        show.addAction(action);
     }
 
     @Override
@@ -60,6 +60,6 @@ public class PowerFireworkAction extends ShowAction {
         this.loc = loc;
         this.motion = motion;
         this.effects = effectList;
-        return null;
+        return this;
     }
 }

@@ -21,7 +21,7 @@ public class PulseAction extends ShowAction {
         final int id = pre.getTypeId();
         final byte data = pre.getData();
         loc.getBlock().setType(Material.REDSTONE_BLOCK);
-        show.actions.add(new BlockAction(show, time + 100, loc, id, data));
+        show.addAction(new BlockAction(show, time + 100, loc, id, data));
     }
 
     @Override

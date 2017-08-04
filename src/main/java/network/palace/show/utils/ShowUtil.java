@@ -3,11 +3,18 @@ package network.palace.show.utils;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.BlockData;
 import network.palace.show.handlers.TitleType;
+import network.palace.show.sequence.ShowSequence;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -39,7 +46,10 @@ public class ShowUtil {
         }
     }
 
-    public static int getInt(String s) {
+    public static int getInt(String s) throws ShowParseException {
+        if (!isInt(s)) {
+            throw new ShowParseException("This isn't a number: " + s);
+        }
         return Integer.parseInt(s);
     }
 
@@ -58,6 +68,22 @@ public class ShowUtil {
                 return TitleType.SUBTITLE;
         }
         return TitleType.TITLE;
+    }
+
+    public static void runSequences(HashSet<ShowSequence> set, long startTime) {
+        if (set == null) return;
+        List<ShowSequence> sequences = new ArrayList<>(set);
+        for (ShowSequence sequence : sequences) {
+            if (sequence == null) continue;
+            try {
+                if (System.currentTimeMillis() - startTime <= sequence.getTime()) {
+                    continue;
+                }
+                if (sequence.run()) set.remove(sequence);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static Color colorFromString(String s) throws ShowParseException {
@@ -278,5 +304,29 @@ public class ShowUtil {
                 return Particle.SPELL_WITCH;
         }
         return Particle.valueOf(s);
+    }
+
+    public static PotionEffect getInvisibility() {
+        return new PotionEffect(PotionEffectType.INVISIBILITY, 200000, 0, true);
+    }
+
+    public static boolean areLocationsEqual(Location loc1, Location loc2, int decimalPlace) {
+        StringBuilder pattern = new StringBuilder("#.");
+        for (int i = 0; i < decimalPlace; i++) {
+            pattern.append("#");
+        }
+        DecimalFormat df = new DecimalFormat(pattern.toString());
+        df.setRoundingMode(RoundingMode.CEILING);
+        double x1 = format(df, loc1.getX());
+        double y1 = format(df, loc1.getY());
+        double z1 = format(df, loc1.getZ());
+        double x2 = format(df, loc2.getX());
+        double y2 = format(df, loc2.getY());
+        double z2 = format(df, loc2.getZ());
+        return x1 == x2 && y1 == y2 && z1 == z2;
+    }
+
+    private static double format(DecimalFormat format, double num) {
+        return Double.parseDouble(format.format(num));
     }
 }

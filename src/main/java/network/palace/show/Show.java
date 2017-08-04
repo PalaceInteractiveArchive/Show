@@ -1,6 +1,7 @@
 package network.palace.show;
 
 import lombok.Getter;
+import lombok.Setter;
 import network.palace.audio.Audio;
 import network.palace.audio.handlers.AudioArea;
 import network.palace.core.player.CPlayer;
@@ -13,6 +14,7 @@ import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.ArmorData;
 import network.palace.show.handlers.armorstand.PositionType;
 import network.palace.show.handlers.armorstand.ShowStand;
+import network.palace.show.sequence.ShowSequence;
 import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
 import org.bukkit.*;
@@ -31,20 +33,20 @@ import java.util.stream.Collectors;
 @SuppressWarnings("deprecation")
 public class Show {
     @Getter private UUID showID = UUID.randomUUID();
-    public long startTime;
-    public HashSet<ShowAction> actions;
-    public long musicTime = 0;
-    public String areaName = "none";
     @Getter private World world;
-    private Location loc;
-    private int radius = 75;
+    private Location location;
+    @Getter private String name = "";
+    private HashSet<ShowAction> actions;
+    private HashSet<ShowSequence> sequences;
+    @Getter private long startTime = 0;
+    @Getter @Setter private long musicTime = 0;
+    @Getter @Setter private String areaName = "none";
+    @Getter private int radius = 75;
     private HashMap<String, FireworkEffect> effectMap;
     private HashMap<String, String> invalidLines;
     private HashMap<String, ShowStand> standmap = new HashMap<>();
-    private int npcTick = 0;
     private long lastPlayerListUpdate = System.currentTimeMillis();
     private List<UUID> nearbyPlayers = new ArrayList<>();
-    private String showName = "";
 
     public Show(JavaPlugin plugin, File file) {
         world = Bukkit.getWorlds().get(0);
@@ -52,7 +54,7 @@ public class Show {
         invalidLines = new HashMap<>();
         loadActions(file, 0);
         startTime = System.currentTimeMillis();
-        nearbyPlayers.addAll(Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getLocation().distance(loc) <= radius)
+        nearbyPlayers.addAll(Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getLocation().distance(location) <= radius)
                 .map(Player::getUniqueId).collect(Collectors.toList()));
     }
 
@@ -80,7 +82,7 @@ public class Show {
                     if (name.length() > 1) {
                         name = new StringBuilder(name.substring(0, name.length() - 1));
                     }
-                    showName = name.toString();
+                    this.name = name.toString();
                     continue;
                 }
                 // Set Show Location
@@ -90,7 +92,7 @@ public class Show {
                         invalidLines.put(strLine, "Invalid Location Line");
                         continue;
                     }
-                    this.loc = loc;
+                    this.location = loc;
                     continue;
                 }
                 //Load other show
@@ -306,7 +308,7 @@ public class Show {
             e.printStackTrace();
         }
 
-        if (loc == null) {
+        if (location == null) {
             invalidLines.put("Missing Line", "Show loc x,y,z");
         }
 
@@ -317,6 +319,7 @@ public class Show {
         }
 
         this.actions = actions;
+        this.sequences = sequences;
     }
 
     private double rad(double v) {
@@ -396,7 +399,7 @@ public class Show {
         if (System.currentTimeMillis() - lastPlayerListUpdate < 10000) {
             return new ArrayList<>(nearbyPlayers);
         }
-        List<UUID> list = Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getLocation().distance(loc) <= radius)
+        List<UUID> list = Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getLocation().distance(location) <= radius)
                 .map(Player::getUniqueId).collect(Collectors.toList());
         lastPlayerListUpdate = System.currentTimeMillis();
         nearbyPlayers = list;
@@ -407,20 +410,24 @@ public class Show {
         if (!invalidLines.isEmpty()) {
             return true;
         }
-        List<ShowAction> list = new ArrayList<>(actions);
-        for (ShowAction action : list) {
+        List<ShowAction> actions = new ArrayList<>(this.actions);
+        for (ShowAction action : actions) {
             if (action == null) continue;
             try {
                 if (System.currentTimeMillis() - startTime <= action.getTime()) {
                     continue;
                 }
                 action.play();
-                actions.remove(action);
+                this.actions.remove(action);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return actions.isEmpty();
+        if (sequences == null) {
+            return this.actions.isEmpty();
+        }
+        ShowUtil.runSequences(sequences, startTime);
+        return this.actions.isEmpty() && this.sequences.isEmpty();
     }
 
     public void displayText(String text) {
@@ -429,7 +436,7 @@ public class Show {
             if (player == null) {
                 continue;
             }
-            if (offset(player.getLocation(), loc) < radius) {
+            if (offset(player.getLocation(), location) < radius) {
                 player.sendMessage(ChatColor.AQUA + ChatColor.translateAlternateColorCodes('&', text));
             }
         }
@@ -441,12 +448,12 @@ public class Show {
             if (player == null) {
                 continue;
             }
-            player.playEffect(loc, Effect.RECORD_PLAY, record);
+            player.playEffect(location, Effect.RECORD_PLAY, record);
         }
     }
 
     public Location getLocation() {
-        return loc.clone();
+        return location.clone();
     }
 
     public void syncAudioForPlayer(final CPlayer tp) {
@@ -456,14 +463,6 @@ public class Show {
         }
         area.triggerPlayer(tp);
         Bukkit.getScheduler().runTaskLater(ShowPlugin.getInstance(), () -> area.sync(((System.currentTimeMillis() - musicTime + 300) / 1000), tp), 20L);
-    }
-
-    public String getName() {
-        return showName;
-    }
-
-    public int getRadius() {
-        return radius;
     }
 
     public void stop() {
@@ -482,5 +481,9 @@ public class Show {
 
     public HashMap<String, FireworkEffect> getEffectMap() {
         return new HashMap<>(effectMap);
+    }
+
+    public void addAction(ShowAction action) {
+        actions.add(action);
     }
 }

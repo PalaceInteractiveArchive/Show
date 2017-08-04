@@ -26,8 +26,8 @@ public class AudioStart extends ShowAction {
         if (area == null) {
             return;
         }
-        show.musicTime = System.currentTimeMillis();
-        show.areaName = area.getAreaName();
+        show.setMusicTime(System.currentTimeMillis());
+        show.setAreaName(area.getAreaName());
         if (area != null) {
             for (UUID uuid : show.getNearPlayers()) {
                 CPlayer tp = Core.getPlayerManager().getPlayer(uuid);

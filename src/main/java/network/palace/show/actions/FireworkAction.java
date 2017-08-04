@@ -58,7 +58,7 @@ public class FireworkAction extends ShowAction implements Listener {
         }
         if (instaburst) {
             FireworkExplodeAction explode = new FireworkExplodeAction(show, time + 50, fw);
-            show.actions.add(explode);
+            show.addAction(explode);
         }
     }
 
