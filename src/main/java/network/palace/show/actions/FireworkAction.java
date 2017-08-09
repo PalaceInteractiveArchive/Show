@@ -18,8 +18,6 @@ public class FireworkAction extends ShowAction implements Listener {
     private int power;
     private Vector direction;
     private double dirPower;
-    private Show show;
-    private long time;
 
     public FireworkAction(Show show, long time) {
         super(show, time);
