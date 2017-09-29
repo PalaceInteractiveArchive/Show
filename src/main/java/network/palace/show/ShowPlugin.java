@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Created by Marc on 12/6/16.
  */
-@PluginInfo(name = "Show", version = "1.0.8", depend = {"Audio", "Core"}, canReload = true)
+@PluginInfo(name = "Show", version = "1.0.9", depend = {"Audio", "Core"}, canReload = true)
 public class ShowPlugin extends Plugin {
     @Getter private ArmorStandManager armorStandManager;
     @Getter private FountainManager fountainManager;
@@ -67,7 +67,7 @@ public class ShowPlugin extends Plugin {
         int size = shows.size();
         if (size > 0) {
             for (CPlayer p : Core.getPlayerManager().getOnlinePlayers()) {
-                if (p.getRank().getRankId() < Rank.SQUIRE.getRankId()) {
+                if (p.getRank().getRankId() < Rank.TRAINEE.getRankId()) {
                     continue;
                 }
                 p.sendMessage(ChatColor.RED + "" + ChatColor.BOLD + "Reloading Show plugin, there are currently " +

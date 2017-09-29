@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
  * Created by Marc on 12/6/16.
  */
 @CommandMeta(description = "Command used to start shows")
-@CommandPermission(rank = Rank.KNIGHT)
+@CommandPermission(rank = Rank.MOD)
 public class CommandShow extends CoreCommand {
 
     public CommandShow() {
