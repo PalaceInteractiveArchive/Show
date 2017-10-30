@@ -6,9 +6,10 @@ public enum LaserObject {
     public static LaserObject fromString(String s) {
         switch (s.toLowerCase()) {
             case "source":
-                return SOURCE;
-            case "target":
+            case "base":
                 return TARGET;
+            case "target":
+                return SOURCE;
         }
         return null;
     }

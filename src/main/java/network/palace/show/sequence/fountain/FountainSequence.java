@@ -1,14 +1,17 @@
-package network.palace.show.sequence.laser;
+package network.palace.show.sequence.fountain;
 
 import lombok.Getter;
+import network.palace.show.FountainManager;
 import network.palace.show.Show;
-import network.palace.show.beam.beam.Beam;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.sequence.ShowSequence;
-import network.palace.show.sequence.handlers.SequenceState;
 import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.FallingBlock;
+import org.bukkit.material.MaterialData;
+import org.bukkit.util.Vector;
 
 import java.io.*;
 import java.util.HashSet;
@@ -17,14 +20,16 @@ import java.util.HashSet;
  * @author Marc
  * @since 8/2/17
  */
-public class LaserSequence extends ShowSequence {
-    protected SequenceState state = null;
+public class FountainSequence extends ShowSequence {
     @Getter private long startTime;
     private HashSet<ShowSequence> sequences;
-    @Getter private Beam beam = null;
-    private Location relativeSpawn = null;
+    protected boolean running = false;
+    protected MaterialData data = new MaterialData(Material.STAINED_GLASS, (byte) 3);
+    protected Vector direction;
+    protected Location spawn = null;
+    private int ticks = 0;
 
-    public LaserSequence(Show show, long time) {
+    public FountainSequence(Show show, long time) {
         super(show, time);
     }
 
@@ -33,6 +38,8 @@ public class LaserSequence extends ShowSequence {
         if (startTime == 0) {
             startTime = System.currentTimeMillis();
         }
+        if (running && ticks % 2 == 0) launch();
+        ticks++;
         if (sequences != null) {
             ShowUtil.runSequences(sequences, startTime);
             return sequences.isEmpty();
@@ -40,43 +47,30 @@ public class LaserSequence extends ShowSequence {
         return false;
     }
 
-    protected void spawn(Location loc) throws ShowParseException {
-        spawn(loc, loc);
+    @SuppressWarnings("deprecation")
+    private void launch() {
+        FallingBlock b = spawn.getWorld().spawnFallingBlock(spawn, data);
+        b.setVelocity(direction);
+        FountainManager.blocks.add(b.getUniqueId());
     }
 
-    protected void spawn(Location source, Location target) throws ShowParseException {
-        if (isSpawned()) return;
-        if (state.equals(SequenceState.RELATIVE)) {
-            if (relativeSpawn == null) {
-                beam = new Beam(target, source);
-            } else if (source != null) {
-                beam = new Beam(relativeSpawn, source);
-            } else {
-                beam = new Beam(relativeSpawn, relativeSpawn);
-            }
-        } else {
-            if (source == null && target == null) {
-                throw new ShowParseException("Sequence is ACTUAL type and no spawn locations were provided!");
-            }
-            beam = new Beam(target, source);
-        }
-        beam.start();
+    protected void spawn() {
+        running = true;
     }
 
     public void despawn() {
-        if (!isSpawned() || beam == null) return;
-        beam.stop();
+        running = false;
     }
 
     public boolean isSpawned() {
-        return beam != null && beam.isActive();
+        return running;
     }
 
     @Override
     public ShowSequence load(String line, String... showArgs) throws ShowParseException {
-        File file = new File("plugins/Show/sequences/lasers/" + showArgs[3] + ".sequence");
+        File file = new File("plugins/Show/sequences/fountains/" + showArgs[3] + ".sequence");
         if (!file.exists()) {
-            throw new ShowParseException("Could not find Laser sequence file " + showArgs[3]);
+            throw new ShowParseException("Could not find Fountain sequence file " + showArgs[3]);
         }
         HashSet<ShowSequence> sequences = new HashSet<>();
         String strLine = "";
@@ -84,6 +78,7 @@ public class LaserSequence extends ShowSequence {
             FileInputStream fstream = new FileInputStream(file);
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            boolean first = true;
             // Parse Lines
             while ((strLine = br.readLine()) != null) {
                 if (strLine.length() == 0 || strLine.startsWith("#")) continue;
@@ -93,17 +88,14 @@ public class LaserSequence extends ShowSequence {
                     continue;
                 }
                 // Make sure first line is the Sequence line
-                if (!args[0].equalsIgnoreCase("Sequence") && state == null) {
+                if (!args[0].equalsIgnoreCase("Sequence") && first) {
                     throw new ShowParseException("First line isn't Sequence definition");
                 }
-                if (args[0].equalsIgnoreCase("Sequence") && state == null) {
-                    if (!args[1].equalsIgnoreCase("Laser")) {
-                        throw new ShowParseException("This isn't a Laser file!");
+                if (args[0].equalsIgnoreCase("Sequence") && first) {
+                    if (!args[1].equalsIgnoreCase("Fountain")) {
+                        throw new ShowParseException("This isn't a Fountain file!");
                     }
-                    state = SequenceState.fromString(args[2]);
-                    if (state == null) {
-                        throw new ShowParseException("Unknown Sequence State " + args[2]);
-                    }
+                    first = false;
                     continue;
                 }
                 String[] timeToks = args[0].split("_");
@@ -111,18 +103,29 @@ public class LaserSequence extends ShowSequence {
                 for (String timeStr : timeToks) {
                     time += (long) (Double.parseDouble(timeStr) * 1000);
                 }
+                //TODO make durations doubles
                 if (args[1].equalsIgnoreCase("Spawn")) {
-                    LaserSpawnSequence sq = new LaserSpawnSequence(show, time, this);
+                    FountainSpawnSequence sq = new FountainSpawnSequence(show, time, this);
                     sequences.add(sq.load(strLine, args));
                     continue;
                 }
                 if (args[1].equalsIgnoreCase("Move")) {
-                    LaserMoveSequence sq = new LaserMoveSequence(show, time, this);
+                    FountainMoveSequence sq = new FountainMoveSequence(show, time, this);
+                    sequences.add(sq.load(strLine, args));
+                    continue;
+                }
+                if (args[1].equalsIgnoreCase("Block")) {
+                    FountainBlockSequence sq = new FountainBlockSequence(show, time, this);
+                    sequences.add(sq.load(strLine, args));
+                    continue;
+                }
+                if (args[1].equalsIgnoreCase("Rotate")) {
+                    FountainRotateSequence sq = new FountainRotateSequence(show, time, this);
                     sequences.add(sq.load(strLine, args));
                     continue;
                 }
                 if (args[1].equalsIgnoreCase("Despawn")) {
-                    LaserDespawnSequence sq = new LaserDespawnSequence(show, time, this);
+                    FountainDespawnSequence sq = new FountainDespawnSequence(show, time, this);
                     sequences.add(sq.load(strLine, args));
                 }
             }
@@ -133,7 +136,7 @@ public class LaserSequence extends ShowSequence {
             throw new ShowParseException("Error while parsing Sequence " + showArgs[3] + " on Line [" + strLine + "]");
         }
         if (showArgs.length > 4) {
-            relativeSpawn = WorldUtil.strToLoc(show.getWorld().getName() + "," + showArgs[4]);
+            spawn = WorldUtil.strToLoc(show.getWorld().getName() + "," + showArgs[4]);
         }
         this.sequences = sequences;
         return this;

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class FountainManager implements Listener {
-    private static List<UUID> blocks = new ArrayList<>();
+    public static List<UUID> blocks = new ArrayList<>();
     public List<Fountain> fountains = new ArrayList<>();
 
     public FountainManager() {

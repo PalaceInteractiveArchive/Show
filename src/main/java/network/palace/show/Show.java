@@ -15,6 +15,8 @@ import network.palace.show.handlers.ArmorData;
 import network.palace.show.handlers.armorstand.PositionType;
 import network.palace.show.handlers.armorstand.ShowStand;
 import network.palace.show.sequence.ShowSequence;
+import network.palace.show.sequence.fountain.FountainSequence;
+import network.palace.show.sequence.laser.LaserSequence;
 import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
 import org.bukkit.*;
@@ -39,8 +41,12 @@ public class Show {
     private HashSet<ShowAction> actions;
     private HashSet<ShowSequence> sequences;
     @Getter private long startTime = 0;
-    @Getter @Setter private long musicTime = 0;
-    @Getter @Setter private String areaName = "none";
+    @Getter
+    @Setter
+    private long musicTime = 0;
+    @Getter
+    @Setter
+    private String areaName = "none";
     @Getter private int radius = 75;
     private HashMap<String, FireworkEffect> effectMap;
     private HashMap<String, String> invalidLines;
@@ -60,6 +66,7 @@ public class Show {
 
     private void loadActions(File file, long addTime) {
         HashSet<ShowAction> actions = new HashSet<>();
+        HashSet<ShowSequence> sequences = new HashSet<>();
         String strLine = "";
         try {
             FileInputStream fstream = new FileInputStream(file);
@@ -296,6 +303,24 @@ public class Show {
                 if (args[1].contains("AudioSync")) {
                     AudioSync ac = new AudioSync(this, time);
                     actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // Sequences
+                if (args[1].contains("Sequence")) {
+                    ShowSequence sequence;
+                    switch (args[2].toLowerCase()) {
+                        case "laser": {
+                            sequence = new LaserSequence(this, time);
+                            break;
+                        }
+                        case "fountain": {
+                            sequence = new FountainSequence(this, time);
+                            break;
+                        }
+                        default:
+                            continue;
+                    }
+                    sequences.add(sequence.load(strLine, args));
                 }
             }
             in.close();
@@ -414,7 +439,7 @@ public class Show {
         for (ShowAction action : actions) {
             if (action == null) continue;
             try {
-                if (System.currentTimeMillis() - startTime <= action.getTime()) {
+                if (System.currentTimeMillis() - startTime < action.getTime()) {
                     continue;
                 }
                 action.play();
@@ -472,6 +497,11 @@ public class Show {
                 continue;
             }
             e.remove();
+        }
+        for (ShowSequence s : sequences) {
+            if (s instanceof LaserSequence) {
+                ((LaserSequence) s).despawn();
+            }
         }
     }
 
