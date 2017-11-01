@@ -10,7 +10,6 @@ public class FountainRotateSequence extends ShowSequence {
     private int degrees;
     private int currentDegrees;
     private double speed;
-//    private int change;
     private double radius;
     private long startTime = 0;
 

@@ -1,6 +1,7 @@
 package network.palace.show.sequence.fountain;
 
 import lombok.Getter;
+import network.palace.core.Core;
 import network.palace.show.FountainManager;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
@@ -20,11 +21,12 @@ import java.util.HashSet;
  * @author Marc
  * @since 8/2/17
  */
+@SuppressWarnings("deprecation")
 public class FountainSequence extends ShowSequence {
     @Getter private long startTime;
     private HashSet<ShowSequence> sequences;
     protected boolean running = false;
-    protected MaterialData data = new MaterialData(Material.STAINED_GLASS, (byte) 3);
+    protected MaterialData data;
     protected Vector direction;
     protected Location spawn = null;
     private int ticks = 0;
@@ -47,7 +49,6 @@ public class FountainSequence extends ShowSequence {
         return false;
     }
 
-    @SuppressWarnings("deprecation")
     private void launch() {
         FallingBlock b = spawn.getWorld().spawnFallingBlock(spawn, data);
         b.setVelocity(direction);
@@ -78,7 +79,6 @@ public class FountainSequence extends ShowSequence {
             FileInputStream fstream = new FileInputStream(file);
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            boolean first = true;
             // Parse Lines
             while ((strLine = br.readLine()) != null) {
                 if (strLine.length() == 0 || strLine.startsWith("#")) continue;
@@ -88,22 +88,37 @@ public class FountainSequence extends ShowSequence {
                     continue;
                 }
                 // Make sure first line is the Sequence line
-                if (!args[0].equalsIgnoreCase("Sequence") && first) {
-                    throw new ShowParseException("First line isn't Sequence definition");
-                }
-                if (args[0].equalsIgnoreCase("Sequence") && first) {
-                    if (!args[1].equalsIgnoreCase("Fountain")) {
-                        throw new ShowParseException("This isn't a Fountain file!");
+                if (data == null) {
+                    if (!args[0].equalsIgnoreCase("Sequence")) {
+                        throw new ShowParseException("First line isn't Sequence definition");
                     }
-                    first = false;
-                    continue;
+                    if (args[0].equalsIgnoreCase("Sequence")) {
+                        if (!args[1].equalsIgnoreCase("Fountain")) {
+                            throw new ShowParseException("This isn't a Fountain file!");
+                        }
+                        if (args.length <= 2) {
+                            data = new MaterialData(Material.GLASS);
+                            continue;
+                        }
+                        try {
+                            String[] list = args[2].split(":");
+                            if (list.length == 1) {
+                                data = new MaterialData(Material.getMaterial(Integer.parseInt(list[0])));
+                            } else {
+                                data = new MaterialData(Material.getMaterial(Integer.parseInt(list[0])), Byte.valueOf(list[1]));
+                            }
+                        } catch (Exception e) {
+                            Core.logMessage("Show Parser", "Error parsing id:data for " + args[2]);
+                            data = new MaterialData(Material.GLASS);
+                        }
+                        continue;
+                    }
                 }
                 String[] timeToks = args[0].split("_");
                 long time = 0;
                 for (String timeStr : timeToks) {
                     time += (long) (Double.parseDouble(timeStr) * 1000);
                 }
-                //TODO make durations doubles
                 if (args[1].equalsIgnoreCase("Spawn")) {
                     FountainSpawnSequence sq = new FountainSpawnSequence(show, time, this);
                     sequences.add(sq.load(strLine, args));
