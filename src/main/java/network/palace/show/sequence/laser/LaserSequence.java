@@ -22,7 +22,8 @@ public class LaserSequence extends ShowSequence {
     @Getter private long startTime;
     private HashSet<ShowSequence> sequences;
     @Getter private Beam beam = null;
-    private Location relativeSpawn = null;
+    private Location relativeBaseSpawn = null;
+    private Location relativeTargetSpawn = null;
 
     public LaserSequence(Show show, long time) {
         super(show, time);
@@ -47,12 +48,14 @@ public class LaserSequence extends ShowSequence {
     protected void spawn(Location source, Location target) throws ShowParseException {
         if (isSpawned()) return;
         if (state.equals(SequenceState.RELATIVE)) {
-            if (relativeSpawn == null) {
+            if (relativeBaseSpawn == null) {
                 beam = new Beam(target, source);
             } else if (source != null) {
-                beam = new Beam(relativeSpawn, source);
+                beam = new Beam(relativeBaseSpawn, source);
+            } else if (relativeTargetSpawn == null) {
+                beam = new Beam(relativeBaseSpawn, relativeBaseSpawn);
             } else {
-                beam = new Beam(relativeSpawn, relativeSpawn);
+                beam = new Beam(relativeBaseSpawn, relativeTargetSpawn);
             }
         } else {
             if (source == null && target == null) {
@@ -133,7 +136,10 @@ public class LaserSequence extends ShowSequence {
             throw new ShowParseException("Error while parsing Sequence " + showArgs[3] + " on Line [" + strLine + "]");
         }
         if (showArgs.length > 4) {
-            relativeSpawn = WorldUtil.strToLoc(show.getWorld().getName() + "," + showArgs[4]);
+            relativeBaseSpawn = WorldUtil.strToLoc(show.getWorld().getName() + "," + showArgs[4]);
+            if (showArgs.length > 5) {
+                relativeTargetSpawn = WorldUtil.strToLoc(show.getWorld().getName() + "," + showArgs[5]);
+            }
         }
         this.sequences = sequences;
         return this;
