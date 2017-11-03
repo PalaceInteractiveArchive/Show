@@ -12,31 +12,6 @@ import java.util.UUID;
 import static com.comphenix.protocol.PacketType.Play.Server.*;
 
 public class PacketFactory {
-    private static Entity fakeSquid;
-    private static Entity fakeGuardian;
-
-    /*
-      Generate fake entities
-     */
-    static {
-        fakeSquid = (Entity) Accessors.getConstructorAccessor(
-                MinecraftReflection.getCraftBukkitClass("entity.CraftSquid"),
-                MinecraftReflection.getCraftBukkitClass("CraftServer"),
-                MinecraftReflection.getMinecraftClass("EntitySquid")
-        ).invoke(null, Accessors.getConstructorAccessor(
-                MinecraftReflection.getMinecraftClass("EntitySquid"),
-                MinecraftReflection.getNmsWorldClass()
-        ).invoke(new Object[]{null}));
-
-        fakeGuardian = (Entity) Accessors.getConstructorAccessor(
-                MinecraftReflection.getCraftBukkitClass("entity.CraftGuardian"),
-                MinecraftReflection.getCraftBukkitClass("CraftServer"),
-                MinecraftReflection.getMinecraftClass("EntityGuardian")
-        ).invoke(null, Accessors.getConstructorAccessor(
-                MinecraftReflection.getMinecraftClass("EntityGuardian"),
-                MinecraftReflection.getNmsWorldClass()
-        ).invoke(new Object[]{null}));
-    }
 
     /**
      * Creates a packet to spawn a squid at the location.
@@ -54,6 +29,11 @@ public class PacketFactory {
         container.getDoubles().write(2, location.getZ());
         container.getBytes().write(0, (byte) (location.getYaw() * 256.0F / 360.0F));
         container.getBytes().write(1, (byte) (location.getPitch() * 256.0F / 360.0F));
+        Entity fakeSquid = (Entity) Accessors.getConstructorAccessor(MinecraftReflection.getCraftBukkitClass(
+                "entity.CraftSquid"), MinecraftReflection.getCraftBukkitClass("CraftServer"),
+                MinecraftReflection.getMinecraftClass("EntitySquid")).invoke(null,
+                Accessors.getConstructorAccessor(MinecraftReflection.getMinecraftClass("EntitySquid"),
+                        MinecraftReflection.getNmsWorldClass()).invoke(new Object[]{null}));
         WrappedDataWatcher wrapper = WrappedDataWatcher.getEntityWatcher(fakeSquid);
         wrapper.setObject(0, (byte) 32);
         container.getDataWatcherModifier().write(0, wrapper);
@@ -77,6 +57,11 @@ public class PacketFactory {
         container.getDoubles().write(2, location.getZ());
         container.getBytes().write(0, (byte) (location.getYaw() * 256.0F / 360.0F));
         container.getBytes().write(1, (byte) (location.getPitch() * 256.0F / 360.0F));
+        Entity fakeGuardian = (Entity) Accessors.getConstructorAccessor(MinecraftReflection.getCraftBukkitClass(
+                "entity.CraftGuardian"), MinecraftReflection.getCraftBukkitClass("CraftServer"),
+                MinecraftReflection.getMinecraftClass("EntityGuardian")).invoke(null,
+                Accessors.getConstructorAccessor(MinecraftReflection.getMinecraftClass("EntityGuardian"),
+                        MinecraftReflection.getNmsWorldClass()).invoke(new Object[]{null}));
         WrappedDataWatcher watcher = WrappedDataWatcher.getEntityWatcher(fakeGuardian);
         watcher.setObject(0, (byte) 32);
         watcher.setObject(12, false);
