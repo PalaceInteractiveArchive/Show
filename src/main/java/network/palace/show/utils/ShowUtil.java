@@ -11,7 +11,6 @@ import org.bukkit.Particle;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -76,7 +75,7 @@ public class ShowUtil {
         for (ShowSequence sequence : sequences) {
             if (sequence == null) continue;
             try {
-                if (System.currentTimeMillis() - startTime <= sequence.getTime()) {
+                if (System.currentTimeMillis() - startTime < sequence.getTime()) {
                     continue;
                 }
                 if (sequence.run()) set.remove(sequence);
@@ -311,6 +310,8 @@ public class ShowUtil {
     }
 
     public static boolean areLocationsEqual(Location loc1, Location loc2, int decimalPlace) {
+        return loc1.distance(loc2) <= (decimalPlace * .1);
+        /*
         StringBuilder pattern = new StringBuilder("#.");
         for (int i = 0; i < decimalPlace; i++) {
             pattern.append("#");
@@ -323,7 +324,7 @@ public class ShowUtil {
         double x2 = format(df, loc2.getX());
         double y2 = format(df, loc2.getY());
         double z2 = format(df, loc2.getZ());
-        return x1 == x2 && y1 == y2 && z1 == z2;
+        return x1 == x2 && y1 == y2 && z1 == z2;*/
     }
 
     private static double format(DecimalFormat format, double num) {

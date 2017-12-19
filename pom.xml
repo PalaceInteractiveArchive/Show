@@ -6,7 +6,7 @@
 
     <groupId>network.palace</groupId>
     <artifactId>Show</artifactId>
-    <version>1.0.9</version>
+    <version>1.1.0</version>
     <repositories>
         <repository>
             <id>palace</id>
@@ -49,9 +49,9 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>com.comphenix</groupId>
-            <artifactId>protocollib</artifactId>
-            <version>4.1</version>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib-API</artifactId>
+            <version>4.3.0</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q</groupId>

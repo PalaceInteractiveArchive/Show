@@ -29,5 +29,9 @@ public class FileUtil {
         if (!armorstands.exists()) {
             armorstands.mkdir();
         }
+        File lasers = new File("plugins/Show/sequences/lasers/");
+        if (!lasers.exists()) {
+            lasers.mkdir();
+        }
     }
 }

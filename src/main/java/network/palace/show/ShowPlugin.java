@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Created by Marc on 12/6/16.
  */
-@PluginInfo(name = "Show", version = "1.0.9", depend = {"Audio", "Core"}, canReload = true)
+@PluginInfo(name = "Show", version = "1.1.0", depend = {"Audio", "Core"}, canReload = true)
 public class ShowPlugin extends Plugin {
     @Getter private ArmorStandManager armorStandManager;
     @Getter private FountainManager fountainManager;
@@ -41,7 +41,7 @@ public class ShowPlugin extends Plugin {
         fountainManager = new FountainManager();
         FileUtil.setupFiles();
         registerCommand(new CommandShow());
-        registerListener(new FountainManager());
+        registerListener(fountainManager);
         registerListener(new PlayerInteract());
         registerListener(new SignChange());
         // Show Ticker
