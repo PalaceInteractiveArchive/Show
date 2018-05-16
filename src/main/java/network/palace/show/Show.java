@@ -40,13 +40,9 @@ public class Show {
     @Getter private String name = "";
     private HashSet<ShowAction> actions;
     private HashSet<ShowSequence> sequences;
-    @Getter private long startTime = 0;
-    @Getter
-    @Setter
-    private long musicTime = 0;
-    @Getter
-    @Setter
-    private String areaName = "none";
+    @Getter private long startTime;
+    @Getter @Setter private long musicTime = 0;
+    @Getter @Setter private String areaName = "none";
     @Getter private int radius = 75;
     private HashMap<String, FireworkEffect> effectMap;
     private HashMap<String, String> invalidLines;
