@@ -24,11 +24,6 @@ public class TitleAction extends ShowAction {
 
     public TitleAction(Show show, long time) {
         super(show, time);
-        this.type = type;
-        this.title = ChatColor.translateAlternateColorCodes('&', title);
-        this.fadeIn = fadeIn;
-        this.fadeOut = fadeOut;
-        this.stay = stay;
     }
 
     @Override
