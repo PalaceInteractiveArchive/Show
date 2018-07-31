@@ -31,6 +31,13 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>de.slikey</groupId>
+            <artifactId>EffectLib</artifactId>
+            <version>6.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>/Users/Marc/Downloads/EffectLib.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>network.palace</groupId>
             <artifactId>Core</artifactId>
             <version>2.0</version>

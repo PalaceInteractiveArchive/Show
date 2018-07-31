@@ -283,6 +283,12 @@ public class Show {
                     actions.add(ac.load(strLine, args));
                     continue;
                 }
+                // SpiralParticle
+                if (args[1].contains("SpiralParticle")) {
+                    SpiralParticle ac = new SpiralParticle(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
                 // Particle
                 if (args[1].contains("Particle")) {
                     ParticleAction ac = new ParticleAction(this, time);
