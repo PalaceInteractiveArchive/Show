@@ -7,7 +7,6 @@ import network.palace.show.ShowPlugin;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -23,10 +22,10 @@ public class PlayerInteract implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        CPlayer cplayer = Core.getPlayerManager().getPlayer(player);
+        CPlayer player = Core.getPlayerManager().getPlayer(event.getPlayer());
+        if (player == null) return;
         Action action = event.getAction();
-        Rank rank = Core.getPlayerManager().getPlayer(player.getUniqueId()).getRank();
+        Rank rank = player.getRank();
         final ItemStack hand = player.getInventory().getItemInMainHand();
         if (action.equals(Action.RIGHT_CLICK_BLOCK)) {
             Material type = event.getClickedBlock().getType();
@@ -35,7 +34,7 @@ public class PlayerInteract implements Listener {
                 if (s.getLine(0).equals(show)) {
                     String show = ChatColor.stripColor(s.getLine(3));
                     ShowPlugin.getShows().values().stream().filter(sh -> sh.getName().equals(show)).forEach(sh -> {
-                        sh.syncAudioForPlayer(cplayer);
+                        sh.syncAudioForPlayer(player);
                         player.sendMessage(ChatColor.GREEN + "Syncing your audio for " + show + "!");
                     });
                 }
