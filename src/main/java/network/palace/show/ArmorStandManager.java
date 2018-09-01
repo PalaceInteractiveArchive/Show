@@ -26,6 +26,9 @@ public class ArmorStandManager {
         Bukkit.getScheduler().runTaskTimer(ShowPlugin.getInstance(), () -> {
             try {
                 for (ShowStand stand : new ArrayList<>(move)) {
+                    if (!stand.isHasSpawned()) {
+                        continue;
+                    }
                     ArmorStand armor = stand.getStand();
                     if (armor == null) {
                         move.remove(stand);
@@ -59,6 +62,9 @@ public class ArmorStandManager {
                     }
                 }
                 for (ShowStand stand : new ArrayList<>(pos)) {
+                    if (!stand.isHasSpawned()) {
+                        continue;
+                    }
                     ArmorStand armor = stand.getStand();
                     for (Position position : stand.getPositions()) {
                         Vector motion = position.getMotion();
