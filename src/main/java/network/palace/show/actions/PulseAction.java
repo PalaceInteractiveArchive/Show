@@ -26,7 +26,7 @@ public class PulseAction extends ShowAction {
 
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
-        Location loc = WorldUtil.strToLoc(show.getWorld().getName() + "," + args[2]);
+        this.loc = WorldUtil.strToLoc(show.getWorld().getName() + "," + args[2]);
         if (loc == null) {
             throw new ShowParseException("Invalid Location");
         }

@@ -34,8 +34,6 @@ public class GlowAction extends ShowAction {
     public GlowAction(Show show, long time) {
         super(show, time);
         helm = new ItemStack(Material.LEATHER_HELMET);
-        this.loc = loc;
-        this.radius = radius;
     }
 
     @Override
@@ -49,7 +47,7 @@ public class GlowAction extends ShowAction {
             p.setItem(helm);
             packets.add(p);
         });
-        collection.forEach(tp -> packets.stream().forEach(tp::sendPacket));
+        collection.forEach(tp -> packets.forEach(tp::sendPacket));
     }
 
     @Override
