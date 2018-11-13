@@ -35,6 +35,7 @@ public class ArmorStandSpawn extends ShowAction {
         armor.setArms(true);
         armor.setBasePlate(false);
         armor.setGravity(false);
+        armor.setSilent(true);
         armor.setSmall(stand.isSmall());
         armor.setMetadata("show", new FixedMetadataValue(ShowPlugin.getInstance(), true));
         ArmorData data = stand.getArmorData();
