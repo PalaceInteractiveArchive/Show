@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import network.palace.audio.Audio;
 import network.palace.audio.handlers.AudioArea;
+import network.palace.core.Core;
 import network.palace.core.player.CPlayer;
 import network.palace.core.utils.HeadUtil;
 import network.palace.show.actions.*;
@@ -489,7 +490,12 @@ public class Show {
             return;
         }
         area.triggerPlayer(tp);
-        Bukkit.getScheduler().runTaskLater(ShowPlugin.getInstance(), () -> area.sync(((System.currentTimeMillis() - musicTime + 300) / 1000), tp), 20L);
+
+        Core.runTaskLater(() -> {
+            long ms = (System.currentTimeMillis() - musicTime) + 1000;
+            float seconds = ms / 1000f;
+            area.sync(seconds, tp, 0);
+        }, 20L);
     }
 
     public void stop() {

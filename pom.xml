@@ -39,7 +39,7 @@
         <dependency>
             <groupId>network.palace</groupId>
             <artifactId>Audio</artifactId>
-            <version>1.1.2</version>
+            <version>1.1.4</version>
             <type>jar</type>
         </dependency>
         <dependency>

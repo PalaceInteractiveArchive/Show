@@ -37,9 +37,6 @@ public class ParticleAction extends ShowAction {
             if (tp == null) {
                 continue;
             }
-            if (tp.getLocation().distance(loc) > 50) {
-                continue;
-            }
             tp.getParticles().send(loc, effect, amount, (float) offsetX, (float) offsetY, (float) offsetZ, speed);
         }
     }
