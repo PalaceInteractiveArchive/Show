@@ -1,11 +1,13 @@
 package network.palace.show.actions;
 
+import network.palace.core.Core;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.BlockData;
 import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -26,12 +28,15 @@ public class FakeBlockAction extends ShowAction {
 
     @Override
     public void play() {
-        for (UUID uuid : show.getNearPlayers()) {
-            Player tp = Bukkit.getPlayer(uuid);
-            if (tp == null) {
-                continue;
+        try {
+            for (UUID uuid : show.getNearPlayers()) {
+                Player tp = Bukkit.getPlayer(uuid);
+                if (tp != null)
+                    tp.sendBlockChange(loc, id, data);
             }
-            tp.sendBlockChange(loc, id, data);
+        } catch (Exception e) {
+            Core.logMessage("FakeBlockAction", ChatColor.RED + "Error sending FakeBlockAction for location " + loc.getX() + "," + loc.getY() + "," + loc.getZ() + " at time " + time + " for show " + show.getName());
+            e.printStackTrace();
         }
     }
 

@@ -445,7 +445,11 @@ public class Show {
                 if (System.currentTimeMillis() - startTime < action.getTime()) {
                     continue;
                 }
-                action.play();
+                try {
+                    action.play();
+                } catch (Exception e) {
+                    Core.logMessage("Show " + action.getShow().getName(), "Error playing action in show " + action.getShow().getName());
+                }
                 this.actions.remove(action);
             } catch (Exception e) {
                 e.printStackTrace();
