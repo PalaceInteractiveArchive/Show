@@ -8,7 +8,6 @@ import network.palace.show.handlers.armorstand.Rotation;
 import network.palace.show.handlers.armorstand.ShowStand;
 import network.palace.show.handlers.armorstand.StandAction;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.ArmorStand;
 
 /**
  * Created by Marc on 3/26/16
@@ -31,9 +30,10 @@ public class ArmorStandRotate extends ShowAction {
             Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has not spawned", "arcade.bypass");
             return;
         }
-        ArmorStand armor = stand.getStand();
-        float yaw = (float) (((armor.getLocation().getYaw() + this.yaw) / speed) / 20);
-        stand.setRotation(new Rotation(yaw, speed * 20));
+
+        double ticks = speed * 20;
+        float interval = (float) (this.yaw / ticks);
+        stand.setRotation(new Rotation(interval, speed * 20));
         ShowPlugin.getInstance().getArmorStandManager().addStand(stand, StandAction.ROTATION);
     }
 

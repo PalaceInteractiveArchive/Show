@@ -32,6 +32,7 @@ public class ArmorStandSpawn extends ShowAction {
         }
         ArmorStand armor = loc.getWorld().spawn(loc, ArmorStand.class);
         stand.spawn();
+        armor.setCustomName(stand.getId());
         armor.setArms(true);
         armor.setBasePlate(false);
         armor.setGravity(false);

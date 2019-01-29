@@ -1,5 +1,16 @@
 package network.palace.show;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import network.palace.audio.Audio;
@@ -7,8 +18,27 @@ import network.palace.audio.handlers.AudioArea;
 import network.palace.core.Core;
 import network.palace.core.player.CPlayer;
 import network.palace.core.utils.HeadUtil;
-import network.palace.show.actions.*;
-import network.palace.show.actions.armor.*;
+import network.palace.show.actions.BlockAction;
+import network.palace.show.actions.FakeBlockAction;
+import network.palace.show.actions.FireworkAction;
+import network.palace.show.actions.FountainAction;
+import network.palace.show.actions.GlowAction;
+import network.palace.show.actions.GlowDoneAction;
+import network.palace.show.actions.LightningAction;
+import network.palace.show.actions.MusicAction;
+import network.palace.show.actions.ParticleAction;
+import network.palace.show.actions.PowerFireworkAction;
+import network.palace.show.actions.PulseAction;
+import network.palace.show.actions.SchematicAction;
+import network.palace.show.actions.ShowAction;
+import network.palace.show.actions.SpiralParticle;
+import network.palace.show.actions.TextAction;
+import network.palace.show.actions.TitleAction;
+import network.palace.show.actions.armor.ArmorStandDespawn;
+import network.palace.show.actions.armor.ArmorStandMove;
+import network.palace.show.actions.armor.ArmorStandPosition;
+import network.palace.show.actions.armor.ArmorStandRotate;
+import network.palace.show.actions.armor.ArmorStandSpawn;
 import network.palace.show.actions.audio.AudioStart;
 import network.palace.show.actions.audio.AudioSync;
 import network.palace.show.exceptions.ShowParseException;
@@ -20,7 +50,14 @@ import network.palace.show.sequence.fountain.FountainSequence;
 import network.palace.show.sequence.laser.LaserSequence;
 import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.Effect;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -28,10 +65,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.EulerAngle;
-
-import java.io.*;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
 public class Show {
@@ -186,7 +219,7 @@ public class Show {
                     switch (action.toLowerCase()) {
                         case "spawn": {
                             // x,y,z
-                            Location loc = WorldUtil.strToLoc(world.getName() + "," + args[4]);
+                            Location loc = WorldUtil.strToLocWithYaw(world.getName() + "," + args[4]);
                             ArmorStandSpawn spawn = new ArmorStandSpawn(this, time, stand, loc);
                             actions.add(spawn);
                             break;
