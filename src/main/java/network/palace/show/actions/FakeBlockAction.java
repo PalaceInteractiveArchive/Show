@@ -1,5 +1,7 @@
 package network.palace.show.actions;
 
+import lombok.Getter;
+import lombok.Setter;
 import network.palace.core.Core;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
@@ -16,6 +18,8 @@ import java.util.UUID;
 /**
  * Created by Marc on 7/1/15
  */
+@Getter
+@Setter
 @SuppressWarnings("deprecation")
 public class FakeBlockAction extends ShowAction {
     private Location loc;

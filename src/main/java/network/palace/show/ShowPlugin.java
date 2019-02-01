@@ -11,6 +11,8 @@ import network.palace.core.plugin.PluginInfo;
 import network.palace.show.actions.SchematicAction;
 import network.palace.show.commands.CommandShow;
 import network.palace.show.listeners.ChunkListener;
+import network.palace.show.commands.CommandShowGen;
+import network.palace.show.generator.ShowGenerator;
 import network.palace.show.listeners.PlayerInteract;
 import network.palace.show.listeners.SignChange;
 import network.palace.show.utils.FileUtil;
@@ -23,10 +25,11 @@ import java.util.Map;
 /**
  * Created by Marc on 12/6/16.
  */
-@PluginInfo(name = "Show", version = "1.3.1", depend = {"Audio", "Core"}, canReload = true)
+@PluginInfo(name = "Show", version = "1.3.2-dev", depend = {"Audio", "Core"}, canReload = true)
 public class ShowPlugin extends Plugin {
     @Getter private ArmorStandManager armorStandManager;
     @Getter private FountainManager fountainManager;
+    @Getter private static ShowGenerator showGenerator;
     private static ShowPlugin instance;
     private static HashMap<String, Show> shows = new HashMap<>();
     private int taskid = 0;
@@ -40,8 +43,10 @@ public class ShowPlugin extends Plugin {
         instance = this;
         armorStandManager = new ArmorStandManager();
         fountainManager = new FountainManager();
+        showGenerator = new ShowGenerator();
         FileUtil.setupFiles();
         registerCommand(new CommandShow());
+        registerCommand(new CommandShowGen());
         registerListener(fountainManager);
         registerListener(new PlayerInteract());
         registerListener(new SignChange());
