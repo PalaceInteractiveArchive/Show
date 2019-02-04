@@ -398,8 +398,9 @@ public class Show {
         ItemStack chestplate = new ItemStack(Material.AIR);
         ItemStack leggings = new ItemStack(Material.AIR);
         ItemStack boots = new ItemStack(Material.AIR);
+        ItemStack itemInMainHand = new ItemStack(Material.AIR);
         int i = 0;
-        if (list.length == 4) {
+        if (list.length == 5) {
             for (String st : list) {
                 i++;
                 if (i == 1) {
@@ -436,6 +437,9 @@ public class Show {
                         case 4:
                             boots = temp;
                             continue;
+                        case 5:
+                            itemInMainHand = temp;
+                            continue;
                     }
                     continue;
                 }
@@ -455,10 +459,13 @@ public class Show {
                         continue;
                     case 4:
                         boots = temp;
+                        continue;
+                    case 5:
+                        itemInMainHand = temp;
                 }
             }
         }
-        return new ArmorData(head, chestplate, leggings, boots);
+        return new ArmorData(head, chestplate, leggings, boots, itemInMainHand);
     }
 
     public List<UUID> getNearPlayers() {
