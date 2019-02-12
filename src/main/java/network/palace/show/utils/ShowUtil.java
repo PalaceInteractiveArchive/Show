@@ -4,7 +4,10 @@ import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.BlockData;
 import network.palace.show.handlers.TitleType;
 import network.palace.show.sequence.ShowSequence;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 

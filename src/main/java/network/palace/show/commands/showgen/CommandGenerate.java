@@ -66,7 +66,6 @@ public class CommandGenerate extends CoreCommand {
 
             Location finalMax = selection.getMaximumPoint();
             Location finalMin = selection.getMinimumPoint();
-            Bukkit.broadcastMessage(finalMax.toString());
 
             GeneratorSession.ShowSelection finalScene = new GeneratorSession.ShowSelection(finalMax, finalMin);
 
