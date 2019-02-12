@@ -31,15 +31,18 @@ public class WorldUtil {
 
         String[] tokens = string.split(",");
         try {
-             for (World world : Bukkit.getWorlds()) {
-                 if (world.getName().equalsIgnoreCase(tokens[0])) {
-                     return new Location(world, Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2]),
-                             Double.parseDouble(tokens[3]), Float.parseFloat(tokens[4]), 0);
-                 }
-             }
-        }
-        catch (Exception ignored) {
-
+            for (World world : Bukkit.getWorlds()) {
+                if (world.getName().equalsIgnoreCase(tokens[0])) {
+                    if (tokens.length > 4) {
+                        return new Location(world, Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2]),
+                                Double.parseDouble(tokens[3]), Float.parseFloat(tokens[4]), 0);
+                    } else {
+                        return new Location(world, Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2]),
+                                Double.parseDouble(tokens[3]));
+                    }
+                }
+            }
+        } catch (Exception ignored) {
         }
 
         return null;

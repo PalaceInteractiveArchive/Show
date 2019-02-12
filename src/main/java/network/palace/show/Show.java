@@ -402,7 +402,7 @@ public class Show {
         ItemStack boots = new ItemStack(Material.AIR);
         ItemStack itemInMainHand = new ItemStack(Material.AIR);
         int i = 0;
-        if (list.length == 5) {
+        if (list.length >= 4) {
             for (String st : list) {
                 i++;
                 if (i == 1) {
