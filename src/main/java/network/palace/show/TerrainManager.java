@@ -65,8 +65,6 @@ public class TerrainManager {
      * @param saveFile a File representing the schematic file to create
      * @param l1       one corner of the region to save
      * @param l2       the corner of the region to save, opposite to l1
-     * @throws com.sk89q.worldedit.data.DataException
-     * @throws IOException
      */
     public void saveTerrain(File saveFile, Location l1, Location l2) throws FilenameException, DataException, IOException {
         Vector min = getMin(l1, l2);
@@ -100,6 +98,8 @@ public class TerrainManager {
         Operation operation = localSession.getClipboard().createPaste(editSession, editSession.getWorld()
                 .getWorldData()).to(to).ignoreAirBlocks(noAir).build();
         Operations.completeLegacy(operation);
+        fis.close();
+        bis.close();
     }
 
     public void loadSchematic(WorldEditPlugin wep, String fileName, boolean noAir) throws Exception {

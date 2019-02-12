@@ -144,6 +144,9 @@ public class FountainSequence extends ShowSequence {
                     sequences.add(sq.load(strLine, args));
                 }
             }
+            br.close();
+            in.close();
+            fstream.close();
         } catch (ShowParseException e) {
             throw new ShowParseException("Error while parsing Sequence " + showArgs[3] + ": " + e.getReason());
         } catch (Exception e) {

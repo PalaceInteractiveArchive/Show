@@ -326,7 +326,9 @@ public class Show {
                     sequences.add(sequence.load(strLine, args));
                 }
             }
+            br.close();
             in.close();
+            fstream.close();
         } catch (ShowParseException e) {
             Bukkit.getLogger().warning("Error on Line [" + strLine + "] Cause: " + e.getReason());
             Bukkit.broadcast("Error on Line [" + strLine + "] Cause: " + e.getReason(), "arcade.bypass");
