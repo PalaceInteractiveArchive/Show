@@ -24,6 +24,27 @@ public class WorldUtil {
         return null;
     }
 
+    public static Location strToLocWithYaw(String string) {
+        if (string.length() == 0) {
+            return null;
+        }
+
+        String[] tokens = string.split(",");
+        try {
+             for (World world : Bukkit.getWorlds()) {
+                 if (world.getName().equalsIgnoreCase(tokens[0])) {
+                     return new Location(world, Double.parseDouble(tokens[1]), Double.parseDouble(tokens[2]),
+                             Double.parseDouble(tokens[3]), Float.parseFloat(tokens[4]), 0);
+                 }
+             }
+        }
+        catch (Exception ignored) {
+
+        }
+
+        return null;
+    }
+
     public static Double[] strToDoubleList(String string) {
         if (string.length() == 0) {
             return null;

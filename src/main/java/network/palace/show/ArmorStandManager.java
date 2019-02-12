@@ -1,14 +1,17 @@
 package network.palace.show;
 
-import network.palace.show.handlers.armorstand.*;
+import java.util.ArrayList;
+import java.util.List;
+import network.palace.show.handlers.armorstand.Movement;
+import network.palace.show.handlers.armorstand.Position;
+import network.palace.show.handlers.armorstand.Rotation;
+import network.palace.show.handlers.armorstand.ShowStand;
+import network.palace.show.handlers.armorstand.StandAction;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Marc on 10/11/15
@@ -46,7 +49,7 @@ public class ArmorStandManager {
                             }
                             Rotation r = s2.getRotation();
                             r.handle();
-                            yaw += r.getYaw();
+                            yaw = yaw + r.getYaw();
                             r.setDuration(r.getDuration() - 1);
                             if (r.getDuration() < 0) {
                                 rot.remove(s2);
@@ -129,8 +132,7 @@ public class ArmorStandManager {
                         continue;
                     }
                     Location loc = armor.getLocation().clone();
-                    armor.teleport(new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw() +
-                            r.getYaw(), loc.getPitch()));
+                    armor.teleport(new Location(loc.getWorld(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw() + r.getYaw(), loc.getPitch()));
                     r.setDuration(r.getDuration() - 1);
                     if (r.getDuration() < 0) {
                         rot.remove(stand);

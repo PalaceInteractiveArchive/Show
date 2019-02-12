@@ -10,6 +10,7 @@ import network.palace.core.plugin.Plugin;
 import network.palace.core.plugin.PluginInfo;
 import network.palace.show.actions.SchematicAction;
 import network.palace.show.commands.CommandShow;
+import network.palace.show.listeners.ChunkListener;
 import network.palace.show.commands.CommandShowGen;
 import network.palace.show.generator.ShowGenerator;
 import network.palace.show.listeners.PlayerInteract;
@@ -49,6 +50,7 @@ public class ShowPlugin extends Plugin {
         registerListener(fountainManager);
         registerListener(new PlayerInteract());
         registerListener(new SignChange());
+        registerListener(new ChunkListener());
         // Show Ticker
         org.bukkit.plugin.Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldEdit");
         if (plugin instanceof WorldEditPlugin) {
