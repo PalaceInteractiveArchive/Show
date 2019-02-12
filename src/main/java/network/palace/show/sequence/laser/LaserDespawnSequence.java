@@ -3,8 +3,6 @@ package network.palace.show.sequence.laser;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.sequence.ShowSequence;
-import network.palace.show.utils.WorldUtil;
-import org.bukkit.Location;
 
 /**
  * @author Marc
