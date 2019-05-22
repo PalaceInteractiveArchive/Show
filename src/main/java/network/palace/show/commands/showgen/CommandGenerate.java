@@ -37,9 +37,9 @@ public class CommandGenerate extends CoreCommand {
             return;
         }
         String action = args[0];
-        int time;
+        double time;
         try {
-            time = Integer.parseInt(args[1]);
+            time = Double.parseDouble(args[1]);
         } catch (NumberFormatException e) {
             player.sendMessage(ChatColor.RED + args[1] + " is not a number!");
             return;
@@ -88,7 +88,7 @@ public class CommandGenerate extends CoreCommand {
                             }
                             Material material = newBlock.getType();
                             byte data = newBlock.getData();
-                            FakeBlockAction act = new FakeBlockAction(null, time);
+                            FakeBlockAction act = new FakeBlockAction(null, (long) (time * 1000));
                             act.setId(material.getId());
                             act.setData(data);
                             act.setLoc(new Location(corner.getWorld(), corner.getBlockX() + x, corner.getBlockY() + y, corner.getBlockZ() + z));

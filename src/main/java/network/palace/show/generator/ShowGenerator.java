@@ -51,13 +51,13 @@ public class ShowGenerator {
 
         for (FakeBlockAction action : actions) {
             Location loc = action.getLoc();
-            int time = (int) action.getTime();
+            double time = action.getTime() / 1000.0;
             int id = action.getId();
             byte data = action.getData();
             int x = loc.getBlockX();
             int y = loc.getBlockY();
             int z = loc.getBlockZ();
-            String actionString = action.getTime() + "\u0009" + "FakeBlock" + "\u0009" + action.getId() + ":" + action.getData() + "\u0009" + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ();
+            String actionString = time + "\u0009" + "FakeBlock" + "\u0009" + id + ":" + data + "\u0009" + x + "," + y + "," + z;
             content.append(actionString).append("\n");
         }
 
