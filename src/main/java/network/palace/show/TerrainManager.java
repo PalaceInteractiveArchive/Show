@@ -83,7 +83,7 @@ public class TerrainManager {
         File f = wep.getWorldEdit().getSafeOpenFile(null, new File("plugins/WorldEdit/schematics"), fileName,
                 "schematic", "schematic");
         if (!f.exists()) {
-            Bukkit.broadcast("Tried to load Schematic " + fileName + " but does not exist!", "arcade.bypass");
+            Bukkit.broadcast("Tried to load Schematic " + fileName + " but does not exist!", "palace.core.rank.mod");
             return;
         }
         Closer closer = Closer.create();

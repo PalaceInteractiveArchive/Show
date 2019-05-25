@@ -29,7 +29,7 @@ public class ArmorStandMove extends ShowAction {
     @Override
     public void play() {
         if (!stand.isHasSpawned()) {
-            Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has not spawned", "arcade.bypass");
+            Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has not spawned", "palace.core.rank.mod");
             return;
         }
         Location l = stand.getStand().getLocation();

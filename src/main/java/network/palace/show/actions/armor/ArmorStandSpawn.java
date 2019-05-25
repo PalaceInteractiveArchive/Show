@@ -27,7 +27,7 @@ public class ArmorStandSpawn extends ShowAction {
     @Override
     public void play() {
         if (stand.isHasSpawned()) {
-            Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has spawned already", "arcade.bypass");
+            Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has spawned already", "palace.core.rank.mod");
             return;
         }
         ArmorStand armor = loc.getWorld().spawn(loc, ArmorStand.class);

@@ -1,7 +1,6 @@
 package network.palace.show.utils;
 
 import java.io.File;
-import network.palace.show.ShowPlugin;
 
 /**
  * @author Marc
@@ -34,7 +33,11 @@ public class FileUtil {
         if (!lasers.exists()) {
             lasers.mkdir();
         }
-        File lights = new File(ShowPlugin.getInstance().getDataFolder(), "sequences/lights/");
+        File lights = new File("plugins/Show/sequences/lights/");
+        if (!lights.exists()) {
+            lights.mkdirs();
+        }
+        File particles = new File("plugins/Show/sequences/particles/");
         if (!lights.exists()) {
             lights.mkdirs();
         }

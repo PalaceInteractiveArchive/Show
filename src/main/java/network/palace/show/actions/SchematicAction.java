@@ -1,10 +1,10 @@
 package network.palace.show.actions;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import network.palace.core.utils.MiscUtil;
 import network.palace.show.Show;
 import network.palace.show.TerrainManager;
 import network.palace.show.exceptions.ShowParseException;
-import network.palace.show.utils.ShowUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -35,7 +35,7 @@ public class SchematicAction extends ShowAction {
 
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
-        if (ShowUtil.isInt(args[3]) && ShowUtil.isInt(args[4]) && ShowUtil.isInt(args[5])) {
+        if (MiscUtil.checkIfInt(args[3]) && MiscUtil.checkIfInt(args[4]) && MiscUtil.checkIfInt(args[5])) {
             try {
                 int x = Integer.parseInt(args[3]);
                 int y = Integer.parseInt(args[4]);

@@ -26,7 +26,7 @@ public class LightSpawnSequence extends ShowSequence {
     @Override
     public boolean run() {
         if (crystal.isSpawned()) {
-            Bukkit.broadcast("EnderCrystal with ID " + crystal.getId() + " has spawned already", "arcade.bypass");
+            Bukkit.broadcast("EnderCrystal with ID " + crystal.getId() + " has spawned already", "palace.core.rank.mod");
             return true;
         }
 

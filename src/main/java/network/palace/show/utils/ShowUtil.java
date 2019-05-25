@@ -1,5 +1,6 @@
 package network.palace.show.utils;
 
+import network.palace.core.utils.MiscUtil;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.BlockData;
 import network.palace.show.handlers.TitleType;
@@ -46,25 +47,15 @@ public class ShowUtil {
     }
 
     public static int getInt(String s) throws ShowParseException {
-        if (!isInt(s)) {
+        if (!MiscUtil.checkIfInt(s)) {
             throw new ShowParseException("This isn't a number: " + s);
         }
         return Integer.parseInt(s);
     }
 
-    public static boolean isInt(String s) {
-        try {
-            Integer.parseInt(s);
-            return true;
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-    }
-
     public static TitleType getTitleType(String s) {
-        switch (s.toLowerCase()) {
-            case "subtitle":
-                return TitleType.SUBTITLE;
+        if (s.equalsIgnoreCase("subtitle")) {
+            return TitleType.SUBTITLE;
         }
         return TitleType.TITLE;
     }

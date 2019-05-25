@@ -34,7 +34,7 @@ public class LaserSpawnSequence extends ShowSequence {
             }
         } catch (ShowParseException e) {
             Bukkit.getLogger().warning("Error on Spawn action for Laser Sequence Cause: " + e.getReason());
-            Bukkit.broadcast("Error on Spawn action for Laser Sequence Cause: " + e.getReason(), "arcade.bypass");
+            Bukkit.broadcast("Error on Spawn action for Laser Sequence Cause: " + e.getReason(), "palace.core.rank.mod");
         }
         return true;
     }

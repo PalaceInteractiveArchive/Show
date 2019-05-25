@@ -1,16 +1,5 @@
 package network.palace.show;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import network.palace.audio.Audio;
@@ -18,27 +7,8 @@ import network.palace.audio.handlers.AudioArea;
 import network.palace.core.Core;
 import network.palace.core.player.CPlayer;
 import network.palace.core.utils.HeadUtil;
-import network.palace.show.actions.BlockAction;
-import network.palace.show.actions.FakeBlockAction;
-import network.palace.show.actions.FireworkAction;
-import network.palace.show.actions.FountainAction;
-import network.palace.show.actions.GlowAction;
-import network.palace.show.actions.GlowDoneAction;
-import network.palace.show.actions.LightningAction;
-import network.palace.show.actions.MusicAction;
-import network.palace.show.actions.ParticleAction;
-import network.palace.show.actions.PowerFireworkAction;
-import network.palace.show.actions.PulseAction;
-import network.palace.show.actions.SchematicAction;
-import network.palace.show.actions.ShowAction;
-import network.palace.show.actions.SpiralParticle;
-import network.palace.show.actions.TextAction;
-import network.palace.show.actions.TitleAction;
-import network.palace.show.actions.armor.ArmorStandDespawn;
-import network.palace.show.actions.armor.ArmorStandMove;
-import network.palace.show.actions.armor.ArmorStandPosition;
-import network.palace.show.actions.armor.ArmorStandRotate;
-import network.palace.show.actions.armor.ArmorStandSpawn;
+import network.palace.show.actions.*;
+import network.palace.show.actions.armor.*;
 import network.palace.show.actions.audio.AudioStart;
 import network.palace.show.actions.audio.AudioSync;
 import network.palace.show.exceptions.ShowParseException;
@@ -49,16 +19,10 @@ import network.palace.show.sequence.ShowSequence;
 import network.palace.show.sequence.fountain.FountainSequence;
 import network.palace.show.sequence.laser.LaserSequence;
 import network.palace.show.sequence.light.LightSequence;
+import network.palace.show.sequence.particle.ParticleSequence;
 import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Color;
-import org.bukkit.Effect;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -66,6 +30,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.EulerAngle;
+
+import java.io.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
 public class Show {
@@ -176,7 +144,7 @@ public class Show {
                         invalidLines.put(strLine, "ArmorStand with the ID " + id + " already exists!");
                         continue;
                     }
-                    Boolean small = Boolean.valueOf(args[2]);
+                    boolean small = Boolean.parseBoolean(args[2]);
                     //ArmorStand 0 false skull:myHash;299(234,124,41);300;301
                     ArmorData armorData = parseArmorData(args[3]);
                     ShowStand stand = new ShowStand(id, small, armorData);
@@ -228,14 +196,14 @@ public class Show {
                         case "move": {
                             // x,y,z speed
                             Location loc = WorldUtil.strToLoc(world.getName() + "," + args[4]);
-                            Double speed = Double.parseDouble(args[5]);
+                            double speed = Double.parseDouble(args[5]);
                             ArmorStandMove move = new ArmorStandMove(this, time, stand, loc, speed);
                             actions.add(move);
                             break;
                         }
                         case "position": {
                             // PositionType x,y,z time
-                            Double speed = Double.parseDouble(args[6]);
+                            double speed = Double.parseDouble(args[6]);
                             String[] alist = args[5].split(",");
                             EulerAngle angle = new EulerAngle(rad(Double.parseDouble(alist[0])),
                                     rad(Double.parseDouble(alist[1])), rad(Double.parseDouble(alist[2])));
@@ -358,6 +326,10 @@ public class Show {
                             sequence = new LightSequence(this, time);
                             break;
                         }
+                        case "particle": {
+                            sequence = new ParticleSequence(this, time);
+                            break;
+                        }
                         default:
                             continue;
                     }
@@ -369,10 +341,10 @@ public class Show {
             fstream.close();
         } catch (ShowParseException e) {
             Bukkit.getLogger().warning("Error on Line [" + strLine + "] Cause: " + e.getReason());
-            Bukkit.broadcast("Error on Line [" + strLine + "] Cause: " + e.getReason(), "arcade.bypass");
+            Bukkit.broadcast("Error on Line [" + strLine + "] Cause: " + e.getReason(), "palace.core.rank.mod");
         } catch (Exception e) {
             System.out.println("Error on Line [" + strLine + "]");
-            Bukkit.broadcast("Error on Line [" + strLine + "]", "arcade.bypass");
+            Bukkit.broadcast("Error on Line [" + strLine + "]", "palace.core.rank.mod");
             e.printStackTrace();
         }
 
@@ -383,7 +355,7 @@ public class Show {
         for (String cur : invalidLines.keySet()) {
             System.out.print(ChatColor.GOLD + invalidLines.get(cur) + " @ " + ChatColor.WHITE + cur.replaceAll("\t", " "));
             Bukkit.broadcast(ChatColor.GOLD + invalidLines.get(cur) + " @ " + ChatColor.WHITE + cur.replaceAll("\t", " "),
-                    "arcade.bypass");
+                    "palace.core.rank.mod");
         }
 
         this.actions = actions;

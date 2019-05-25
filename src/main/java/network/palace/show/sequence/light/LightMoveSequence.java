@@ -32,7 +32,7 @@ public class LightMoveSequence extends ShowSequence {
     @Override
     public boolean run() {
         if (!crystal.isSpawned()) {
-            Bukkit.broadcast("EnderCrystal with ID " + crystal.getId() + " has spawned already", "arcade.bypass");
+            Bukkit.broadcast("EnderCrystal with ID " + crystal.getId() + " has not spawned.", "palace.core.rank.mod");
             return true;
         }
 
@@ -62,7 +62,7 @@ public class LightMoveSequence extends ShowSequence {
                         }
 
                         hasProtocolErrored = true;
-                        Bukkit.broadcast("Failed to update " + crystal.getId() + "'s position for 1 or more players.", "arcade.bypass");
+                        Bukkit.broadcast("Failed to update " + crystal.getId() + "'s position for 1 or more players.", "palace.core.rank.mod");
                         e.printStackTrace();
                     }
                 });
