@@ -8,9 +8,9 @@ import org.bukkit.command.CommandSender;
 
 import java.util.Set;
 
-public class CommandList extends CoreCommand {
+public class ListCommand extends CoreCommand {
 
-    public CommandList() {
+    public ListCommand() {
         super("list");
     }
 

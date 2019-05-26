@@ -2,8 +2,8 @@ package network.palace.show.sequence.fountain;
 
 import lombok.Getter;
 import network.palace.core.Core;
-import network.palace.show.FountainManager;
 import network.palace.show.Show;
+import network.palace.show.ShowPlugin;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.sequence.ShowSequence;
 import network.palace.show.utils.ShowUtil;
@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.material.MaterialData;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import java.io.*;
@@ -52,7 +53,7 @@ public class FountainSequence extends ShowSequence {
     private void launch() {
         FallingBlock b = spawn.getWorld().spawnFallingBlock(spawn, data);
         b.setVelocity(direction);
-        FountainManager.blocks.add(b.getUniqueId());
+        b.setMetadata("dontplaceblock", new FixedMetadataValue(ShowPlugin.getInstance(), true));
     }
 
     protected void spawn() {

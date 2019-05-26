@@ -11,9 +11,9 @@ import org.bukkit.command.CommandSender;
  * @author Marc
  * @since 8/2/17
  */
-public class CommandStop extends CoreCommand {
+public class StopCommand extends CoreCommand {
 
-    public CommandStop() {
+    public StopCommand() {
         super("stop");
     }
 

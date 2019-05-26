@@ -8,14 +8,13 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class FountainManager implements Listener {
-    public static List<UUID> blocks = new ArrayList<>();
     public List<Fountain> fountains = new ArrayList<>();
 
     public FountainManager() {
@@ -38,7 +37,7 @@ public class FountainManager implements Listener {
                 Vector force = fon.getForce();
                 FallingBlock fb = loc.getWorld().spawnFallingBlock(loc, type, data);
                 fb.setVelocity(force);
-                blocks.add(fb.getUniqueId());
+                fb.setMetadata("dontplaceblock", new FixedMetadataValue(ShowPlugin.getInstance(), true));
             }
         }, 0L, 4L);
     }
@@ -46,7 +45,7 @@ public class FountainManager implements Listener {
     @EventHandler
     public void entityToBlock(EntityChangeBlockEvent event) {
         Entity e = event.getEntity();
-        if (blocks.remove(e.getUniqueId())) {
+        if (e.hasMetadata("dontplaceblock") && e.getMetadata("dontplaceblock").get(0).asBoolean()) {
             event.setCancelled(true);
             e.remove();
         }

@@ -20,8 +20,7 @@ public class LightDespawnSequence extends ShowSequence {
     public boolean run() {
         if (!crystal.isSpawned()) {
             Bukkit.broadcast("EnderCrystal with ID " + crystal.getId() + " has not spawned.", "palace.core.rank.mod");
-        }
-        else {
+        } else {
             EnderCrystal enderCrystal = crystal.getCrystal();
             enderCrystal.remove();
             crystal.setCrystal(null);

@@ -16,6 +16,7 @@ import network.palace.show.handlers.ArmorData;
 import network.palace.show.handlers.armorstand.PositionType;
 import network.palace.show.handlers.armorstand.ShowStand;
 import network.palace.show.sequence.ShowSequence;
+import network.palace.show.sequence.build.BuildSequence;
 import network.palace.show.sequence.fountain.FountainSequence;
 import network.palace.show.sequence.laser.LaserSequence;
 import network.palace.show.sequence.light.LightSequence;
@@ -330,6 +331,10 @@ public class Show {
                             sequence = new ParticleSequence(this, time);
                             break;
                         }
+                        case "build": {
+                            sequence = new BuildSequence(this, time);
+                            break;
+                        }
                         default:
                             continue;
                     }
@@ -532,6 +537,9 @@ public class Show {
         for (ShowSequence s : sequences) {
             if (s instanceof LaserSequence) {
                 ((LaserSequence) s).despawn();
+            }
+            if (s instanceof BuildSequence) {
+                ((BuildSequence) s).despawn();
             }
         }
     }

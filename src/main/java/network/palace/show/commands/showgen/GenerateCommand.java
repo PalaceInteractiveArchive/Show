@@ -22,9 +22,9 @@ import java.util.Date;
 import java.util.List;
 
 @CommandMeta(description = "Generate blocks of show actions with one command")
-public class CommandGenerate extends CoreCommand {
+public class GenerateCommand extends CoreCommand {
 
-    public CommandGenerate() {
+    public GenerateCommand() {
         super("generate");
     }
 

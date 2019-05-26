@@ -9,12 +9,14 @@ import network.palace.core.player.Rank;
 import network.palace.core.plugin.Plugin;
 import network.palace.core.plugin.PluginInfo;
 import network.palace.show.actions.SchematicAction;
-import network.palace.show.commands.CommandShow;
-import network.palace.show.listeners.ChunkListener;
-import network.palace.show.commands.CommandShowGen;
+import network.palace.show.commands.ShowBuildCommand;
+import network.palace.show.commands.ShowCommand;
+import network.palace.show.commands.ShowGenCommand;
 import network.palace.show.generator.ShowGenerator;
+import network.palace.show.listeners.ChunkListener;
 import network.palace.show.listeners.PlayerInteract;
 import network.palace.show.listeners.SignChange;
+import network.palace.show.utils.BuildUtil;
 import network.palace.show.utils.FileUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,6 +32,7 @@ public class ShowPlugin extends Plugin {
     @Getter private ArmorStandManager armorStandManager;
     @Getter private FountainManager fountainManager;
     @Getter private static ShowGenerator showGenerator;
+    @Getter private static BuildUtil buildUtil;
     private static ShowPlugin instance;
     private static HashMap<String, Show> shows = new HashMap<>();
     private int taskid = 0;
@@ -44,20 +47,22 @@ public class ShowPlugin extends Plugin {
         armorStandManager = new ArmorStandManager();
         fountainManager = new FountainManager();
         showGenerator = new ShowGenerator();
+        buildUtil = new BuildUtil();
         FileUtil.setupFiles();
-        registerCommand(new CommandShow());
-        registerCommand(new CommandShowGen());
+        registerCommand(new ShowCommand());
+        registerCommand(new ShowBuildCommand());
+        registerCommand(new ShowGenCommand());
         registerListener(fountainManager);
         registerListener(new PlayerInteract());
         registerListener(new SignChange());
         registerListener(new ChunkListener());
-        // Show Ticker
         org.bukkit.plugin.Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldEdit");
         if (plugin instanceof WorldEditPlugin) {
             SchematicAction.setWorldEdit((WorldEditPlugin) plugin);
         } else {
             Core.logMessage("Show", "Error finding WorldEdit!");
         }
+        // Show Ticker
         taskid = Bukkit.getScheduler().runTaskTimer(this, () -> {
             for (Map.Entry<String, Show> entry : new HashMap<>(shows).entrySet()) {
                 Show show = entry.getValue();

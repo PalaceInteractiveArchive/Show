@@ -4,7 +4,6 @@ import com.comphenix.protocol.PacketType.Play.Server;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.injector.PacketConstructor;
-import java.lang.reflect.InvocationTargetException;
 import network.palace.show.Show;
 import network.palace.show.ShowPlugin;
 import network.palace.show.exceptions.ShowParseException;
@@ -14,6 +13,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class LightMoveSequence extends ShowSequence {
 
@@ -55,8 +56,7 @@ public class LightMoveSequence extends ShowSequence {
                 Bukkit.getOnlinePlayers().forEach(player -> {
                     try {
                         pm.sendServerPacket(player, pc.createPacket(enderCrystal));
-                    }
-                    catch (InvocationTargetException e) {
+                    } catch (InvocationTargetException e) {
                         if (hasProtocolErrored) {
                             return;
                         }

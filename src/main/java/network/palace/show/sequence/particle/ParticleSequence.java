@@ -9,13 +9,11 @@ import network.palace.show.handlers.particle.CylinderParticle;
 import network.palace.show.sequence.ShowSequence;
 import network.palace.show.sequence.particle.cylinder.ParticleCylinderSequence;
 import network.palace.show.utils.ShowUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.block.BlockFace;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

@@ -4,9 +4,9 @@ import network.palace.core.command.CommandException;
 import network.palace.core.command.CommandMeta;
 import network.palace.core.command.CoreCommand;
 import network.palace.core.player.Rank;
-import network.palace.show.commands.show.CommandList;
-import network.palace.show.commands.show.CommandStart;
-import network.palace.show.commands.show.CommandStop;
+import network.palace.show.commands.show.ListCommand;
+import network.palace.show.commands.show.StartCommand;
+import network.palace.show.commands.show.StopCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -14,13 +14,13 @@ import org.bukkit.command.CommandSender;
  * Created by Marc on 12/6/16.
  */
 @CommandMeta(description = "Command used to start shows", rank = Rank.MOD)
-public class CommandShow extends CoreCommand {
+public class ShowCommand extends CoreCommand {
 
-    public CommandShow() {
+    public ShowCommand() {
         super("show");
-        registerSubCommand(new CommandList());
-        registerSubCommand(new CommandStart());
-        registerSubCommand(new CommandStop());
+        registerSubCommand(new ListCommand());
+        registerSubCommand(new StartCommand());
+        registerSubCommand(new StopCommand());
     }
 
     @Override

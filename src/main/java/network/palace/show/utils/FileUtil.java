@@ -21,6 +21,10 @@ public class FileUtil {
         if (!sequences.exists()) {
             sequences.mkdir();
         }
+        File builds = new File("plugins/Show/builds/");
+        if (!builds.exists()) {
+            builds.mkdir();
+        }
         File fountains = new File("plugins/Show/sequences/fountains/");
         if (!fountains.exists()) {
             fountains.mkdir();
@@ -40,6 +44,10 @@ public class FileUtil {
         File particles = new File("plugins/Show/sequences/particles/");
         if (!lights.exists()) {
             lights.mkdirs();
+        }
+        File buildSequences = new File("plugins/Show/sequences/builds/");
+        if (!buildSequences.exists()) {
+            buildSequences.mkdirs();
         }
     }
 }

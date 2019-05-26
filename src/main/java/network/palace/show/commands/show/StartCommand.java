@@ -13,9 +13,9 @@ import java.io.File;
  * @author Marc
  * @since 8/2/17
  */
-public class CommandStart extends CoreCommand {
+public class StartCommand extends CoreCommand {
 
-    public CommandStart() {
+    public StartCommand() {
         super("start");
     }
 

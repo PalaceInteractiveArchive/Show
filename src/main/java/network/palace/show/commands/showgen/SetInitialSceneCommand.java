@@ -14,9 +14,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 @CommandMeta(description = "Set the initial scene for a generator session")
-public class CommandSetInitialScene extends CoreCommand {
+public class SetInitialSceneCommand extends CoreCommand {
 
-    public CommandSetInitialScene() {
+    public SetInitialSceneCommand() {
         super("setinitialscene");
     }
 

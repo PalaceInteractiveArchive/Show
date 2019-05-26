@@ -1,14 +1,12 @@
-package network.palace.show.sequence.light;
+package network.palace.show.sequence.build;
 
 import lombok.Getter;
 import network.palace.show.Show;
 import network.palace.show.ShowPlugin;
 import network.palace.show.exceptions.ShowParseException;
-import network.palace.show.handlers.ShowCrystal;
+import network.palace.show.handlers.BuildObject;
 import network.palace.show.sequence.ShowSequence;
 import network.palace.show.utils.ShowUtil;
-import network.palace.show.utils.WorldUtil;
-import org.bukkit.util.Vector;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -17,15 +15,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class LightSequence extends ShowSequence {
-
-    @Getter
-    private long startTime;
+public class BuildSequence extends ShowSequence {
+    @Getter private long startTime = 0;
     private HashSet<ShowSequence> sequences;
-    private Map<String, ShowCrystal> crystalMap = new HashMap<>();
-    private boolean isLightSequence = false;
+    private Map<String, BuildObject> blockMap = new HashMap<>();
+    private boolean isBuildSequence = false;
 
-    public LightSequence(Show show, long time) {
+    public BuildSequence(Show show, long time) {
         super(show, time);
     }
 
@@ -45,9 +41,9 @@ public class LightSequence extends ShowSequence {
 
     @Override
     public ShowSequence load(String line, String... showArgs) throws ShowParseException {
-        File file = new File(ShowPlugin.getInstance().getDataFolder(), "sequences/lights/" + showArgs[3] + ".sequence");
+        File file = new File(ShowPlugin.getInstance().getDataFolder(), "sequences/builds/" + showArgs[3] + ".sequence");
         if (!file.exists()) {
-            throw new ShowParseException("Could not find Light sequence file " + showArgs[3]);
+            throw new ShowParseException("Could not find Build sequence file " + showArgs[3]);
         }
 
         HashSet<ShowSequence> sequences = new HashSet<>();
@@ -63,23 +59,23 @@ public class LightSequence extends ShowSequence {
                     continue;
                 }
 
-                if (!isLightSequence) {
+                if (!isBuildSequence) {
                     if (!args[0].equalsIgnoreCase("Sequence")) {
                         throw new ShowParseException("First line isn't a Sequence definition");
                     }
 
-                    if (!args[1].equalsIgnoreCase("Light")) {
-                        throw new ShowParseException("This isn't a Light file!");
+                    if (!args[1].equalsIgnoreCase("Build")) {
+                        throw new ShowParseException("This isn't a Build file!");
                     }
 
-                    isLightSequence = true;
+                    isBuildSequence = true;
                     continue;
                 }
 
-                if (args[0].equals("EnderCrystal")) {
+                if (args[0].equals("Build")) {
                     String id = args[1];
-                    ShowCrystal showCrystal = new ShowCrystal(id);
-                    crystalMap.put(id, showCrystal);
+                    BuildObject block = new BuildObject(id, ShowPlugin.getBuildUtil().loadBuild(args[2]), show);
+                    blockMap.put(id, block);
                     continue;
                 }
 
@@ -89,24 +85,23 @@ public class LightSequence extends ShowSequence {
                     time += (long) (Double.parseDouble(timeStr) * 1000);
                 }
 
-                ShowCrystal crystal = crystalMap.get(args[1]);
+                BuildObject buildObject = blockMap.get(args[1]);
                 switch (args[2].toLowerCase()) {
-                    case "despawn":
-                        LightDespawnSequence despawn = new LightDespawnSequence(show, time, crystal);
-                        sequences.add(despawn.load(strLine, args));
+                    case "spawn":
+                        BuildSpawnSequence spawn = new BuildSpawnSequence(show, time, buildObject);
+                        sequences.add(spawn.load(strLine, args));
                         break;
                     case "move":
-                        Double[] doubles = WorldUtil.strToDoubleList(show.getWorld().getName() + "," + args[3]);
-                        LightMoveSequence move = new LightMoveSequence(show, time, crystal, new Vector(doubles[0], doubles[1], doubles[2]), Double.parseDouble(args[4]));
+                        BuildMoveSequence move = new BuildMoveSequence(show, time, buildObject);
                         sequences.add(move.load(strLine, args));
                         break;
-                    case "target":
-                        LightTargetSequence target = new LightTargetSequence(show, time, crystal, WorldUtil.strToLoc(show.getWorld().getName() + "," + args[3]));
-                        sequences.add(target.load(strLine, args));
+                    case "moveanddespawn":
+                        BuildMoveAndDespawnSequence moveAndDespawn = new BuildMoveAndDespawnSequence(show, time, buildObject);
+                        sequences.add(moveAndDespawn.load(strLine, args));
                         break;
-                    case "spawn":
-                        LightSpawnSequence spawn = new LightSpawnSequence(show, time, crystal, WorldUtil.strToLoc(show.getWorld().getName() + "," + args[3]), WorldUtil.strToLoc(show.getWorld().getName() + "," + args[4]));
-                        sequences.add(spawn.load(strLine, args));
+                    case "despawn":
+                        BuildDespawnSequence despawn = new BuildDespawnSequence(show, time, buildObject);
+                        sequences.add(despawn.load(strLine, args));
                         break;
                 }
             }
@@ -120,5 +115,9 @@ public class LightSequence extends ShowSequence {
 
         this.sequences = sequences;
         return this;
+    }
+
+    public void despawn() {
+        blockMap.values().forEach(BuildObject::despawn);
     }
 }
