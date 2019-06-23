@@ -6,9 +6,8 @@ import network.palace.show.ShowPlugin;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.ShowCrystal;
 import network.palace.show.sequence.ShowSequence;
+import network.palace.show.sequence.handlers.SequenceState;
 import network.palace.show.utils.ShowUtil;
-import network.palace.show.utils.WorldUtil;
-import org.bukkit.util.Vector;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,8 +18,7 @@ import java.util.Map;
 
 public class LightSequence extends ShowSequence {
 
-    @Getter
-    private long startTime;
+    @Getter private long startTime;
     private HashSet<ShowSequence> sequences;
     private Map<String, ShowCrystal> crystalMap = new HashMap<>();
     private boolean isLightSequence = false;
@@ -78,7 +76,14 @@ public class LightSequence extends ShowSequence {
 
                 if (args[0].equals("EnderCrystal")) {
                     String id = args[1];
-                    ShowCrystal showCrystal = new ShowCrystal(id);
+                    SequenceState state;
+                    if (args.length > 2) {
+                        state = SequenceState.fromString(args[2]);
+                        if (state == null) throw new ShowParseException("Unknown Light Sequence State " + args[2]);
+                    } else {
+                        state = SequenceState.RELATIVE;
+                    }
+                    ShowCrystal showCrystal = new ShowCrystal(id, state);
                     crystalMap.put(id, showCrystal);
                     continue;
                 }
@@ -96,16 +101,15 @@ public class LightSequence extends ShowSequence {
                         sequences.add(despawn.load(strLine, args));
                         break;
                     case "move":
-                        Double[] doubles = WorldUtil.strToDoubleList(show.getWorld().getName() + "," + args[3]);
-                        LightMoveSequence move = new LightMoveSequence(show, time, crystal, new Vector(doubles[0], doubles[1], doubles[2]), Double.parseDouble(args[4]));
+                        LightMoveSequence move = new LightMoveSequence(show, time, crystal);
                         sequences.add(move.load(strLine, args));
                         break;
                     case "target":
-                        LightTargetSequence target = new LightTargetSequence(show, time, crystal, WorldUtil.strToLoc(show.getWorld().getName() + "," + args[3]));
+                        LightTargetSequence target = new LightTargetSequence(show, time, crystal);
                         sequences.add(target.load(strLine, args));
                         break;
                     case "spawn":
-                        LightSpawnSequence spawn = new LightSpawnSequence(show, time, crystal, WorldUtil.strToLoc(show.getWorld().getName() + "," + args[3]), WorldUtil.strToLoc(show.getWorld().getName() + "," + args[4]));
+                        LightSpawnSequence spawn = new LightSpawnSequence(show, time, crystal);
                         sequences.add(spawn.load(strLine, args));
                         break;
                 }

@@ -23,9 +23,7 @@ public class LaserSpawnSequence extends ShowSequence {
 
     @Override
     public boolean run() {
-        if (parent.isSpawned()) {
-            return true;
-        }
+        if (parent.isSpawned()) return true;
         try {
             if (loc2 == null) {
                 parent.spawn(loc);

@@ -18,10 +18,7 @@ public class LaserDespawnSequence extends ShowSequence {
 
     @Override
     public boolean run() {
-        if (!parent.isSpawned()) {
-            return true;
-        }
-        parent.despawn();
+        if (parent.isSpawned()) parent.despawn();
         return true;
     }
 

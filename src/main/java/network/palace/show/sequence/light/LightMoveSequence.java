@@ -9,7 +9,10 @@ import network.palace.show.ShowPlugin;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.ShowCrystal;
 import network.palace.show.sequence.ShowSequence;
+import network.palace.show.sequence.handlers.SequenceState;
+import network.palace.show.utils.WorldUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -23,11 +26,9 @@ public class LightMoveSequence extends ShowSequence {
     private Vector movement;
     private ShowCrystal crystal;
 
-    public LightMoveSequence(Show show, long time, ShowCrystal crystal, Vector movement, double seconds) {
+    public LightMoveSequence(Show show, long time, ShowCrystal crystal) {
         super(show, time);
-        this.movement = movement;
         this.crystal = crystal;
-        this.seconds = seconds;
     }
 
     @Override
@@ -45,12 +46,19 @@ public class LightMoveSequence extends ShowSequence {
 
             @Override
             public void run() {
-                if (time >= ticks) {
-                    cancel();
-                }
-
+                if (time >= ticks) cancel();
                 time++;
-                enderCrystal.teleport(enderCrystal.getLocation().clone().add(movement.clone().divide(new Vector(ticks, ticks, ticks))));
+
+                Location target;
+                if (crystal.getState().equals(SequenceState.RELATIVE)) {
+                    target = enderCrystal.getLocation().clone().add(movement.clone().divide(new Vector(ticks, ticks, ticks)));
+                } else if (crystal.getState().equals(SequenceState.ACTUAL)) {
+                    target = movement.toLocation(enderCrystal.getWorld());
+                } else {
+                    return;
+                }
+                enderCrystal.teleport(target);
+
                 ProtocolManager pm = ProtocolLibrary.getProtocolManager();
                 PacketConstructor pc = pm.createPacketConstructor(Server.ENTITY_TELEPORT, enderCrystal);
                 Bukkit.getOnlinePlayers().forEach(player -> {
@@ -73,6 +81,9 @@ public class LightMoveSequence extends ShowSequence {
 
     @Override
     public ShowSequence load(String line, String... args) throws ShowParseException {
+        Double[] doubles = WorldUtil.strToDoubleList(show.getWorld().getName() + "," + args[3]);
+        this.movement = new Vector(doubles[0], doubles[1], doubles[2]);
+        this.seconds = Double.parseDouble(args[4]);
         return this;
     }
 }

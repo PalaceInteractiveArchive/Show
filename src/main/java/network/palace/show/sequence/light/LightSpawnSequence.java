@@ -5,6 +5,7 @@ import network.palace.show.ShowPlugin;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.ShowCrystal;
 import network.palace.show.sequence.ShowSequence;
+import network.palace.show.utils.WorldUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EnderCrystal;
@@ -16,11 +17,9 @@ public class LightSpawnSequence extends ShowSequence {
     private Location targetLocation;
     private ShowCrystal crystal;
 
-    public LightSpawnSequence(Show show, long time, ShowCrystal crystal, Location spawnLocation, Location targetLocation) {
+    public LightSpawnSequence(Show show, long time, ShowCrystal crystal) {
         super(show, time);
         this.crystal = crystal;
-        this.spawnLocation = spawnLocation;
-        this.targetLocation = targetLocation;
     }
 
     @Override
@@ -29,7 +28,6 @@ public class LightSpawnSequence extends ShowSequence {
             Bukkit.broadcast("EnderCrystal with ID " + crystal.getId() + " has spawned already", "palace.core.rank.mod");
             return true;
         }
-
         crystal.setCrystal(spawnLocation.getWorld().spawn(spawnLocation, EnderCrystal.class, ec -> {
             ec.setBeamTarget(targetLocation);
             ec.setCustomName(crystal.getId());
@@ -41,6 +39,8 @@ public class LightSpawnSequence extends ShowSequence {
 
     @Override
     public ShowSequence load(String line, String... args) throws ShowParseException {
+        this.spawnLocation = WorldUtil.strToLoc(show.getWorld().getName() + "," + args[3]);
+        this.targetLocation = WorldUtil.strToLoc(show.getWorld().getName() + "," + args[4]);
         return this;
     }
 }

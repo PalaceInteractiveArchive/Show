@@ -105,7 +105,7 @@ public class LaserSequence extends ShowSequence {
                     }
                     state = SequenceState.fromString(args[2]);
                     if (state == null) {
-                        throw new ShowParseException("Unknown Sequence State " + args[2]);
+                        throw new ShowParseException("Unknown Laser Sequence State " + args[2]);
                     }
                     continue;
                 }

@@ -61,9 +61,7 @@ public class LaserMoveSequence extends ShowSequence {
             startTime = System.currentTimeMillis();
         }
 
-        if ((startTime) + (duration * 50) <= System.currentTimeMillis()) {
-            return true;
-        }
+        if ((startTime) + (duration * 50) <= System.currentTimeMillis()) return true;
 
         switch (object) {
             case SOURCE:
@@ -73,6 +71,7 @@ public class LaserMoveSequence extends ShowSequence {
                 beam.setTarget(loc.add(change));
                 break;
         }
+
         return false;
     }
 
