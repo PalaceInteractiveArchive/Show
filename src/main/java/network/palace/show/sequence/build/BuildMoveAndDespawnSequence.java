@@ -26,15 +26,17 @@ public class BuildMoveAndDespawnSequence extends ShowSequence {
     @Override
     public boolean run() {
         if (!buildObject.isSpawned()) {
-            Bukkit.broadcast("ParticleObject with ID " + buildObject.getId() + " has not spawned.", "palace.core.rank.mod");
+            Bukkit.broadcast("Build with ID " + buildObject.getId() + " has not spawned.", "palace.core.rank.mod");
             return true;
         }
         if (change == null) {
             Location current = buildObject.getLocation();
-            this.change = new Vector(newLocation.getX() - current.getX(), newLocation.getY() - current.getY(), newLocation.getZ() - current.getZ()).divide(new Vector(totalTicks, totalTicks, totalTicks));
+            this.change = new Vector(newLocation.getX() - current.getX(), newLocation.getY() - current.getY(), newLocation.getZ() - current.getZ()).divide(new Vector((double) totalTicks, (double) totalTicks, (double) totalTicks));
         }
         buildObject.move(change, yLocation, above);
-        return ticks++ >= totalTicks;
+        boolean finished = ticks++ >= totalTicks;
+        if (finished) buildObject.despawn();
+        return finished;
     }
 
     @Override

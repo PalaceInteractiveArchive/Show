@@ -24,7 +24,7 @@ public class BuildMoveSequence extends ShowSequence {
     @Override
     public boolean run() {
         if (!buildObject.isSpawned()) {
-            Bukkit.broadcast("ParticleObject with ID " + buildObject.getId() + " has not spawned.", "palace.core.rank.mod");
+            Bukkit.broadcast("Build with ID " + buildObject.getId() + " has not spawned.", "palace.core.rank.mod");
             return true;
         }
         if (change == null) {

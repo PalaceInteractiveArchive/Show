@@ -20,7 +20,7 @@ public class BuildSpawnSequence extends ShowSequence {
     @Override
     public boolean run() {
         if (buildObject.isSpawned()) {
-            Bukkit.broadcast("ParticleObject with ID " + buildObject.getId() + " has spawned already", "palace.core.rank.mod");
+            Bukkit.broadcast("Build with ID " + buildObject.getId() + " has spawned already", "palace.core.rank.mod");
             return true;
         }
         buildObject.teleport(spawnLocation);
