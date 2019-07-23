@@ -519,7 +519,7 @@ public class Show {
         }
         area.triggerPlayer(tp);
 
-        Core.runTaskLater(() -> {
+        Core.runTaskLater(ShowPlugin.getInstance(), () -> {
             long ms = (System.currentTimeMillis() - musicTime) + 1000;
             float seconds = ms / 1000f;
             area.sync(seconds, tp, 0);

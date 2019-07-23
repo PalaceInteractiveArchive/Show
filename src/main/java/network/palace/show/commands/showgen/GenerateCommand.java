@@ -75,7 +75,7 @@ public class GenerateCommand extends CoreCommand {
             }
 
             player.sendMessage(ChatColor.GREEN + "Generating a list of " + args[0].toLowerCase() + " changes at time " + time + " between scene 1 at " + initialScene.toString() + " and scene 2 at " + finalScene.toString());
-            Core.runTaskAsynchronously(() -> {
+            Core.runTaskAsynchronously(ShowPlugin.getInstance(), () -> {
                 List<FakeBlockAction> actions = new ArrayList<>();
 
                 for (int x = 0; x < initialScene.getXLength(); x++) {

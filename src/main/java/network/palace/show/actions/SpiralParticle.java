@@ -3,6 +3,7 @@ package network.palace.show.actions;
 import network.palace.core.Core;
 import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
+import network.palace.show.ShowPlugin;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
@@ -29,7 +30,7 @@ public class SpiralParticle extends ShowAction {
 
     @Override
     public void play() {
-        int taskID = Core.runTaskTimer(() -> {
+        int taskID = Core.runTaskTimer(ShowPlugin.getInstance(), () -> {
             for (int i = 1; i <= strands; i++) {
                 for (int j = 1; j <= particles; j++) {
                     float ratio = (float) j / particles;
@@ -58,7 +59,7 @@ public class SpiralParticle extends ShowAction {
             }
             step += speed;
         }, 0L, 1L);
-        Core.runTaskLater(() -> Core.cancelTask(taskID), duration * 20);
+        Core.runTaskLater(ShowPlugin.getInstance(), () -> Core.cancelTask(taskID), duration * 20);
     }
 
     @Override
