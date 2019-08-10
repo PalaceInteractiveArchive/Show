@@ -104,7 +104,7 @@ public class BuildObject {
     public void despawn() {
         spawned = false;
         entities.forEach((stand, block) -> {
-            stand.removePassenger(block);
+            if (stand.hasPassengers()) stand.removePassenger(block);
             block.despawn();
             stand.despawn();
         });
