@@ -32,14 +32,19 @@ public class GenerateCommand extends CoreCommand {
     @SuppressWarnings("deprecation")
     protected void handleCommand(CPlayer player, String[] args) throws CommandException {
         GeneratorSession session = ShowPlugin.getShowGenerator().getOrCreateSession(player.getUniqueId());
-        if (args.length < 2) {
+        if (args.length < 2 || args.length == 3 || args.length > 4) {
             player.sendMessage(ChatColor.RED + "/showgen generate [action] [timestamp]");
+            player.sendMessage(ChatColor.RED + "OR");
+            player.sendMessage(ChatColor.RED + "/showgen generate [action] [bottom/top] [delay per layer] [timestamp]");
             return;
         }
+
+        boolean layered = args.length >= 4;
+
         String action = args[0];
         double time;
         try {
-            time = Double.parseDouble(args[1]);
+            time = Double.parseDouble(args[layered ? 3 : 1]);
         } catch (NumberFormatException e) {
             player.sendMessage(ChatColor.RED + args[1] + " is not a number!");
             return;
@@ -74,12 +79,42 @@ public class GenerateCommand extends CoreCommand {
                 return;
             }
 
+            boolean bottom;
+            double delayPerLayer;
+
+            if (layered) {
+                bottom = !args[1].equalsIgnoreCase("top");
+                delayPerLayer = Double.parseDouble(args[2]);
+            } else {
+                bottom = false;
+                delayPerLayer = 0;
+            }
+
             player.sendMessage(ChatColor.GREEN + "Generating a list of " + args[0].toLowerCase() + " changes at time " + time + " between scene 1 at " + initialScene.toString() + " and scene 2 at " + finalScene.toString());
             Core.runTaskAsynchronously(ShowPlugin.getInstance(), () -> {
                 List<FakeBlockAction> actions = new ArrayList<>();
 
-                for (int x = 0; x < initialScene.getXLength(); x++) {
-                    for (int y = 0; y < initialScene.getYLength(); y++) {
+                double localTime = time;
+
+                int startingY;
+                int endingY;
+                int yChange;
+                double changeInTime;
+
+                if (!layered) {
+                    startingY = 0;
+                    endingY = initialScene.getYLength();
+                    yChange = 1;
+                    changeInTime = 0;
+                } else {
+                    startingY = bottom ? 0 : initialScene.getYLength();
+                    endingY = bottom ? initialScene.getYLength() : 0;
+                    yChange = bottom ? 1 : -1;
+                    changeInTime = delayPerLayer;
+                }
+
+                for (int y = startingY; compare(y, endingY, !bottom); y += yChange) {
+                    for (int x = 0; x < initialScene.getXLength(); x++) {
                         for (int z = 0; z < initialScene.getZLength(); z++) {
                             Block oldBlock = initialScene.getBlock(x, y, z);
                             Block newBlock = finalScene.getBlock(x, y, z);
@@ -88,13 +123,14 @@ public class GenerateCommand extends CoreCommand {
                             }
                             Material material = newBlock.getType();
                             byte data = newBlock.getData();
-                            FakeBlockAction act = new FakeBlockAction(null, (long) (time * 1000));
+                            FakeBlockAction act = new FakeBlockAction(null, (long) (localTime * 1000));
                             act.setId(material.getId());
                             act.setData(data);
                             act.setLoc(new Location(corner.getWorld(), corner.getBlockX() + x, corner.getBlockY() + y, corner.getBlockZ() + z));
                             actions.add(act);
                         }
                     }
+                    localTime += changeInTime;
                 }
 
                 if (actions.isEmpty()) {
@@ -117,5 +153,9 @@ public class GenerateCommand extends CoreCommand {
             return;
         }
         player.sendMessage(ChatColor.RED + "The show generator doesn't currently support '" + args[0] + "' actions.");
+    }
+
+    private boolean compare(int x, int y, boolean inverted) {
+        return inverted == (x >= y);
     }
 }

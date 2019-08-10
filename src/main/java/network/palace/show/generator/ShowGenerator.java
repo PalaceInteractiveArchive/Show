@@ -51,7 +51,7 @@ public class ShowGenerator {
 
         for (FakeBlockAction action : actions) {
             Location loc = action.getLoc();
-            double time = action.getTime() / 1000.0;
+            double time = ((int) ((action.getTime() / 1000.0) * 10)) / 10.0;
             int id = action.getId();
             byte data = action.getData();
             int x = loc.getBlockX();
