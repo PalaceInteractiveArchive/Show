@@ -14,7 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -60,7 +60,7 @@ public class ShowUtil {
         return TitleType.TITLE;
     }
 
-    public static void runSequences(HashSet<ShowSequence> set, long startTime) {
+    public static void runSequences(LinkedList<ShowSequence> set, long startTime) {
         if (set == null) return;
         List<ShowSequence> sequences = new ArrayList<>(set);
         for (ShowSequence sequence : sequences) {

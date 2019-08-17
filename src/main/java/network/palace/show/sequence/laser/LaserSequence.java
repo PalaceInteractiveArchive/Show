@@ -11,7 +11,7 @@ import network.palace.show.utils.WorldUtil;
 import org.bukkit.Location;
 
 import java.io.*;
-import java.util.HashSet;
+import java.util.LinkedList;
 
 /**
  * @author Marc
@@ -20,7 +20,7 @@ import java.util.HashSet;
 public class LaserSequence extends ShowSequence {
     protected SequenceState state = null;
     @Getter private long startTime;
-    private HashSet<ShowSequence> sequences;
+    private LinkedList<ShowSequence> sequences;
     @Getter private Beam beam = null;
     private Location relativeBaseSpawn = null;
     private Location relativeTargetSpawn = null;
@@ -81,7 +81,7 @@ public class LaserSequence extends ShowSequence {
         if (!file.exists()) {
             throw new ShowParseException("Could not find Laser sequence file " + showArgs[3]);
         }
-        HashSet<ShowSequence> sequences = new HashSet<>();
+        LinkedList<ShowSequence> sequences = new LinkedList<>();
         String strLine = "";
         try {
             FileInputStream fstream = new FileInputStream(file);

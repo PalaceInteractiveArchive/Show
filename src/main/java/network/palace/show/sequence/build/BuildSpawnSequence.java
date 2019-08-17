@@ -1,6 +1,5 @@
 package network.palace.show.sequence.build;
 
-import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.BuildObject;
 import network.palace.show.sequence.ShowSequence;
@@ -9,22 +8,27 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 public class BuildSpawnSequence extends ShowSequence {
+    private final BuildSequence buildSequence;
     private Location spawnLocation;
-    private BuildObject buildObject;
+    private String buildName;
 
-    public BuildSpawnSequence(Show show, long time, BuildObject buildObject) {
-        super(show, time);
-        this.buildObject = buildObject;
+    public BuildSpawnSequence(BuildSequence buildSequence, long time, String buildName) {
+        super(buildSequence.getShow(), time);
+        this.buildSequence = buildSequence;
+        this.buildName = buildName;
     }
 
     @Override
     public boolean run() {
-        if (buildObject.isSpawned()) {
+        BuildObject buildObject = buildSequence.getBuildObject(buildName);
+        if (buildObject == null) {
+            Bukkit.broadcast("There is no Build with ID " + buildName + ".", "palace.core.rank.mod");
+        } else if (buildObject.isSpawned()) {
             Bukkit.broadcast("Build with ID " + buildObject.getId() + " has spawned already", "palace.core.rank.mod");
-            return true;
+        } else {
+            buildObject.teleport(spawnLocation);
+            buildObject.spawn();
         }
-        buildObject.teleport(spawnLocation);
-        buildObject.spawn();
         return true;
     }
 
