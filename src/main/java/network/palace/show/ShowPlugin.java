@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Created by Marc on 12/6/16.
  */
-@PluginInfo(name = "Show", version = "1.3.8", depend = {"Audio", "Core"}, canReload = true)
+@PluginInfo(name = "Show", version = "1.3.9", depend = {"Audio", "Core"}, canReload = true)
 public class ShowPlugin extends Plugin {
     @Getter private ArmorStandManager armorStandManager;
     @Getter private FountainManager fountainManager;

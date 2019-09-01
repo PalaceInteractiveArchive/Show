@@ -42,8 +42,8 @@ public class FileUtil {
             lights.mkdirs();
         }
         File particles = new File("plugins/Show/sequences/particles/");
-        if (!lights.exists()) {
-            lights.mkdirs();
+        if (!particles.exists()) {
+            particles.mkdirs();
         }
         File buildSequences = new File("plugins/Show/sequences/builds/");
         if (!buildSequences.exists()) {
