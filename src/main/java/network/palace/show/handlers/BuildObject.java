@@ -104,7 +104,11 @@ public class BuildObject {
     public void despawn() {
         spawned = false;
         entities.forEach((stand, block) -> {
-            if (stand.hasPassengers()) stand.removePassenger(block);
+            try {
+                stand.removePassenger(block);
+            } catch (Exception ignored) {
+                // Stand doesn't have any passengers, waiting for Core update to fix this
+            }
             block.despawn();
             stand.despawn();
         });

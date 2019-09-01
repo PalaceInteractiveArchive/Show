@@ -12,12 +12,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class BuildSequence extends ShowSequence {
     @Getter private long startTime = 0;
-    private HashSet<ShowSequence> sequences;
+    private LinkedList<ShowSequence> sequences;
     private Map<String, BuildObject> blockMap = new HashMap<>();
     private boolean isBuildSequence = false;
 
@@ -46,7 +46,7 @@ public class BuildSequence extends ShowSequence {
             throw new ShowParseException("Could not find Build sequence file " + showArgs[3]);
         }
 
-        HashSet<ShowSequence> sequences = new HashSet<>();
+        LinkedList<ShowSequence> sequences = new LinkedList<>();
         String strLine = "";
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -85,22 +85,21 @@ public class BuildSequence extends ShowSequence {
                     time += (long) (Double.parseDouble(timeStr) * 1000);
                 }
 
-                BuildObject buildObject = blockMap.get(args[1]);
                 switch (args[2].toLowerCase()) {
                     case "spawn":
-                        BuildSpawnSequence spawn = new BuildSpawnSequence(show, time, buildObject);
+                        BuildSpawnSequence spawn = new BuildSpawnSequence(this, time, args[1]);
                         sequences.add(spawn.load(strLine, args));
                         break;
                     case "move":
-                        BuildMoveSequence move = new BuildMoveSequence(show, time, buildObject);
+                        BuildMoveSequence move = new BuildMoveSequence(this, time, args[1]);
                         sequences.add(move.load(strLine, args));
                         break;
                     case "moveanddespawn":
-                        BuildMoveAndDespawnSequence moveAndDespawn = new BuildMoveAndDespawnSequence(show, time, buildObject);
+                        BuildMoveAndDespawnSequence moveAndDespawn = new BuildMoveAndDespawnSequence(this, time, args[1]);
                         sequences.add(moveAndDespawn.load(strLine, args));
                         break;
                     case "despawn":
-                        BuildDespawnSequence despawn = new BuildDespawnSequence(show, time, buildObject);
+                        BuildDespawnSequence despawn = new BuildDespawnSequence(this, time, args[1]);
                         sequences.add(despawn.load(strLine, args));
                         break;
                 }
@@ -115,6 +114,10 @@ public class BuildSequence extends ShowSequence {
 
         this.sequences = sequences;
         return this;
+    }
+
+    public BuildObject getBuildObject(String name) {
+        return blockMap.get(name);
     }
 
     public void despawn() {

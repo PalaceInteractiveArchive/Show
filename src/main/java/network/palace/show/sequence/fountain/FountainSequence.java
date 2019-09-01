@@ -16,7 +16,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 
 import java.io.*;
-import java.util.HashSet;
+import java.util.LinkedList;
 
 /**
  * @author Marc
@@ -25,7 +25,7 @@ import java.util.HashSet;
 @SuppressWarnings("deprecation")
 public class FountainSequence extends ShowSequence {
     @Getter private long startTime;
-    private HashSet<ShowSequence> sequences;
+    private LinkedList<ShowSequence> sequences;
     protected boolean running = false;
     protected MaterialData data;
     protected Vector direction;
@@ -74,7 +74,7 @@ public class FountainSequence extends ShowSequence {
         if (!file.exists()) {
             throw new ShowParseException("Could not find Fountain sequence file " + showArgs[3]);
         }
-        HashSet<ShowSequence> sequences = new HashSet<>();
+        LinkedList<ShowSequence> sequences = new LinkedList<>();
         String strLine = "";
         try {
             FileInputStream fstream = new FileInputStream(file);
@@ -106,7 +106,7 @@ public class FountainSequence extends ShowSequence {
                             if (list.length == 1) {
                                 data = new MaterialData(Material.getMaterial(Integer.parseInt(list[0])));
                             } else {
-                                data = new MaterialData(Material.getMaterial(Integer.parseInt(list[0])), Byte.valueOf(list[1]));
+                                data = new MaterialData(Material.getMaterial(Integer.parseInt(list[0])), Byte.parseByte(list[1]));
                             }
                         } catch (Exception e) {
                             Core.logMessage("Show Parser", "Error parsing id:data for " + args[2]);

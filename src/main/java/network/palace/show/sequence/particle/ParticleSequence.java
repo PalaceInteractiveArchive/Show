@@ -15,13 +15,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 
 @SuppressWarnings("Duplicates")
 public class ParticleSequence extends ShowSequence {
     @Getter private long startTime = 0;
-    private HashSet<ShowSequence> sequences;
+    private LinkedList<ShowSequence> sequences;
     private Map<String, ParticleObject> particleMap = new HashMap<>();
     private boolean isParticleSequence = false;
 
@@ -52,7 +52,7 @@ public class ParticleSequence extends ShowSequence {
             throw new ShowParseException("Could not find Particle sequence file " + showArgs[3]);
         }
 
-        HashSet<ShowSequence> sequences = new HashSet<>();
+        LinkedList<ShowSequence> sequences = new LinkedList<>();
         String strLine = "";
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));

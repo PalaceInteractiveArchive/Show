@@ -42,8 +42,8 @@ public class Show {
     @Getter private World world;
     private Location location;
     @Getter private String name = "";
-    private HashSet<ShowAction> actions;
-    private HashSet<ShowSequence> sequences;
+    private LinkedList<ShowAction> actions;
+    private LinkedList<ShowSequence> sequences;
     @Getter private long startTime;
     @Getter @Setter private long musicTime = 0;
     @Getter @Setter private String areaName = "none";
@@ -65,8 +65,8 @@ public class Show {
     }
 
     private void loadActions(File file, long addTime) {
-        HashSet<ShowAction> actions = new HashSet<>();
-        HashSet<ShowSequence> sequences = new HashSet<>();
+        LinkedList<ShowAction> actions = new LinkedList<>();
+        LinkedList<ShowSequence> sequences = new LinkedList<>();
         String strLine = "";
         try {
             FileInputStream fstream = new FileInputStream(file);

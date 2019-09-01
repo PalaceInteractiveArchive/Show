@@ -13,13 +13,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class LightSequence extends ShowSequence {
 
     @Getter private long startTime;
-    private HashSet<ShowSequence> sequences;
+    private LinkedList<ShowSequence> sequences;
     private Map<String, ShowCrystal> crystalMap = new HashMap<>();
     private boolean isLightSequence = false;
 
@@ -48,7 +48,7 @@ public class LightSequence extends ShowSequence {
             throw new ShowParseException("Could not find Light sequence file " + showArgs[3]);
         }
 
-        HashSet<ShowSequence> sequences = new HashSet<>();
+        LinkedList<ShowSequence> sequences = new LinkedList<>();
         String strLine = "";
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
