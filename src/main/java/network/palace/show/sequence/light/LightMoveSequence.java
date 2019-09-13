@@ -14,6 +14,7 @@ import network.palace.show.utils.WorldUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EnderCrystal;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -24,6 +25,7 @@ public class LightMoveSequence extends ShowSequence {
     private boolean hasProtocolErrored;
     private double seconds;
     private Vector movement;
+    private boolean first = true;
     private ShowCrystal crystal;
 
     public LightMoveSequence(Show show, long time, ShowCrystal crystal) {
@@ -49,31 +51,25 @@ public class LightMoveSequence extends ShowSequence {
                 if (time >= ticks) cancel();
                 time++;
 
-                Location target;
-                if (crystal.getState().equals(SequenceState.RELATIVE)) {
-                    target = enderCrystal.getLocation().clone().add(movement.clone().divide(new Vector(ticks, ticks, ticks)));
-                } else if (crystal.getState().equals(SequenceState.ACTUAL)) {
-                    target = movement.toLocation(enderCrystal.getWorld());
-                } else {
-                    return;
+                if (first && crystal.getState().equals(SequenceState.ACTUAL)) {
+                    first = false;
+                    Location enderLoc = enderCrystal.getLocation();
+                    Location targetLoc = movement.toLocation(enderCrystal.getWorld());
+                    movement = new Vector(targetLoc.getX() - enderLoc.getX(), targetLoc.getY() - enderLoc.getY(), targetLoc.getZ() - enderLoc.getZ());
                 }
-                enderCrystal.teleport(target);
+
+                enderCrystal.teleport(enderCrystal.getLocation().clone().add(movement.clone().divide(new Vector(ticks, ticks, ticks))));
 
                 ProtocolManager pm = ProtocolLibrary.getProtocolManager();
                 PacketConstructor pc = pm.createPacketConstructor(Server.ENTITY_TELEPORT, enderCrystal);
-                Bukkit.getOnlinePlayers().forEach(player -> {
+                for (Player player : Bukkit.getOnlinePlayers()) {
                     try {
                         pm.sendServerPacket(player, pc.createPacket(enderCrystal));
                     } catch (InvocationTargetException e) {
-                        if (hasProtocolErrored) {
-                            return;
-                        }
-
-                        hasProtocolErrored = true;
-                        Bukkit.broadcast("Failed to update " + crystal.getId() + "'s position for 1 or more players.", "palace.core.rank.mod");
+                        Bukkit.getLogger().warning("Failed to update " + crystal.getId() + "'s position for 1 or more players.");
                         e.printStackTrace();
                     }
-                });
+                }
             }
         }.runTaskTimer(ShowPlugin.getInstance(), 1L, 1L);
         return true;
