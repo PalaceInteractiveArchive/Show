@@ -34,9 +34,7 @@ public class ParticleAction extends ShowAction {
         }
         for (UUID uuid : show.getNearPlayers()) {
             CPlayer tp = Core.getPlayerManager().getPlayer(uuid);
-            if (tp == null) {
-                continue;
-            }
+            if (tp == null) continue;
             tp.getParticles().send(loc, effect, amount, (float) offsetX, (float) offsetY, (float) offsetZ, speed);
         }
     }

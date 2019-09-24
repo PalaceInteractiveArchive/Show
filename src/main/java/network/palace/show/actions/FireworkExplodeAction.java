@@ -17,6 +17,7 @@ public class FireworkExplodeAction extends ShowAction {
 
     @Override
     public void play() {
+        System.out.println("B: " + time);
         fw.detonate();
     }
 

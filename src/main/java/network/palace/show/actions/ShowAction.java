@@ -1,12 +1,16 @@
 package network.palace.show.actions;
 
 import lombok.Getter;
+import lombok.Setter;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 
+@Getter
 public abstract class ShowAction {
-    @Getter protected Show show;
-    @Getter protected long time;
+    protected Show show;
+    protected long time;
+
+    @Setter ShowAction next = null;
 
     public ShowAction(Show show, long time) {
         this.show = show;

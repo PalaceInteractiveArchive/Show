@@ -42,7 +42,7 @@ public class Show {
     @Getter private World world;
     private Location location;
     @Getter private String name = "";
-    private LinkedList<ShowAction> actions;
+    //    private LinkedList<ShowAction> actions;
     private LinkedList<ShowSequence> sequences;
     @Getter private long startTime;
     @Getter @Setter private long musicTime = 0;
@@ -54,6 +54,10 @@ public class Show {
     private long lastPlayerListUpdate = System.currentTimeMillis();
     private List<UUID> nearbyPlayers = new ArrayList<>();
 
+    private ShowAction firstAction = null;
+    private ShowAction lastAction = null;
+    private LinkedList<FireworkExplodeAction> fireworksToExplode = new LinkedList<>();
+
     public Show(JavaPlugin plugin, File file) {
         world = Bukkit.getWorlds().get(0);
         effectMap = new HashMap<>();
@@ -62,6 +66,38 @@ public class Show {
         startTime = System.currentTimeMillis();
         nearbyPlayers.addAll(Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getLocation().distance(location) <= radius)
                 .map(Player::getUniqueId).collect(Collectors.toList()));
+    }
+
+    public void addAction(ShowAction newAction) {
+        if (firstAction == null) {
+            firstAction = newAction;
+            lastAction = newAction;
+        } else {
+            lastAction.setNext(newAction);
+            lastAction = newAction;
+        }
+    }
+
+    public void removeAction(ShowAction action) {
+        ShowAction current = firstAction;
+        ShowAction parent = null;
+        while (current != null && current.hashCode() != action.hashCode()) {
+            parent = current;
+            current = current.getNext();
+        }
+        if (current != null && parent == null) {
+            // Delete head.
+            if (current.getNext() != null) {
+                // Move head to next value.
+                firstAction = current.getNext();
+            } else {
+                // Just set the head to null.
+                firstAction = null;
+            }
+        } else if (current != null) {
+            // Delete current, link parent to child..
+            parent.setNext(current.getNext());
+        }
     }
 
     private void loadActions(File file, long addTime) {
@@ -363,8 +399,12 @@ public class Show {
                     "palace.core.rank.mod");
         }
 
-        this.actions = actions;
         this.sequences = sequences;
+
+        actions.sort((o1, o2) -> (int) (o1.getTime() - o2.getTime()));
+
+        actions.forEach(this::addAction);
+        actions.clear();
     }
 
     private double rad(double v) {
@@ -462,28 +502,42 @@ public class Show {
         if (!invalidLines.isEmpty()) {
             return true;
         }
-        List<ShowAction> actions = new ArrayList<>(this.actions);
-        for (ShowAction action : actions) {
+//        LinkedList<ShowAction> actions = new ArrayList<>(this.actions);
+
+        long timeDiff = System.currentTimeMillis() - startTime;
+
+        for (FireworkExplodeAction action : new LinkedList<>(fireworksToExplode)) {
             if (action == null) continue;
             try {
-                if (System.currentTimeMillis() - startTime < action.getTime()) {
-                    continue;
-                }
+                if (timeDiff < action.getTime()) continue;
                 try {
                     action.play();
                 } catch (Exception e) {
                     Core.logMessage("Show " + action.getShow().getName(), "Error playing action in show " + action.getShow().getName());
                 }
-                this.actions.remove(action);
+                fireworksToExplode.remove(action);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (sequences == null) {
-            return this.actions.isEmpty();
+
+        ShowAction temp = firstAction;
+        while (temp != null) {
+            if (timeDiff >= temp.getTime()) {
+                try {
+                    temp.play();
+                    System.out.println(timeDiff);
+                } catch (Exception e) {
+                    Core.logMessage("Show " + temp.getShow().getName(), "Error playing action in show " + temp.getShow().getName());
+                }
+                removeAction(temp);
+                temp = temp.getNext();
+            } else {
+                temp = temp.getNext();
+            }
         }
-        ShowUtil.runSequences(sequences, startTime);
-        return this.actions.isEmpty() && this.sequences.isEmpty();
+        if (sequences != null) ShowUtil.runSequences(sequences, startTime);
+        return firstAction == null && this.sequences.isEmpty() && fireworksToExplode.isEmpty();
     }
 
     public void displayText(String text) {
@@ -552,7 +606,11 @@ public class Show {
         return new HashMap<>(effectMap);
     }
 
-    public void addAction(ShowAction action) {
-        actions.add(action);
+    public void addExplodeAction(FireworkExplodeAction action) {
+        fireworksToExplode.add(action);
     }
+
+//    public void addAction(ShowAction action) {
+//        actions.add(action);
+//    }
 }

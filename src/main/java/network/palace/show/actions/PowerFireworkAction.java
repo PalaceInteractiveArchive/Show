@@ -34,8 +34,8 @@ public class PowerFireworkAction extends ShowAction {
         }
         fw.setFireworkMeta(meta);
         fw.setVelocity(motion);
-        FireworkExplodeAction action = new FireworkExplodeAction(show, time + 1, fw);
-        show.addAction(action);
+        System.out.println("A: " + (time + 1));
+        show.addExplodeAction(new FireworkExplodeAction(show, time + 1, fw));
     }
 
     @Override
