@@ -78,7 +78,7 @@ public class Show {
         }
     }
 
-    public void removeAction(ShowAction action) {
+    /*public void removeAction(ShowAction action) {
         ShowAction current = firstAction;
         ShowAction parent = null;
         while (current != null && current.hashCode() != action.hashCode()) {
@@ -98,10 +98,20 @@ public class Show {
             // Delete current, link parent to child..
             parent.setNext(current.getNext());
         }
-    }
+    }*/
 
     private void loadActions(File file, long addTime) {
-        LinkedList<ShowAction> actions = new LinkedList<>();
+//        LinkedList<ShowAction> actions = new LinkedList<>();
+
+        List<ShowAction> actions = new ArrayList<ShowAction>() {
+            public boolean add(ShowAction mt) {
+                int index = Collections.binarySearch(this, mt, (o1, o2) -> (int) (o1.getTime() - o2.getTime()));
+                if (index < 0) index = ~index;
+                super.add(index, mt);
+                return true;
+            }
+        };
+
         LinkedList<ShowSequence> sequences = new LinkedList<>();
         String strLine = "";
         try {
@@ -401,7 +411,7 @@ public class Show {
 
         this.sequences = sequences;
 
-        actions.sort((o1, o2) -> (int) (o1.getTime() - o2.getTime()));
+//        actions.sort((o1, o2) -> (int) (o1.getTime() - o2.getTime()));
 
         actions.forEach(this::addAction);
         actions.clear();
@@ -502,7 +512,6 @@ public class Show {
         if (!invalidLines.isEmpty()) {
             return true;
         }
-//        LinkedList<ShowAction> actions = new ArrayList<>(this.actions);
 
         long timeDiff = System.currentTimeMillis() - startTime;
 
@@ -523,19 +532,15 @@ public class Show {
 
         ShowAction temp = firstAction;
         while (temp != null) {
-            if (timeDiff >= temp.getTime()) {
-                try {
-                    temp.play();
-                    System.out.println(timeDiff);
-                } catch (Exception e) {
-                    Core.logMessage("Show " + temp.getShow().getName(), "Error playing action in show " + temp.getShow().getName());
-                }
-                removeAction(temp);
-                temp = temp.getNext();
-            } else {
-                temp = temp.getNext();
+            if (timeDiff < temp.getTime()) break;
+            try {
+                temp.play();
+            } catch (Exception e) {
+                Core.logMessage("Show " + temp.getShow().getName(), "Error playing action in show " + temp.getShow().getName());
             }
+            temp = temp.getNext();
         }
+        firstAction = temp;
         if (sequences != null) ShowUtil.runSequences(sequences, startTime);
         return firstAction == null && this.sequences.isEmpty() && fireworksToExplode.isEmpty();
     }

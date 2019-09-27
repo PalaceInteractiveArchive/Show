@@ -39,7 +39,9 @@ public class FakeBlockAction extends ShowAction {
                     tp.sendBlockChange(loc, id, data);
             }
         } catch (Exception e) {
-            Core.logMessage("FakeBlockAction", ChatColor.RED + "Error sending FakeBlockAction for location " + loc.getX() + "," + loc.getY() + "," + loc.getZ() + " at time " + time + " for show " + show.getName());
+            Core.logMessage("FakeBlockAction", ChatColor.RED + "Error sending FakeBlockAction for type (" +
+                    id + ":" + data + ") at location " + loc.getX() + "," + loc.getY() + "," + loc.getZ() + " at time " +
+                    time + " for show " + show.getName());
             e.printStackTrace();
         }
     }
