@@ -1,5 +1,6 @@
 package network.palace.show.actions;
 
+import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 
@@ -11,7 +12,7 @@ public class MusicAction extends ShowAction {
     }
 
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         show.playMusic(record);
     }
 

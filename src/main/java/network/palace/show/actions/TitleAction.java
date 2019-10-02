@@ -6,11 +6,7 @@ import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.TitleType;
 import network.palace.show.utils.ShowUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 /**
  * Created by Marc on 1/10/15
@@ -27,12 +23,9 @@ public class TitleAction extends ShowAction {
     }
 
     @Override
-    public void play() {
-        for (UUID uuid : show.getNearPlayers()) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player == null) {
-                continue;
-            }
+    public void play(CPlayer[] nearPlayers) {
+        for (CPlayer player : nearPlayers) {
+            if (player == null) continue;
             if (Show.offset(player.getLocation(), show.getLocation()) < show.getRadius()) {
                 CPlayer p = Core.getPlayerManager().getPlayer(player.getUniqueId());
                 if (type.equals(TitleType.TITLE)) {

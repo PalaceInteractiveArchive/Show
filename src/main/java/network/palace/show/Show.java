@@ -56,7 +56,7 @@ public class Show {
 
     private ShowAction firstAction = null;
     private ShowAction lastAction = null;
-    private LinkedList<FireworkExplodeAction> fireworksToExplode = new LinkedList<>();
+    private LinkedList<ShowAction> laterActions = new LinkedList<>();
 
     public Show(JavaPlugin plugin, File file) {
         world = Bukkit.getWorlds().get(0);
@@ -68,7 +68,7 @@ public class Show {
                 .map(Player::getUniqueId).collect(Collectors.toList()));
     }
 
-    public void addAction(ShowAction newAction) {
+    private void addAction(ShowAction newAction) {
         if (firstAction == null) {
             firstAction = newAction;
             lastAction = newAction;
@@ -509,22 +509,28 @@ public class Show {
     }
 
     public boolean update() {
-        if (!invalidLines.isEmpty()) {
-            return true;
+        if (!invalidLines.isEmpty()) return true;
+
+        CPlayer[] nearPlayers;
+        List<UUID> nearIDs = getNearPlayers();
+        nearPlayers = new CPlayer[nearIDs.size()];
+        int i = 0;
+        for (UUID uuid : nearIDs) {
+            nearPlayers[i++] = Core.getPlayerManager().getPlayer(uuid);
         }
 
         long timeDiff = System.currentTimeMillis() - startTime;
 
-        for (FireworkExplodeAction action : new LinkedList<>(fireworksToExplode)) {
+        for (ShowAction action : new LinkedList<>(laterActions)) {
             if (action == null) continue;
             try {
                 if (timeDiff < action.getTime()) continue;
                 try {
-                    action.play();
+                    action.play(nearPlayers);
                 } catch (Exception e) {
                     Core.logMessage("Show " + action.getShow().getName(), "Error playing action in show " + action.getShow().getName());
                 }
-                fireworksToExplode.remove(action);
+                laterActions.remove(action);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -532,17 +538,24 @@ public class Show {
 
         ShowAction temp = firstAction;
         while (temp != null) {
-            if (timeDiff < temp.getTime()) break;
+            // if action time isn't meant to play yet, exit
+            if (temp.getTime() > timeDiff) break;
+            // otherwise, play action
+
             try {
-                temp.play();
+                temp.play(nearPlayers);
             } catch (Exception e) {
                 Core.logMessage("Show " + temp.getShow().getName(), "Error playing action in show " + temp.getShow().getName());
             }
+
+            // then move to next action
+            ShowAction a = temp;
             temp = temp.getNext();
+            a.setNext(null);
         }
         firstAction = temp;
         if (sequences != null) ShowUtil.runSequences(sequences, startTime);
-        return firstAction == null && this.sequences.isEmpty() && fireworksToExplode.isEmpty();
+        return firstAction == null && this.sequences.isEmpty() && laterActions.isEmpty();
     }
 
     public void displayText(String text) {
@@ -611,8 +624,8 @@ public class Show {
         return new HashMap<>(effectMap);
     }
 
-    public void addExplodeAction(FireworkExplodeAction action) {
-        fireworksToExplode.add(action);
+    public void addLaterAction(ShowAction action) {
+        laterActions.add(action);
     }
 
 //    public void addAction(ShowAction action) {

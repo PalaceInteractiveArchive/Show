@@ -1,6 +1,7 @@
 package network.palace.show.actions;
 
 
+import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.utils.WorldUtil;
@@ -14,7 +15,7 @@ public class LightningAction extends ShowAction {
     }
 
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         loc.getWorld().strikeLightningEffect(loc);
     }
 

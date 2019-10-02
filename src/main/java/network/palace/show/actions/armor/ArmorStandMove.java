@@ -1,5 +1,6 @@
 package network.palace.show.actions.armor;
 
+import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.ShowPlugin;
 import network.palace.show.actions.ShowAction;
@@ -27,7 +28,7 @@ public class ArmorStandMove extends ShowAction {
     }
 
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         if (!stand.isHasSpawned()) {
             Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has not spawned", "palace.core.rank.mod");
             return;

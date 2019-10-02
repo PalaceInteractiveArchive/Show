@@ -69,6 +69,7 @@ public class ShowPlugin extends Plugin {
                 if (show.update()) {
                     show.stop();
                     shows.remove(entry.getKey());
+                    Bukkit.broadcastMessage("DONE! " + System.currentTimeMillis());
                 }
             }
         }, 0L, 1L).getTaskId();

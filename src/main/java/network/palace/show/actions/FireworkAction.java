@@ -1,5 +1,6 @@
 package network.palace.show.actions;
 
+import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.utils.WorldUtil;
@@ -24,7 +25,7 @@ public class FireworkAction extends ShowAction implements Listener {
     }
 
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         try {
             playFirework();
         } catch (Exception e) {
@@ -55,7 +56,7 @@ public class FireworkAction extends ShowAction implements Listener {
             fw.setVelocity(direction.normalize().multiply(dirPower * 0.05));
         }
         if (instaburst) {
-            show.addExplodeAction(new FireworkExplodeAction(show, time + 50, fw));
+            show.addLaterAction(new FireworkExplodeAction(show, time + 50, fw));
         }
     }
 

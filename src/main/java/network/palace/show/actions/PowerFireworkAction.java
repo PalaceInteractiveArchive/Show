@@ -1,5 +1,6 @@
 package network.palace.show.actions;
 
+import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.utils.WorldUtil;
@@ -26,7 +27,7 @@ public class PowerFireworkAction extends ShowAction {
     }
 
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         Firework fw = loc.getWorld().spawn(loc, Firework.class);
         FireworkMeta meta = fw.getFireworkMeta();
         for (FireworkEffect effect : effects) {
@@ -34,7 +35,7 @@ public class PowerFireworkAction extends ShowAction {
         }
         fw.setFireworkMeta(meta);
         fw.setVelocity(motion);
-        show.addExplodeAction(new FireworkExplodeAction(show, time + 1, fw));
+        show.addLaterAction(new FireworkExplodeAction(show, time + 1, fw));
     }
 
     @Override

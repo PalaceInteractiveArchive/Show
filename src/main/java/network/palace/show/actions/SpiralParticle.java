@@ -9,8 +9,6 @@ import network.palace.show.utils.WorldUtil;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 
-import java.util.UUID;
-
 public class SpiralParticle extends ShowAction {
     private Particle effect;
     private Location loc;
@@ -28,7 +26,7 @@ public class SpiralParticle extends ShowAction {
     }
 
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         int taskID = Core.runTaskTimer(() -> {
             for (int i = 1; i <= strands; i++) {
                 for (int j = 1; j <= particles; j++) {
@@ -45,9 +43,7 @@ public class SpiralParticle extends ShowAction {
 
                     loc.add(x, vertical, z);
 
-                    for (UUID uuid : show.getNearPlayers()) {
-                        CPlayer tp = Core.getPlayerManager().getPlayer(uuid);
-
+                    for (CPlayer tp : nearPlayers) {
                         if (tp == null || tp.getLocation().distance(loc) > 50) continue;
 
                         tp.getParticles().send(loc, effect, 1, 0, 0, 0, 0);

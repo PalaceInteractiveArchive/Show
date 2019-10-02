@@ -1,6 +1,5 @@
 package network.palace.show.actions;
 
-import network.palace.core.Core;
 import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
@@ -8,8 +7,6 @@ import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-
-import java.util.UUID;
 
 /**
  * Created by Marc on 1/10/15
@@ -28,12 +25,11 @@ public class ParticleAction extends ShowAction {
     }
 
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         if (effect == null) {
             return;
         }
-        for (UUID uuid : show.getNearPlayers()) {
-            CPlayer tp = Core.getPlayerManager().getPlayer(uuid);
+        for (CPlayer tp : nearPlayers) {
             if (tp == null) continue;
             tp.getParticles().send(loc, effect, amount, (float) offsetX, (float) offsetY, (float) offsetZ, speed);
         }

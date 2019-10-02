@@ -1,5 +1,6 @@
 package network.palace.show.actions;
 
+import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.BlockData;
@@ -26,7 +27,7 @@ public class BlockAction extends ShowAction {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         Block block = location.getBlock();
         block.setTypeId(type);
         block.setData(data);

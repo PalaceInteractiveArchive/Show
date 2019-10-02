@@ -1,5 +1,6 @@
 package network.palace.show.actions;
 
+import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.ShowPlugin;
 import network.palace.show.exceptions.ShowParseException;
@@ -22,7 +23,7 @@ public class FountainAction extends ShowAction {
     }
 
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         ShowPlugin.getInstance().getFountainManager().addFountain(new Fountain(loc, duration, type, data, force));
     }
 

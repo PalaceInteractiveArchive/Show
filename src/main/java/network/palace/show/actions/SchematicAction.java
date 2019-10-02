@@ -1,6 +1,7 @@
 package network.palace.show.actions;
 
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import network.palace.core.player.CPlayer;
 import network.palace.core.utils.MiscUtil;
 import network.palace.show.Show;
 import network.palace.show.TerrainManager;
@@ -25,7 +26,7 @@ public class SchematicAction extends ShowAction {
     }
 
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         try {
             tm.loadSchematic(wep, fname, loc, noAir);
         } catch (Exception e) {

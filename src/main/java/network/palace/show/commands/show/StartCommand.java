@@ -39,6 +39,6 @@ public class StartCommand extends CoreCommand {
             return;
         }
         ShowPlugin.startShow(args[0], new Show(ShowPlugin.getInstance(), f));
-        sender.sendMessage(ChatColor.GREEN + args[0] + ChatColor.AQUA + " has started.");
+        sender.sendMessage(ChatColor.GREEN + args[0] + ChatColor.AQUA + " has started. " + System.currentTimeMillis());
     }
 }

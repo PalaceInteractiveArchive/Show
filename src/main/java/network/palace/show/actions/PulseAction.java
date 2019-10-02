@@ -1,5 +1,6 @@
 package network.palace.show.actions;
 
+import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.utils.WorldUtil;
@@ -16,12 +17,12 @@ public class PulseAction extends ShowAction {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         Block pre = loc.getBlock();
         final int id = pre.getTypeId();
         final byte data = pre.getData();
         loc.getBlock().setType(Material.REDSTONE_BLOCK);
-        show.addAction(new BlockAction(show, time + 100, loc, id, data));
+        show.addLaterAction(new BlockAction(show, time + 100, loc, id, data));
     }
 
     @Override

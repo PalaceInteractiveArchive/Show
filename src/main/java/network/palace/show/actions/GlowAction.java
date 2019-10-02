@@ -1,7 +1,6 @@
 package network.palace.show.actions;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import network.palace.core.Core;
 import network.palace.core.packets.AbstractPacket;
 import network.palace.core.packets.server.entity.WrapperPlayServerEntityEquipment;
 import network.palace.core.player.CPlayer;
@@ -17,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,17 +36,18 @@ public class GlowAction extends ShowAction {
     }
 
     @Override
-    public void play() {
+    public void play(CPlayer[] nearPlayers) {
         List<AbstractPacket> packets = new ArrayList<>();
-        Collection<CPlayer> collection = Core.getPlayerManager().getOnlinePlayers().stream().filter(tp -> tp.getLocation().distance(loc) <= radius).collect(Collectors.toList());
-        collection.forEach(tp -> {
-            WrapperPlayServerEntityEquipment p = new WrapperPlayServerEntityEquipment();
-            p.setEntityID(tp.getEntityId());
-            p.setSlot(EnumWrappers.ItemSlot.HEAD);
-            p.setItem(helm);
-            packets.add(p);
-        });
-        collection.forEach(tp -> packets.forEach(tp::sendPacket));
+        WrapperPlayServerEntityEquipment p = new WrapperPlayServerEntityEquipment();
+        p.setSlot(EnumWrappers.ItemSlot.HEAD);
+        p.setItem(helm);
+        Arrays.stream(nearPlayers)
+                .filter(tp -> tp.getLocation().distance(loc) <= radius)
+                .collect(Collectors.toList())
+                .forEach(tp -> {
+                    p.setEntityID(tp.getEntityId());
+                    tp.sendPacket(p);
+                });
     }
 
     @Override
