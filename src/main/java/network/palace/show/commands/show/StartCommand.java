@@ -4,7 +4,6 @@ import network.palace.core.command.CommandException;
 import network.palace.core.command.CoreCommand;
 import network.palace.show.Show;
 import network.palace.show.ShowPlugin;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -39,8 +38,8 @@ public class StartCommand extends CoreCommand {
             sender.sendMessage(ChatColor.RED + "----------------------------------------------");
             return;
         }
-        Bukkit.broadcastMessage(ChatColor.GREEN + "Starting... " + System.currentTimeMillis());
+        sender.sendMessage(ChatColor.GREEN + "Starting... ");
         ShowPlugin.startShow(args[0], new Show(ShowPlugin.getInstance(), f));
-        Bukkit.broadcastMessage(ChatColor.GREEN + args[0] + ChatColor.AQUA + " has started. " + System.currentTimeMillis());
+        sender.sendMessage(ChatColor.GREEN + args[0] + ChatColor.AQUA + " has started. ");
     }
 }

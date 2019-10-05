@@ -83,6 +83,7 @@ public class BuildObject {
                 block.spawn();
                 stand.addPassenger(block);
             });
+            return;
         }
         for (Build.BuildBlock block : build.getBlocks()) {
             if (block.getTypeId() == 0) continue;

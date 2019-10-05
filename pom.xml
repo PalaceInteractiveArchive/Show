@@ -6,7 +6,7 @@
 
     <groupId>network.palace</groupId>
     <artifactId>Show</artifactId>
-    <version>1.4.0-linked</version>
+    <version>1.4.2-linked</version>
     <repositories>
         <repository>
             <id>palace</id>
@@ -24,12 +24,6 @@
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.spigotmc</groupId>-->
-        <!--            <artifactId>spigot</artifactId>-->
-        <!--            <version>1.12.2</version>-->
-        <!--            <type>jar</type>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>network.palace</groupId>
             <artifactId>Core</artifactId>

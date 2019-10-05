@@ -25,7 +25,6 @@ public class AudioStart extends ShowAction {
         if (area == null) return;
         show.setMusicTime(System.currentTimeMillis());
         show.setAreaName(area.getAreaName());
-        Bukkit.broadcastMessage(System.currentTimeMillis() + "!");
         if (area != null) {
             for (CPlayer tp : nearPlayers) {
                 if (tp != null) area.triggerPlayer(tp);
