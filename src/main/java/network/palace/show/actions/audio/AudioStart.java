@@ -7,6 +7,7 @@ import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.actions.ShowAction;
 import network.palace.show.exceptions.ShowParseException;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 /**
@@ -24,6 +25,7 @@ public class AudioStart extends ShowAction {
         if (area == null) return;
         show.setMusicTime(System.currentTimeMillis());
         show.setAreaName(area.getAreaName());
+        Bukkit.broadcastMessage(System.currentTimeMillis() + "!");
         if (area != null) {
             for (CPlayer tp : nearPlayers) {
                 if (tp != null) area.triggerPlayer(tp);

@@ -591,11 +591,11 @@ public class Show {
         }
         area.triggerPlayer(tp);
 
-        Core.runTaskLater(() -> {
-            long ms = (System.currentTimeMillis() - musicTime) + 1000;
-            float seconds = ms / 1000f;
-            area.sync(seconds, tp, 0);
-        }, 20L);
+//        Core.runTaskLater(() -> {
+        long ms = (System.currentTimeMillis() - musicTime);
+        float seconds = ms / 1000f;
+        area.sync(seconds, tp, 0);
+//        }, 20L);
     }
 
     public void stop() {
