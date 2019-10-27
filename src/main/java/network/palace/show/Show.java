@@ -42,7 +42,6 @@ public class Show {
     @Getter private World world;
     private Location location;
     @Getter private String name = "";
-    //    private LinkedList<ShowAction> actions;
     private LinkedList<ShowSequence> sequences;
     @Getter private long startTime;
     @Getter @Setter private long musicTime = 0;
@@ -78,31 +77,7 @@ public class Show {
         }
     }
 
-    /*public void removeAction(ShowAction action) {
-        ShowAction current = firstAction;
-        ShowAction parent = null;
-        while (current != null && current.hashCode() != action.hashCode()) {
-            parent = current;
-            current = current.getNext();
-        }
-        if (current != null && parent == null) {
-            // Delete head.
-            if (current.getNext() != null) {
-                // Move head to next value.
-                firstAction = current.getNext();
-            } else {
-                // Just set the head to null.
-                firstAction = null;
-            }
-        } else if (current != null) {
-            // Delete current, link parent to child..
-            parent.setNext(current.getNext());
-        }
-    }*/
-
     private void loadActions(File file, long addTime) {
-//        LinkedList<ShowAction> actions = new LinkedList<>();
-
         List<ShowAction> actions = new ArrayList<ShowAction>() {
             public boolean add(ShowAction mt) {
                 int index = Collections.binarySearch(this, mt, (o1, o2) -> (int) (o1.getTime() - o2.getTime()));
@@ -410,9 +385,6 @@ public class Show {
         }
 
         this.sequences = sequences;
-
-//        actions.sort((o1, o2) -> (int) (o1.getTime() - o2.getTime()));
-
         actions.forEach(this::addAction);
         actions.clear();
     }
@@ -590,12 +562,9 @@ public class Show {
             return;
         }
         area.triggerPlayer(tp);
-
-//        Core.runTaskLater(() -> {
         long ms = (System.currentTimeMillis() - musicTime);
         float seconds = ms / 1000f;
         area.sync(seconds, tp, 0);
-//        }, 20L);
     }
 
     public void stop() {
@@ -627,8 +596,4 @@ public class Show {
     public void addLaterAction(ShowAction action) {
         laterActions.add(action);
     }
-
-//    public void addAction(ShowAction action) {
-//        actions.add(action);
-//    }
 }
