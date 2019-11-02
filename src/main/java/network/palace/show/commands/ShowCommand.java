@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 /**
  * Created by Marc on 12/6/16.
  */
-@CommandMeta(description = "Command used to start shows", rank = Rank.MOD)
+@CommandMeta(description = "Command used to start shows", rank = Rank.TRAINEETECH)
 public class ShowCommand extends CoreCommand {
 
     public ShowCommand() {

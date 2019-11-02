@@ -7,7 +7,7 @@ import network.palace.show.commands.showgen.GenerateCommand;
 import network.palace.show.commands.showgen.SetCornerCommand;
 import network.palace.show.commands.showgen.SetInitialSceneCommand;
 
-@CommandMeta(description = "Generate blocks of show actions with one command", rank = Rank.MOD)
+@CommandMeta(description = "Generate blocks of show actions with one command", rank = Rank.TRAINEETECH)
 public class ShowGenCommand extends CoreCommand {
 
     public ShowGenCommand() {

@@ -6,7 +6,7 @@ import network.palace.core.player.Rank;
 import network.palace.show.commands.showbuild.LoadCommand;
 import network.palace.show.commands.showbuild.SaveCommand;
 
-@CommandMeta(description = "Save builds for use in Build sequences", rank = Rank.MOD)
+@CommandMeta(description = "Save builds for use in Build sequences", rank = Rank.TRAINEETECH)
 public class ShowBuildCommand extends CoreCommand {
 
     public ShowBuildCommand() {
