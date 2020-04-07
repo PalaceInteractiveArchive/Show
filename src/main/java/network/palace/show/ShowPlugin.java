@@ -12,6 +12,7 @@ import network.palace.show.actions.SchematicAction;
 import network.palace.show.commands.ShowBuildCommand;
 import network.palace.show.commands.ShowCommand;
 import network.palace.show.commands.ShowGenCommand;
+import network.palace.show.dashboard.PacketListener;
 import network.palace.show.generator.ShowGenerator;
 import network.palace.show.listeners.ChunkListener;
 import network.palace.show.listeners.PlayerInteract;
@@ -57,6 +58,7 @@ public class ShowPlugin extends Plugin {
         registerListener(new SignChange());
         registerListener(new ChunkListener());
         org.bukkit.plugin.Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldEdit");
+        Bukkit.getPluginManager().registerEvents(new PacketListener(), this);
         if (plugin instanceof WorldEditPlugin) {
             SchematicAction.setWorldEdit((WorldEditPlugin) plugin);
         } else {
