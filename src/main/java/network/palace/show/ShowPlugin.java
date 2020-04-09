@@ -1,14 +1,12 @@
 package network.palace.show;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import lombok.Getter;
 import network.palace.core.Core;
 import network.palace.core.player.CPlayer;
 import network.palace.core.player.Rank;
 import network.palace.core.plugin.Plugin;
 import network.palace.core.plugin.PluginInfo;
-import network.palace.show.actions.SchematicAction;
 import network.palace.show.commands.ShowBuildCommand;
 import network.palace.show.commands.ShowCommand;
 import network.palace.show.commands.ShowGenCommand;
@@ -27,7 +25,7 @@ import java.util.Map;
 /**
  * Created by Marc on 12/6/16.
  */
-@PluginInfo(name = "Show", version = "1.4.5", depend = {"Audio", "Core"}, canReload = true)
+@PluginInfo(name = "Show", version = "1.4.5", depend = {"Audio", "Core"}, softdepend = "WorldEdit", canReload = true)
 public class ShowPlugin extends Plugin {
     @Getter private ArmorStandManager armorStandManager;
     @Getter private FountainManager fountainManager;
@@ -56,12 +54,6 @@ public class ShowPlugin extends Plugin {
         registerListener(new PlayerInteract());
         registerListener(new SignChange());
         registerListener(new ChunkListener());
-        org.bukkit.plugin.Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldEdit");
-        if (plugin instanceof WorldEditPlugin) {
-            SchematicAction.setWorldEdit((WorldEditPlugin) plugin);
-        } else {
-            Core.logMessage("Show", "Error finding WorldEdit!");
-        }
         // Show Ticker
         taskid = Bukkit.getScheduler().runTaskTimer(this, () -> {
             for (Map.Entry<String, Show> entry : new HashMap<>(shows).entrySet()) {

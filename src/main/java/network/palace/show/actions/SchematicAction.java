@@ -1,17 +1,13 @@
 package network.palace.show.actions;
 
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import network.palace.core.player.CPlayer;
 import network.palace.core.utils.MiscUtil;
 import network.palace.show.Show;
-import network.palace.show.TerrainManager;
 import network.palace.show.exceptions.ShowParseException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 public class SchematicAction extends ShowAction {
-    public static WorldEditPlugin wep;
-    private static TerrainManager tm;
     private Location loc;
     private String fname;
     private boolean noAir;
@@ -20,15 +16,10 @@ public class SchematicAction extends ShowAction {
         super(show, time);
     }
 
-    public static void setWorldEdit(WorldEditPlugin pl) {
-        wep = pl;
-        tm = new TerrainManager(wep, Bukkit.getWorlds().get(0));
-    }
-
     @Override
     public void play(CPlayer[] nearPlayers) {
         try {
-            tm.loadSchematic(wep, fname, loc, noAir);
+            show.getTerrainManager().loadSchematic(show.getWorldEditPlugin(), fname, loc, noAir);
         } catch (Exception e) {
             e.printStackTrace();
         }

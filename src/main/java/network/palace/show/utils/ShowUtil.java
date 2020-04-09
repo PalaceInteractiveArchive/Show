@@ -301,7 +301,7 @@ public class ShowUtil {
     }
 
     public static boolean areLocationsEqual(Location loc1, Location loc2, int decimalPlace) {
-        return loc1.distance(loc2) <= (decimalPlace * .1);
+        return loc1.getWorld().equals(loc2.getWorld()) && loc1.distance(loc2) <= (decimalPlace * 0.1);
         /*
         StringBuilder pattern = new StringBuilder("#.");
         for (int i = 0; i < decimalPlace; i++) {
