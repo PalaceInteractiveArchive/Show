@@ -4,7 +4,6 @@ import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.utils.WorldUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.entity.Firework;
@@ -44,7 +43,7 @@ public class PowerFireworkAction extends ShowAction {
         if (args.length != 5) {
             throw new ShowParseException("Invalid PowerFirework Line Length");
         }
-        Location loc = WorldUtil.strToLoc(Bukkit.getWorlds().get(0).getName() + "," + args[2]);
+        Location loc = WorldUtil.strToLoc(show.getWorld().getName() + "," + args[2]);
         String[] l = args[4].split(",");
         Vector motion = new Vector(Double.parseDouble(l[0]), Double.parseDouble(l[1]), Double.parseDouble(l[2]));
         ArrayList<FireworkEffect> effectList = new ArrayList<>();

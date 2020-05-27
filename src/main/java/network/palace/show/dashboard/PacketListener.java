@@ -8,7 +8,8 @@ import network.palace.show.Show;
 import network.palace.show.ShowPlugin;
 import network.palace.show.dashboard.packets.park.PacketShowStart;
 import network.palace.show.dashboard.packets.park.PacketShowStop;
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -34,8 +35,9 @@ public class PacketListener implements Listener {
             Core.debugLog("Trying to start multi-show: " + showName);
             if (ShowPlugin.getShows().containsKey(showName)) return;
             File f = new File("plugins/Show/shows/" + showName + ".show");
-            if (!f.exists()) return;
-            ShowPlugin.startShow(showName, new Show(ShowPlugin.getInstance(), f));
+            World world;
+            if (!f.exists() || (world = Bukkit.getWorld(packet.getWorld())) == null) return;
+            ShowPlugin.startShow(showName, new Show(f, world));
             Core.debugLog("Started multi-show: " + showName);
         }
         /**

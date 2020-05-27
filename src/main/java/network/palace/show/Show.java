@@ -1,5 +1,6 @@
 package network.palace.show;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import lombok.Getter;
 import lombok.Setter;
 import network.palace.audio.Audio;
@@ -29,7 +30,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.EulerAngle;
 
 import java.io.*;
@@ -57,14 +57,20 @@ public class Show {
     private ShowAction lastAction = null;
     private LinkedList<ShowAction> laterActions = new LinkedList<>();
 
-    public Show(JavaPlugin plugin, File file) {
-        world = Bukkit.getWorlds().get(0);
+    /*
+      WorldEdit classes
+    */
+    @Getter private WorldEditPlugin worldEditPlugin;
+    @Getter private TerrainManager terrainManager;
+
+    public Show(File file, World world) {
+        this.world = world;
         effectMap = new HashMap<>();
         invalidLines = new HashMap<>();
         loadActions(file, 0);
         startTime = System.currentTimeMillis();
-        nearbyPlayers.addAll(Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getLocation().distance(location) <= radius)
-                .map(Player::getUniqueId).collect(Collectors.toList()));
+        nearbyPlayers.addAll(Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getWorld().getName().equals(world.getName()))
+                .filter(tp -> tp.getLocation().distance(location) <= radius).map(Player::getUniqueId).collect(Collectors.toList()));
     }
 
     private void addAction(ShowAction newAction) {
@@ -78,7 +84,7 @@ public class Show {
     }
 
     private void loadActions(File file, long addTime) {
-        List<ShowAction> actions = new ArrayList<ShowAction>() {
+        List<ShowAction> actions = new ArrayList<>() {
             public boolean add(ShowAction mt) {
                 int index = Collections.binarySearch(this, mt, (o1, o2) -> (int) (o1.getTime() - o2.getTime()));
                 if (index < 0) index = ~index;
@@ -292,6 +298,15 @@ public class Show {
                 }
                 // Schematic
                 if (args[1].contains("Schematic")) {
+                    if (worldEditPlugin == null) {
+                        org.bukkit.plugin.Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldEdit");
+                        if (plugin instanceof WorldEditPlugin) {
+                            worldEditPlugin = (WorldEditPlugin) plugin;
+                            terrainManager = new TerrainManager(worldEditPlugin, world);
+                        } else {
+                            throw new ShowParseException("Unable to load SchematicAction - no WorldEdit plugin found!");
+                        }
+                    }
                     SchematicAction ac = new SchematicAction(this, time);
                     actions.add(ac.load(strLine, args));
                     continue;
@@ -473,8 +488,8 @@ public class Show {
         if (System.currentTimeMillis() - lastPlayerListUpdate < 10000) {
             return new ArrayList<>(nearbyPlayers);
         }
-        List<UUID> list = Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getLocation().distance(location) <= radius)
-                .map(Player::getUniqueId).collect(Collectors.toList());
+        List<UUID> list = Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getWorld().getName().equals(world.getName()))
+                .filter(tp -> tp.getLocation().distance(location) <= radius).map(Player::getUniqueId).collect(Collectors.toList());
         lastPlayerListUpdate = System.currentTimeMillis();
         nearbyPlayers = list;
         return list;
