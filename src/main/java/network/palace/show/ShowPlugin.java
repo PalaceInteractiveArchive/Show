@@ -10,6 +10,7 @@ import network.palace.core.plugin.PluginInfo;
 import network.palace.show.commands.ShowBuildCommand;
 import network.palace.show.commands.ShowCommand;
 import network.palace.show.commands.ShowGenCommand;
+import network.palace.show.dashboard.PacketListener;
 import network.palace.show.generator.ShowGenerator;
 import network.palace.show.listeners.ChunkListener;
 import network.palace.show.listeners.PlayerInteract;
@@ -54,6 +55,7 @@ public class ShowPlugin extends Plugin {
         registerListener(new PlayerInteract());
         registerListener(new SignChange());
         registerListener(new ChunkListener());
+        registerListener(new PacketListener());
         // Show Ticker
         taskid = Bukkit.getScheduler().runTaskTimer(this, () -> {
             for (Map.Entry<String, Show> entry : new HashMap<>(shows).entrySet()) {
