@@ -6,7 +6,7 @@
 
     <groupId>network.palace</groupId>
     <artifactId>Show</artifactId>
-    <version>1.4.6</version>
+    <version>1.4.7</version>
     <repositories>
         <repository>
             <id>palace</id>

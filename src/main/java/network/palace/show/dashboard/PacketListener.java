@@ -15,7 +15,6 @@ import org.bukkit.event.Listener;
 
 import java.io.File;
 
-
 public class PacketListener implements Listener {
 
     @EventHandler
