@@ -302,20 +302,6 @@ public class ShowUtil {
 
     public static boolean areLocationsEqual(Location loc1, Location loc2, int decimalPlace) {
         return loc1.getWorld().equals(loc2.getWorld()) && loc1.distance(loc2) <= (decimalPlace * 0.1);
-        /*
-        StringBuilder pattern = new StringBuilder("#.");
-        for (int i = 0; i < decimalPlace; i++) {
-            pattern.append("#");
-        }
-        DecimalFormat df = new DecimalFormat(pattern.toString());
-        df.setRoundingMode(RoundingMode.CEILING);
-        double x1 = format(df, loc1.getX());
-        double y1 = format(df, loc1.getY());
-        double z1 = format(df, loc1.getZ());
-        double x2 = format(df, loc2.getX());
-        double y2 = format(df, loc2.getY());
-        double z2 = format(df, loc2.getZ());
-        return x1 == x2 && y1 == y2 && z1 == z2;*/
     }
 
     private static double format(DecimalFormat format, double num) {
