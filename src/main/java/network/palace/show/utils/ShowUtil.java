@@ -1,14 +1,15 @@
 package network.palace.show.utils;
 
+import network.palace.core.Core;
+import network.palace.core.player.Rank;
 import network.palace.core.utils.MiscUtil;
+import network.palace.show.Show;
+import network.palace.show.ShowPlugin;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.BlockData;
 import network.palace.show.handlers.TitleType;
 import network.palace.show.sequence.ShowSequence;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -320,5 +321,15 @@ public class ShowUtil {
 
     private static double format(DecimalFormat format, double num) {
         return Double.parseDouble(format.format(num));
+    }
+
+    public static void logDebug(String showName, String message) {
+        Core.logMessage("ShowDebug - " + showName, message);
+        Core.getPlayerManager().getOnlinePlayers().stream()
+                .filter(p -> p.getRank().getRankId() >= Rank.TRAINEEBUILD.getRankId() && p.getRegistry().hasEntry("show_debug"))
+                .forEach(p -> p.sendMessage(ChatColor.AQUA + "[ShowDebug - " + showName + "] " + ChatColor.YELLOW + message));
+
+        Show s = ShowPlugin.getInstance().getShows().get(showName);
+        if (s != null) s.debug();
     }
 }

@@ -3,6 +3,7 @@ package network.palace.show.sequence.laser;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.sequence.ShowSequence;
+import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -32,7 +33,7 @@ public class LaserSpawnSequence extends ShowSequence {
             }
         } catch (ShowParseException e) {
             Bukkit.getLogger().warning("Error on Spawn action for Laser Sequence Cause: " + e.getReason());
-            Bukkit.broadcast("Error on Spawn action for Laser Sequence Cause: " + e.getReason(), "palace.core.rank.mod");
+            ShowUtil.logDebug(show.getName(), "Error on Spawn action for Laser Sequence Cause: " + e.getReason());
         }
         return true;
     }

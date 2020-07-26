@@ -7,6 +7,7 @@ import network.palace.audio.Audio;
 import network.palace.audio.handlers.AudioArea;
 import network.palace.core.Core;
 import network.palace.core.player.CPlayer;
+import network.palace.core.player.Rank;
 import network.palace.core.utils.HeadUtil;
 import network.palace.show.actions.*;
 import network.palace.show.actions.armor.*;
@@ -57,6 +58,9 @@ public class Show {
     private ShowAction lastAction = null;
     private LinkedList<ShowAction> laterActions = new LinkedList<>();
 
+    @Getter private boolean skipDebug = false;
+    @Getter private int debug = 0;
+
     /*
       WorldEdit classes
     */
@@ -105,7 +109,7 @@ public class Show {
                     continue;
                 String[] args = strLine.split("\\s+");
                 if (args.length < 2) {
-                    System.out.println("Invalid Show Line [" + strLine + "]");
+                    ShowUtil.logDebug(getName(), "Invalid Show Line [" + strLine + "]");
                     continue;
                 }
                 if (args[1].equals("Name")) {
@@ -177,6 +181,11 @@ public class Show {
                     ArmorData armorData = parseArmorData(args[3]);
                     ShowStand stand = new ShowStand(id, small, armorData);
                     standmap.put(id, stand);
+                    continue;
+                }
+                // ShowDebug status
+                if (args[0].equals("HideDebug")) {
+                    skipDebug = Boolean.parseBoolean(args[1]);
                     continue;
                 }
                 // Get time
@@ -382,10 +391,10 @@ public class Show {
             fstream.close();
         } catch (ShowParseException e) {
             Bukkit.getLogger().warning("Error on Line [" + strLine + "] Cause: " + e.getReason());
-            Bukkit.broadcast("Error on Line [" + strLine + "] Cause: " + e.getReason(), "palace.core.rank.mod");
+            ShowUtil.logDebug(getName(), "Error on Line [" + strLine + "] Cause: " + e.getReason());
         } catch (Exception e) {
             System.out.println("Error on Line [" + strLine + "]");
-            Bukkit.broadcast("Error on Line [" + strLine + "]", "palace.core.rank.mod");
+            ShowUtil.logDebug(getName(), "Error on Line [" + strLine + "]");
             e.printStackTrace();
         }
 
@@ -395,8 +404,7 @@ public class Show {
 
         for (String cur : invalidLines.keySet()) {
             System.out.print(ChatColor.GOLD + invalidLines.get(cur) + " @ " + ChatColor.WHITE + cur.replaceAll("\t", " "));
-            Bukkit.broadcast(ChatColor.GOLD + invalidLines.get(cur) + " @ " + ChatColor.WHITE + cur.replaceAll("\t", " "),
-                    "palace.core.rank.mod");
+            ShowUtil.logDebug(getName(), ChatColor.GOLD + invalidLines.get(cur) + " @ " + ChatColor.WHITE + cur.replaceAll("\t", " "));
         }
 
         this.sequences = sequences;
@@ -598,6 +606,12 @@ public class Show {
                 ((BuildSequence) s).despawn();
             }
         }
+        if (debug > 0) {
+            Core.getPlayerManager().getOnlinePlayers().stream()
+                    .filter(p -> p.getRank().getRankId() >= Rank.TRAINEETECH.getRankId())
+                    .forEach(p -> p.sendMessage(ChatColor.AQUA + "[ShowDebug - " + getName() + "] " +
+                            ChatColor.YELLOW + debug + " debug messages were hidden."));
+        }
     }
 
     public static double offset(Location a, Location b) {
@@ -610,5 +624,10 @@ public class Show {
 
     public void addLaterAction(ShowAction action) {
         laterActions.add(action);
+    }
+
+    public void debug() {
+        if (skipDebug) return;
+        debug++;
     }
 }

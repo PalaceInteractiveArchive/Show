@@ -4,7 +4,7 @@ import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.particle.CylinderParticle;
 import network.palace.show.sequence.ShowSequence;
-import org.bukkit.Bukkit;
+import network.palace.show.utils.ShowUtil;
 
 public class ParticleCylinderSequence extends ShowSequence {
     private CylinderParticle particleObject;
@@ -22,7 +22,7 @@ public class ParticleCylinderSequence extends ShowSequence {
     @Override
     public boolean run() {
         if (!particleObject.isSpawned()) {
-            Bukkit.broadcast("ParticleObject with ID " + particleObject.getId() + " has not spawned.", "palace.core.rank.mod");
+            ShowUtil.logDebug(show.getName(), "ParticleObject with ID " + particleObject.getId() + " has not spawned.");
             return true;
         }
         if (ticks == -1) {

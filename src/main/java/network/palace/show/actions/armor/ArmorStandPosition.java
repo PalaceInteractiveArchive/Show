@@ -9,6 +9,7 @@ import network.palace.show.handlers.armorstand.Position;
 import network.palace.show.handlers.armorstand.PositionType;
 import network.palace.show.handlers.armorstand.ShowStand;
 import network.palace.show.handlers.armorstand.StandAction;
+import network.palace.show.utils.ShowUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
@@ -33,7 +34,7 @@ public class ArmorStandPosition extends ShowAction {
     @Override
     public void play(CPlayer[] nearPlayers) {
         if (!stand.isHasSpawned()) {
-            Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has not spawned", "palace.core.rank.mod");
+            ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has not spawned");
             return;
         }
         EulerAngle a = null;

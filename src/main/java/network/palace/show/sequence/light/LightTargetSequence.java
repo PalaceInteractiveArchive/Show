@@ -4,8 +4,8 @@ import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.ShowCrystal;
 import network.palace.show.sequence.ShowSequence;
+import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 public class LightTargetSequence extends ShowSequence {
@@ -21,7 +21,7 @@ public class LightTargetSequence extends ShowSequence {
     @Override
     public boolean run() {
         if (!crystal.isSpawned()) {
-            Bukkit.broadcast("EnderCrystal with ID " + crystal.getId() + " has not spawned.", "palace.core.rank.mod");
+            ShowUtil.logDebug(show.getName(), "EnderCrystal with ID " + crystal.getId() + " has not spawned.");
         } else {
             crystal.getCrystal().setBeamTarget(target);
         }

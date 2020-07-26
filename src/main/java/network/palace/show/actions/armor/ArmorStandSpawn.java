@@ -7,7 +7,7 @@ import network.palace.show.actions.ShowAction;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.ArmorData;
 import network.palace.show.handlers.armorstand.ShowStand;
-import org.bukkit.Bukkit;
+import network.palace.show.utils.ShowUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -28,7 +28,7 @@ public class ArmorStandSpawn extends ShowAction {
     @Override
     public void play(CPlayer[] nearPlayers) {
         if (stand.isHasSpawned()) {
-            Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has spawned already", "palace.core.rank.mod");
+            ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has spawned already");
             return;
         }
         ArmorStand armor = loc.getWorld().spawn(loc, ArmorStand.class);

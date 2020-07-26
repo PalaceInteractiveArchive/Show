@@ -5,7 +5,7 @@ import network.palace.show.Show;
 import network.palace.show.actions.ShowAction;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.armorstand.ShowStand;
-import org.bukkit.Bukkit;
+import network.palace.show.utils.ShowUtil;
 import org.bukkit.entity.ArmorStand;
 
 /**
@@ -22,7 +22,7 @@ public class ArmorStandDespawn extends ShowAction {
     @Override
     public void play(CPlayer[] nearPlayers) {
         if (!stand.isHasSpawned()) {
-            Bukkit.broadcast("ArmorStand with ID " + stand.getId() + " has not spawned", "palace.core.rank.mod");
+            ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has not spawned");
             return;
         }
         ArmorStand armor = stand.getStand();
