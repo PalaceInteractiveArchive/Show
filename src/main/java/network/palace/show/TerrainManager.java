@@ -15,7 +15,7 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.util.io.Closer;
 import com.sk89q.worldedit.util.io.file.FilenameException;
 import com.sk89q.worldedit.world.registry.WorldData;
-import org.bukkit.Bukkit;
+import network.palace.show.utils.ShowUtil;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -83,7 +83,7 @@ public class TerrainManager {
         File f = wep.getWorldEdit().getSafeOpenFile(null, new File("plugins/WorldEdit/schematics"), fileName,
                 "schematic", "schematic");
         if (!f.exists()) {
-            Bukkit.broadcast("Tried to load Schematic " + fileName + " but does not exist!", "palace.core.rank.mod");
+            ShowUtil.logDebug("Schematics", "Tried to load Schematic " + fileName + " but does not exist!");
             return;
         }
         Closer closer = Closer.create();

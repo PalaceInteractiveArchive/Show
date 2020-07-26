@@ -3,8 +3,8 @@ package network.palace.show.sequence.build;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.BuildObject;
 import network.palace.show.sequence.ShowSequence;
+import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -29,12 +29,12 @@ public class BuildMoveSequence extends ShowSequence {
         if (buildObject == null) {
             this.buildObject = buildSequence.getBuildObject(buildName);
             if (buildObject == null) {
-                Bukkit.broadcast("There is no Build with ID " + buildName + ".", "palace.core.rank.mod");
+                ShowUtil.logDebug(show.getName(), "There is no Build with ID " + buildName + ".");
                 return true;
             }
         }
         if (!buildObject.isSpawned()) {
-            Bukkit.broadcast("Build with ID " + buildObject.getId() + " has not spawned.", "palace.core.rank.mod");
+            ShowUtil.logDebug(show.getName(), "Build with ID " + buildObject.getId() + " has not spawned.");
             return true;
         }
         if (change == null) {

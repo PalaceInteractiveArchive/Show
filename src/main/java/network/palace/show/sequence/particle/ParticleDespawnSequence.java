@@ -4,7 +4,7 @@ import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.ParticleObject;
 import network.palace.show.sequence.ShowSequence;
-import org.bukkit.Bukkit;
+import network.palace.show.utils.ShowUtil;
 
 public class ParticleDespawnSequence extends ShowSequence {
     private ParticleObject particleObject;
@@ -17,7 +17,7 @@ public class ParticleDespawnSequence extends ShowSequence {
     @Override
     public boolean run() {
         if (!particleObject.isSpawned()) {
-            Bukkit.broadcast("ParticleObject with ID " + particleObject.getId() + " has not spawned.", "palace.core.rank.mod");
+            ShowUtil.logDebug(show.getName(), "ParticleObject with ID " + particleObject.getId() + " has not spawned.");
         } else {
             particleObject.setSpawned(false);
         }

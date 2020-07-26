@@ -3,7 +3,7 @@ package network.palace.show.sequence.build;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.BuildObject;
 import network.palace.show.sequence.ShowSequence;
-import org.bukkit.Bukkit;
+import network.palace.show.utils.ShowUtil;
 
 public class BuildDespawnSequence extends ShowSequence {
     private final BuildSequence buildSequence;
@@ -19,9 +19,9 @@ public class BuildDespawnSequence extends ShowSequence {
     public boolean run() {
         BuildObject buildObject = buildSequence.getBuildObject(buildName);
         if (buildObject == null) {
-            Bukkit.broadcast("There is no Build with ID " + buildName + ".", "palace.core.rank.mod");
+            ShowUtil.logDebug(show.getName(), "There is no Build with ID " + buildName + ".");
         } else if (!buildObject.isSpawned()) {
-            Bukkit.broadcast("Build with ID " + buildObject.getId() + " has not spawned.", "palace.core.rank.mod");
+            ShowUtil.logDebug(show.getName(), "Build with ID " + buildObject.getId() + " has not spawned.");
         } else {
             buildObject.despawn();
         }

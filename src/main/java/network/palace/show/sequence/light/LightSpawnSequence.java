@@ -5,8 +5,8 @@ import network.palace.show.ShowPlugin;
 import network.palace.show.exceptions.ShowParseException;
 import network.palace.show.handlers.ShowCrystal;
 import network.palace.show.sequence.ShowSequence;
+import network.palace.show.utils.ShowUtil;
 import network.palace.show.utils.WorldUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -25,7 +25,7 @@ public class LightSpawnSequence extends ShowSequence {
     @Override
     public boolean run() {
         if (crystal.isSpawned()) {
-            Bukkit.broadcast("EnderCrystal with ID " + crystal.getId() + " has spawned already", "palace.core.rank.mod");
+            ShowUtil.logDebug(show.getName(), "EnderCrystal with ID " + crystal.getId() + " has spawned already");
             return true;
         }
         crystal.setCrystal(spawnLocation.getWorld().spawn(spawnLocation, EnderCrystal.class, ec -> {

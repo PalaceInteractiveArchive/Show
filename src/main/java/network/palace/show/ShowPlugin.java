@@ -9,6 +9,7 @@ import network.palace.core.plugin.Plugin;
 import network.palace.core.plugin.PluginInfo;
 import network.palace.show.commands.ShowBuildCommand;
 import network.palace.show.commands.ShowCommand;
+import network.palace.show.commands.ShowDebugCommand;
 import network.palace.show.commands.ShowGenCommand;
 import network.palace.show.dashboard.PacketListener;
 import network.palace.show.generator.ShowGenerator;
@@ -51,6 +52,7 @@ public class ShowPlugin extends Plugin {
         registerCommand(new ShowCommand());
         registerCommand(new ShowBuildCommand());
         registerCommand(new ShowGenCommand());
+        registerCommand(new ShowDebugCommand());
         registerListener(fountainManager);
         registerListener(new PlayerInteract());
         registerListener(new SignChange());
