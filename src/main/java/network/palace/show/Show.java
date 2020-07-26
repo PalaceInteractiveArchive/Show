@@ -69,7 +69,7 @@ public class Show {
         invalidLines = new HashMap<>();
         loadActions(file, 0);
         startTime = System.currentTimeMillis();
-        nearbyPlayers.addAll(Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getWorld().getName().equals(world.getName()))
+        nearbyPlayers.addAll(Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getWorld().getUID().equals(world.getUID()))
                 .filter(tp -> tp.getLocation().distance(location) <= radius).map(Player::getUniqueId).collect(Collectors.toList()));
     }
 
@@ -488,7 +488,7 @@ public class Show {
         if (System.currentTimeMillis() - lastPlayerListUpdate < 10000) {
             return new ArrayList<>(nearbyPlayers);
         }
-        List<UUID> list = Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getWorld().getName().equals(world.getName()))
+        List<UUID> list = Bukkit.getOnlinePlayers().stream().filter(tp -> tp.getWorld().getUID().equals(world.getUID()))
                 .filter(tp -> tp.getLocation().distance(location) <= radius).map(Player::getUniqueId).collect(Collectors.toList());
         lastPlayerListUpdate = System.currentTimeMillis();
         nearbyPlayers = list;

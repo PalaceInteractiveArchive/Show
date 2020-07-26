@@ -44,7 +44,8 @@ public class SpiralParticle extends ShowAction {
                     loc.add(x, vertical, z);
 
                     for (CPlayer tp : nearPlayers) {
-                        if (tp == null || tp.getLocation().distance(loc) > 50) continue;
+                        if (tp == null || !tp.getWorld().getUID().equals(loc.getWorld().getUID()) || tp.getLocation().distance(loc) > 50)
+                            continue;
 
                         tp.getParticles().send(loc, effect, 1, 0, 0, 0, 0);
                     }

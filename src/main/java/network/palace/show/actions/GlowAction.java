@@ -42,6 +42,7 @@ public class GlowAction extends ShowAction {
         p.setSlot(EnumWrappers.ItemSlot.HEAD);
         p.setItem(helm);
         Arrays.stream(nearPlayers)
+                .filter(tp -> tp.getWorld().getUID().equals(loc.getWorld().getUID()))
                 .filter(tp -> tp.getLocation().distance(loc) <= radius)
                 .collect(Collectors.toList())
                 .forEach(tp -> {
