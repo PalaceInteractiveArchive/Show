@@ -136,7 +136,7 @@ public class Show {
                 //Load other show
                 if (args[1].equals("LoadShow")) {
                     String showName = args[2];
-                    File f = new File("plugins/ParkManager/shows/" + showName);
+                    File f = new File("plugins/Show/shows/" + world.getName() + "/" + showName + ".show");
                     if (!f.exists()) {
                         invalidLines.put(strLine, "Show does not exist!");
                         continue;
