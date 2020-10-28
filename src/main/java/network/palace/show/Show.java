@@ -37,7 +37,7 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "DuplicatedCode"})
 public class Show {
     @Getter private UUID showID = UUID.randomUUID();
     @Getter private World world;
@@ -85,6 +85,375 @@ public class Show {
             lastAction.setNext(newAction);
             lastAction = newAction;
         }
+    }
+
+    private List<ShowAction> getActions(File file, long addTime) {
+        List<ShowAction> actions = new ArrayList<>() {
+            public boolean add(ShowAction mt) {
+                int index = Collections.binarySearch(this, mt, (o1, o2) -> (int) (o1.getTime() - o2.getTime()));
+                if (index < 0) index = ~index;
+                super.add(index, mt);
+                return true;
+            }
+        };
+        LinkedList<ShowSequence> sequences = new LinkedList<>();
+        String strLine = "";
+        try {
+            FileInputStream fstream = new FileInputStream(file);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            // Parse Lines
+            while ((strLine = br.readLine()) != null) {
+                if (strLine.length() == 0 || strLine.startsWith("#"))
+                    continue;
+                String[] args = strLine.split("\\s+");
+                if (args.length < 2) {
+                    ShowUtil.logDebug(getName(), "Invalid Show Line [" + strLine + "]");
+                    continue;
+                }
+                if (args[1].equals("Name")) {
+                    StringBuilder name = new StringBuilder();
+                    for (int i = 2; i < args.length; i++) {
+                        name.append(args[i]).append(" ");
+                    }
+                    if (name.length() > 1) {
+                        name = new StringBuilder(name.substring(0, name.length() - 1));
+                    }
+                    this.name = name.toString();
+                    continue;
+                }
+                // Set Show Location
+                if (args[1].equals("Location")) {
+                    Location loc = WorldUtil.strToLoc(world.getName() + "," + args[2]);
+                    if (loc == null) {
+                        invalidLines.put(strLine, "Invalid Location Line");
+                        continue;
+                    }
+                    this.location = loc;
+                    continue;
+                }
+                //Load other show
+                if (args[1].equals("LoadShow")) {
+                    String showName = args[2];
+                    File f = new File("plugins/Show/shows/" + world.getName() + "/" + showName + ".show");
+                    if (!f.exists()) {
+                        invalidLines.put(strLine, "Show does not exist!");
+                        continue;
+                    }
+                    if (f.equals(file)) {
+                        invalidLines.put(strLine, "You cannot load a file that's already being loaded");
+                        continue;
+                    }
+                    double time = Double.parseDouble(args[3]);
+                    List<ShowAction> loadedActions = getActions(f, (long) (time * 1000));
+                    actions.addAll(loadedActions);
+                    continue;
+                }
+                // Set Text Radius
+                if (args[1].equals("TextRadius")) {
+                    try {
+                        radius = Integer.parseInt(args[2]);
+                    } catch (Exception e) {
+                        invalidLines.put(strLine, "Invalid Text Radius");
+                    }
+                    continue;
+                }
+                // Load Firework effects
+                if (args[0].equals("Effect")) {
+                    FireworkEffect effect = ShowUtil.parseEffect(args[2]);
+                    if (effect == null) {
+                        invalidLines.put(strLine, "Invalid Effect Line");
+                        continue;
+                    }
+                    effectMap.put(args[1], effect);
+                    continue;
+                }
+                // ArmorStand Ids
+                if (args[0].equals("ArmorStand")) {
+                    // ArmorStand id small
+                    String id = args[1];
+                    if (standmap.get(id) != null) {
+                        invalidLines.put(strLine, "ArmorStand with the ID " + id + " already exists!");
+                        continue;
+                    }
+                    boolean small = Boolean.parseBoolean(args[2]);
+                    //ArmorStand 0 false skull:myHash;299(234,124,41);300;301
+                    ArmorData armorData = parseArmorData(args[3]);
+                    ShowStand stand = new ShowStand(id, small, armorData);
+                    standmap.put(id, stand);
+                    continue;
+                }
+                // ShowDebug status
+                if (args[0].equals("HideDebug")) {
+                    skipDebug = Boolean.parseBoolean(args[1]);
+                    continue;
+                }
+                // Get time
+                String[] timeToks = args[0].split("_");
+                long time = addTime;
+                for (String timeStr : timeToks) {
+                    time += (long) (Double.parseDouble(timeStr) * 1000);
+                }
+                // Text
+                if (args[1].contains("Text")) {
+                    TextAction ac = new TextAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // Music
+                if (args[1].contains("Music")) {
+                    MusicAction ac = new MusicAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // Pulse
+                if (args[1].contains("Pulse")) {
+                    PulseAction ac = new PulseAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // ArmorStand Movement
+                if (args[1].equals("ArmorStand")) {
+                    // Show ArmorStand id action param
+                    String id = args[2];
+                    ShowStand stand = standmap.get(id);
+                    if (stand == null) {
+                        invalidLines.put(strLine, "No ArmorStand exists with the ID " + id);
+                        continue;
+                    }
+                    String action = args[3];
+                    switch (action.toLowerCase()) {
+                        case "spawn": {
+                            // x,y,z
+                            Location loc = WorldUtil.strToLocWithYaw(world.getName() + "," + args[4]);
+                            ArmorStandSpawn spawn = new ArmorStandSpawn(this, time, stand, loc);
+                            actions.add(spawn);
+                            break;
+                        }
+                        case "move": {
+                            // x,y,z speed
+                            Location loc = WorldUtil.strToLoc(world.getName() + "," + args[4]);
+                            double speed = Double.parseDouble(args[5]);
+                            ArmorStandMove move = new ArmorStandMove(this, time, stand, loc, speed);
+                            actions.add(move);
+                            break;
+                        }
+                        case "position": {
+                            // PositionType x,y,z time
+                            double speed = Double.parseDouble(args[6]);
+                            String[] alist = args[5].split(",");
+                            EulerAngle angle = new EulerAngle(rad(Double.parseDouble(alist[0])),
+                                    rad(Double.parseDouble(alist[1])), rad(Double.parseDouble(alist[2])));
+                            ArmorStandPosition position = new ArmorStandPosition(this, time, stand,
+                                    PositionType.fromString(args[4]), angle, speed);
+                            actions.add(position);
+                            break;
+                        }
+                        case "rotate": {
+                            // yaw speed
+                            float yaw = Float.parseFloat(args[4]);
+                            double speed = Double.parseDouble(args[5]);
+                            actions.add(new ArmorStandRotate(this, time, stand, yaw, speed));
+                            break;
+                        }
+                        case "despawn": {
+                            ArmorStandDespawn despawn = new ArmorStandDespawn(this, time, stand);
+                            actions.add(despawn);
+                            break;
+                        }
+                    }
+                    continue;
+                }
+                // Take away GWTS Hats
+                if (args[1].contains("GlowDone")) {
+                    actions.add(new GlowDoneAction(this, time));
+                    continue;
+                }
+                // Glow With The Show
+                if (args[1].contains("Glow")) {
+                    GlowAction ac = new GlowAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // Lightning
+                if (args[1].contains("Lightning")) {
+                    LightningAction ac = new LightningAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // FakeBlock
+                if (args[1].contains("FakeBlock")) {
+                    FakeBlockAction ac = new FakeBlockAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // Block
+                if (args[1].startsWith("Block")) {
+                    BlockAction ac = new BlockAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // PowerFirework
+                if (args[1].contains("PowerFirework")) {
+                    PowerFireworkAction ac = new PowerFireworkAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // Firework
+                if (args[1].startsWith("Firework")) {
+                    FireworkAction ac = new FireworkAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // Schematic
+                if (args[1].contains("Schematic")) {
+                    if (worldEditPlugin == null) {
+                        org.bukkit.plugin.Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldEdit");
+                        if (plugin instanceof WorldEditPlugin) {
+                            worldEditPlugin = (WorldEditPlugin) plugin;
+                            terrainManager = new TerrainManager(worldEditPlugin, world);
+                        } else {
+                            throw new ShowParseException("Unable to load SchematicAction - no WorldEdit plugin found!");
+                        }
+                    }
+                    SchematicAction ac = new SchematicAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // Fountain
+                if (args[1].contains("Fountain")) {
+                    FountainAction ac = new FountainAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // Title
+                if (args[1].contains("Title")) {
+                    TitleAction ac = new TitleAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // SpiralParticle
+                if (args[1].contains("SpiralParticle")) {
+                    SpiralParticle ac = new SpiralParticle(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // Particle
+                if (args[1].contains("Particle")) {
+                    ParticleAction ac = new ParticleAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // AudioStart
+                if (args[1].contains("AudioStart")) {
+                    AudioStart ac = new AudioStart(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // AudioSync
+                if (args[1].contains("AudioSync")) {
+                    AudioSync ac = new AudioSync(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+            }
+            br.close();
+            in.close();
+            fstream.close();
+        } catch (ShowParseException e) {
+            Bukkit.getLogger().warning("Error on Line [" + strLine + "] Cause: " + e.getReason());
+            ShowUtil.logDebug(getName(), "Error on Line [" + strLine + "] Cause: " + e.getReason());
+        } catch (Exception e) {
+            System.out.println("Error on Line [" + strLine + "]");
+            ShowUtil.logDebug(getName(), "Error on Line [" + strLine + "]");
+            e.printStackTrace();
+        }
+
+        if (location == null) {
+            invalidLines.put("Missing Line", "Show loc x,y,z");
+        }
+
+        for (String cur : invalidLines.keySet()) {
+            System.out.print(ChatColor.GOLD + invalidLines.get(cur) + " @ " + ChatColor.WHITE + cur.replaceAll("\t", " "));
+            ShowUtil.logDebug(getName(), ChatColor.GOLD + invalidLines.get(cur) + " @ " + ChatColor.WHITE + cur.replaceAll("\t", " "));
+        }
+        return actions;
+    }
+
+    private LinkedList<ShowSequence> getSequences(File file, long addTime) {
+        LinkedList<ShowSequence> sequences = new LinkedList<>();
+        String strLine = "";
+        try {
+            FileInputStream fstream = new FileInputStream(file);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            // Parse Lines
+            while ((strLine = br.readLine()) != null) {
+                if (strLine.length() == 0 || strLine.startsWith("#"))
+                    continue;
+                String[] args = strLine.split("\\s+");
+                if (args.length < 2) {
+                    ShowUtil.logDebug(getName(), "Invalid Show Line [" + strLine + "]");
+                    continue;
+                }
+                // Get time
+                String[] timeToks = args[0].split("_");
+                long time = addTime;
+                for (String timeStr : timeToks) {
+                    time += (long) (Double.parseDouble(timeStr) * 1000);
+                }
+                // Sequences
+                if (args[1].contains("Sequence")) {
+                    ShowSequence sequence;
+                    switch (args[2].toLowerCase()) {
+                        case "laser": {
+                            sequence = new LaserSequence(this, time);
+                            break;
+                        }
+                        case "fountain": {
+                            sequence = new FountainSequence(this, time);
+                            break;
+                        }
+                        case "light": {
+                            sequence = new LightSequence(this, time);
+                            break;
+                        }
+                        case "particle": {
+                            sequence = new ParticleSequence(this, time);
+                            break;
+                        }
+                        case "build": {
+                            sequence = new BuildSequence(this, time);
+                            break;
+                        }
+                        default:
+                            continue;
+                    }
+                    sequences.add(sequence.load(strLine, args));
+                }
+            }
+            br.close();
+            in.close();
+            fstream.close();
+        } catch (ShowParseException e) {
+            Bukkit.getLogger().warning("Error on Line [" + strLine + "] Cause: " + e.getReason());
+            ShowUtil.logDebug(getName(), "Error on Line [" + strLine + "] Cause: " + e.getReason());
+        } catch (Exception e) {
+            System.out.println("Error on Line [" + strLine + "]");
+            ShowUtil.logDebug(getName(), "Error on Line [" + strLine + "]");
+            e.printStackTrace();
+        }
+
+        if (location == null) {
+            invalidLines.put("Missing Line", "Show loc x,y,z");
+        }
+
+        for (String cur : invalidLines.keySet()) {
+            System.out.print(ChatColor.GOLD + invalidLines.get(cur) + " @ " + ChatColor.WHITE + cur.replaceAll("\t", " "));
+            ShowUtil.logDebug(getName(), ChatColor.GOLD + invalidLines.get(cur) + " @ " + ChatColor.WHITE + cur.replaceAll("\t", " "));
+        }
+
+        return sequences;
     }
 
     private void loadActions(File file, long addTime) {
