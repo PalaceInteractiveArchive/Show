@@ -34,7 +34,7 @@ public class ShowPlugin extends Plugin {
     @Getter private static ShowGenerator showGenerator;
     @Getter private static BuildUtil buildUtil;
     private static ShowPlugin instance;
-    private static HashMap<String, Show> shows = new HashMap<>();
+    private static final HashMap<String, Show> shows = new HashMap<>();
     private int taskid = 0;
 
     public static ShowPlugin getInstance() {
