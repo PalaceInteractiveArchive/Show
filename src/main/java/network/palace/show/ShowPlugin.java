@@ -7,10 +7,7 @@ import network.palace.core.player.CPlayer;
 import network.palace.core.player.Rank;
 import network.palace.core.plugin.Plugin;
 import network.palace.core.plugin.PluginInfo;
-import network.palace.show.commands.ShowBuildCommand;
-import network.palace.show.commands.ShowCommand;
-import network.palace.show.commands.ShowDebugCommand;
-import network.palace.show.commands.ShowGenCommand;
+import network.palace.show.commands.*;
 import network.palace.show.generator.ShowGenerator;
 import network.palace.show.listeners.ChunkListener;
 import network.palace.show.listeners.PlayerInteract;
@@ -27,7 +24,7 @@ import java.util.Map;
 /**
  * Created by Marc on 12/6/16.
  */
-@PluginInfo(name = "Show", version = "1.5.0", depend = {"Audio", "Core"}, softdepend = "WorldEdit", canReload = true)
+@PluginInfo(name = "Show", version = "1.5.1", depend = {"Audio", "Core"}, softdepend = "WorldEdit", canReload = true)
 public class ShowPlugin extends Plugin {
     @Getter private ArmorStandManager armorStandManager;
     @Getter private FountainManager fountainManager;
@@ -49,6 +46,7 @@ public class ShowPlugin extends Plugin {
         showGenerator = new ShowGenerator();
         buildUtil = new BuildUtil();
         FileUtil.setupFiles();
+        registerCommand(new MultiShowCommand());
         registerCommand(new ShowCommand());
         registerCommand(new ShowBuildCommand());
         registerCommand(new ShowGenCommand());
