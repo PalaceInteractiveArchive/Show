@@ -337,6 +337,12 @@ public class Show {
                     actions.add(ac.load(strLine, args));
                     continue;
                 }
+                // Command
+                if (args[1].contains("Command")) {
+                    CommandAction ac = new CommandAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
                 // SpiralParticle
                 if (args[1].contains("SpiralParticle")) {
                     SpiralParticle ac = new SpiralParticle(this, time);
