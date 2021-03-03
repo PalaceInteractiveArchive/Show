@@ -39,24 +39,24 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("deprecation")
 public class Show {
-    @Getter private UUID showID = UUID.randomUUID();
-    @Getter private World world;
+    @Getter private final UUID showID = UUID.randomUUID();
+    @Getter private final World world;
     private Location location;
     @Getter private String name = "";
     private LinkedList<ShowSequence> sequences;
-    @Getter private long startTime;
+    @Getter private final long startTime;
     @Getter @Setter private long musicTime = 0;
     @Getter @Setter private String areaName = "none";
     @Getter private int radius = 75;
-    private HashMap<String, FireworkEffect> effectMap;
-    private HashMap<String, String> invalidLines;
-    private HashMap<String, ShowStand> standmap = new HashMap<>();
+    private final HashMap<String, FireworkEffect> effectMap;
+    private final HashMap<String, String> invalidLines;
+    private final HashMap<String, ShowStand> standmap = new HashMap<>();
     private long lastPlayerListUpdate = System.currentTimeMillis();
     private List<UUID> nearbyPlayers = new ArrayList<>();
 
     private ShowAction firstAction = null;
     private ShowAction lastAction = null;
-    private LinkedList<ShowAction> laterActions = new LinkedList<>();
+    private final LinkedList<ShowAction> laterActions = new LinkedList<>();
 
     @Getter private boolean skipDebug = false;
     @Getter private int debug = 0;
@@ -80,11 +80,10 @@ public class Show {
     private void addAction(ShowAction newAction) {
         if (firstAction == null) {
             firstAction = newAction;
-            lastAction = newAction;
         } else {
             lastAction.setNext(newAction);
-            lastAction = newAction;
         }
+        lastAction = newAction;
     }
 
     private void loadActions(File file, long addTime) {
@@ -329,6 +328,12 @@ public class Show {
                 // Title
                 if (args[1].contains("Title")) {
                     TitleAction ac = new TitleAction(this, time);
+                    actions.add(ac.load(strLine, args));
+                    continue;
+                }
+                // ActionBar
+                if (args[1].contains("ActionBar")) {
+                    ActionBarAction ac = new ActionBarAction(this, time);
                     actions.add(ac.load(strLine, args));
                     continue;
                 }
