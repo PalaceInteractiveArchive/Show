@@ -1,5 +1,6 @@
 package network.palace.show.commands.show;
 
+import network.palace.core.Core;
 import network.palace.core.command.CommandException;
 import network.palace.core.command.CoreCommand;
 import network.palace.core.player.CPlayer;
@@ -13,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * @author Marc
@@ -36,11 +38,15 @@ public class StartCommand extends CoreCommand {
 
     @Override
     protected void handleCommand(ConsoleCommandSender commandSender, String[] args) throws CommandException {
-        if (Bukkit.getWorlds().size() > 1) {
-            commandSender.sendMessage(ChatColor.RED + "You can't start shows from console with multiple worlds!");
-            return;
+        try {
+            if (args[1] == null) {
+                commandSender.sendMessage(ChatColor.RED + "You have to specify a world to run this in!");
+                return;
+            }
+            handle(commandSender, args, Bukkit.getWorld(args[1]));
+        } catch (Exception e) {
+            commandSender.sendMessage(ChatColor.RED + "Encountered an unexpected error!");
         }
-        handle(commandSender, args, Bukkit.getWorlds().get(0));
     }
 
     private void handle(CommandSender sender, String[] args, World world) {
