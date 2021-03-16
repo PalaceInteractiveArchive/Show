@@ -1,6 +1,5 @@
 package network.palace.show.actions;
 
-import network.palace.core.Core;
 import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
@@ -27,11 +26,10 @@ public class TitleAction extends ShowAction {
         for (CPlayer player : nearPlayers) {
             if (player == null) continue;
             if (Show.offset(player.getLocation(), show.getLocation()) < show.getRadius()) {
-                CPlayer p = Core.getPlayerManager().getPlayer(player.getUniqueId());
                 if (type.equals(TitleType.TITLE)) {
-                    p.getTitle().show(title, "", fadeIn, stay, fadeOut);
+                    player.getTitle().show(title, "", fadeIn, stay, fadeOut);
                 } else {
-                    p.getTitle().show("", title, fadeIn, stay, fadeOut);
+                    player.getTitle().show("", title, fadeIn, stay, fadeOut);
                 }
             }
         }
