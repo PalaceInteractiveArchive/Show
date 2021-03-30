@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
-@CommandMeta(description = "Run a show across multiple park servers", rank = Rank.MOD)
+@CommandMeta(description = "Run a show across multiple park servers", rank = Rank.CM)
 public class MultiShowCommand extends CoreCommand {
 
     public MultiShowCommand() {
