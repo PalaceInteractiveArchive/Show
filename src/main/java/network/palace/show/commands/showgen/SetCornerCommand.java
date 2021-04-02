@@ -11,7 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 
-@CommandMeta(description = "Set the location of the final north-west-bottom corner to help give real coordinate values", rank = Rank.MOD)
+@CommandMeta(description = "Set the location of the final north-west-bottom corner to help give real coordinate values", rank = Rank.CM)
 public class SetCornerCommand extends CoreCommand {
 
     public SetCornerCommand() {
