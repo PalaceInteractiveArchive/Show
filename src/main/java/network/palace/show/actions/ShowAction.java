@@ -18,7 +18,7 @@ public abstract class ShowAction {
         this.time = time;
     }
 
-    public abstract void play(CPlayer[] nearPlayers);
+    public abstract boolean play(CPlayer[] nearPlayers);
 
     public abstract ShowAction load(String line, String... args) throws ShowParseException;
 }

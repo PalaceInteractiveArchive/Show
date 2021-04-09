@@ -12,8 +12,9 @@ public class TextAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         show.displayText(text);
+        return true;
     }
 
     @Override

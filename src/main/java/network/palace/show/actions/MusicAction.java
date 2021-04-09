@@ -12,8 +12,9 @@ public class MusicAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         show.playMusic(record);
+        return true;
     }
 
     @Override

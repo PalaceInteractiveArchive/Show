@@ -222,7 +222,7 @@ public class Show {
         actions.clear();
     }
 
-    private ShowAction parseAction(String strLine, String[] args, long time, int start) throws ShowParseException {
+    public ShowAction parseAction(String strLine, String[] args, long time, int start) throws ShowParseException {
         ShowAction action;
         if (args[start].contains("Text")) {
             // Text
@@ -494,14 +494,16 @@ public class Show {
             nearPlayers[i++] = Core.getPlayerManager().getPlayer(uuid);
         }
 
-        long timeDiff = System.currentTimeMillis() - startTime;
+        long timeDiff = getShowTime();
 
         for (ShowAction action : new LinkedList<>(laterActions)) {
             if (action == null) continue;
             try {
                 if (timeDiff < action.getTime()) continue;
                 try {
-                    action.play(nearPlayers);
+                    if (!action.play(nearPlayers)) continue;
+                    // If false, it needs to continue being run
+                    // If true, it will continue down to be removed from the list of actions
                 } catch (Exception e) {
                     Core.logMessage("Show " + action.getShow().getName(), "Error playing action in show " + action.getShow().getName());
                 }
@@ -531,6 +533,10 @@ public class Show {
         firstAction = temp;
         if (sequences != null) ShowUtil.runSequences(sequences, startTime);
         return firstAction == null && this.sequences.isEmpty() && laterActions.isEmpty();
+    }
+
+    public long getShowTime() {
+        return System.currentTimeMillis() - startTime;
     }
 
     public void displayText(String text) {

@@ -22,7 +22,7 @@ public class TitleAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         for (CPlayer player : nearPlayers) {
             if (player == null) continue;
             if (Show.offset(player.getLocation(), show.getLocation()) < show.getRadius()) {
@@ -33,6 +33,7 @@ public class TitleAction extends ShowAction {
                 }
             }
         }
+        return true;
     }
 
     @Override

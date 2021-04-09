@@ -15,8 +15,9 @@ public class LightningAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         loc.getWorld().strikeLightningEffect(loc);
+        return true;
     }
 
     @Override

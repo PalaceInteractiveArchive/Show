@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class GlowAction extends ShowAction {
     public static String name = ChatColor.LIGHT_PURPLE + "Glow With The Show Ears";
     private int radius;
-    private ItemStack helm;
+    private final ItemStack helm;
     private Location loc;
 
     public GlowAction(Show show, long time) {
@@ -36,7 +36,7 @@ public class GlowAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         List<AbstractPacket> packets = new ArrayList<>();
         WrapperPlayServerEntityEquipment p = new WrapperPlayServerEntityEquipment();
         p.setSlot(EnumWrappers.ItemSlot.HEAD);
@@ -49,6 +49,7 @@ public class GlowAction extends ShowAction {
                     p.setEntityID(tp.getEntityId());
                     tp.sendPacket(p);
                 });
+        return true;
     }
 
     @Override

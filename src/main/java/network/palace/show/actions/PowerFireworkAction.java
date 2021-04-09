@@ -26,7 +26,7 @@ public class PowerFireworkAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         Firework fw = loc.getWorld().spawn(loc, Firework.class);
         FireworkMeta meta = fw.getFireworkMeta();
         for (FireworkEffect effect : effects) {
@@ -34,7 +34,8 @@ public class PowerFireworkAction extends ShowAction {
         }
         fw.setFireworkMeta(meta);
         fw.setVelocity(motion);
-        show.addLaterAction(new FireworkExplodeAction(show, time + 1, fw));
+        show.addLaterAction(new FireworkExplodeAction(show, show.getShowTime() + 1, fw));
+        return true;
     }
 
     @Override

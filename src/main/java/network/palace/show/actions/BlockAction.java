@@ -27,10 +27,11 @@ public class BlockAction extends ShowAction {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         Block block = location.getBlock();
         block.setTypeId(type);
         block.setData(data);
+        return true;
     }
 
     @Override

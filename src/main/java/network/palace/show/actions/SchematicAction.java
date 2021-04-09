@@ -17,12 +17,13 @@ public class SchematicAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         try {
             show.getTerrainManager().loadSchematic(show.getWorldEditPlugin(), fname, loc, noAir);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return true;
     }
 
     @Override

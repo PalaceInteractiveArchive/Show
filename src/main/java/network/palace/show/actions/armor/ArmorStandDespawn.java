@@ -12,7 +12,7 @@ import org.bukkit.entity.ArmorStand;
  * Created by Marc on 10/11/15
  */
 public class ArmorStandDespawn extends ShowAction {
-    private ShowStand stand;
+    private final ShowStand stand;
 
     public ArmorStandDespawn(Show show, long time, ShowStand stand) {
         super(show, time);
@@ -20,15 +20,16 @@ public class ArmorStandDespawn extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         if (!stand.isHasSpawned()) {
             ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has not spawned");
-            return;
+            return true;
         }
         ArmorStand armor = stand.getStand();
         armor.remove();
         stand.setStand(null);
         stand.despawn();
+        return true;
     }
 
     @Override

@@ -9,7 +9,6 @@ import network.palace.show.handlers.armorstand.Movement;
 import network.palace.show.handlers.armorstand.ShowStand;
 import network.palace.show.handlers.armorstand.StandAction;
 import network.palace.show.utils.ShowUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -18,8 +17,8 @@ import org.bukkit.util.Vector;
  */
 public class ArmorStandMove extends ShowAction {
     private final Location loc;
-    private ShowStand stand;
-    private double speed;
+    private final ShowStand stand;
+    private final double speed;
 
     public ArmorStandMove(Show show, long time, ShowStand stand, Location loc, double speed) {
         super(show, time);
@@ -29,14 +28,14 @@ public class ArmorStandMove extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         if (!stand.isHasSpawned()) {
             ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has not spawned");
-            return;
+            return true;
         }
         Location l = stand.getStand().getLocation();
         if (loc == null || l == null) {
-            return;
+            return true;
         }
         double x = ((float) (((float) (loc.getX() - l.getX())) / (20 * speed)));
         double y = ((float) (((float) (loc.getY() - l.getY())) / (20 * speed)));
@@ -44,6 +43,7 @@ public class ArmorStandMove extends ShowAction {
         Vector motion = new Vector(x, y, z);
         stand.setMovement(new Movement(motion, speed * 20));
         ShowPlugin.getInstance().getArmorStandManager().addStand(stand, StandAction.MOVE);
+        return true;
     }
 
     @Override

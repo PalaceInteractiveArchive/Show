@@ -17,12 +17,13 @@ public class PulseAction extends ShowAction {
 
     @SuppressWarnings("deprecation")
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         Block pre = loc.getBlock();
         final int id = pre.getTypeId();
         final byte data = pre.getData();
         loc.getBlock().setType(Material.REDSTONE_BLOCK);
-        show.addLaterAction(new BlockAction(show, time + 100, loc, id, data));
+        show.addLaterAction(new BlockAction(show, show.getShowTime() + 100, loc, id, data));
+        return true;
     }
 
     @Override

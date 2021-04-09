@@ -26,7 +26,7 @@ public class SpiralParticle extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         int taskID = Core.runTaskTimer(() -> {
             for (int i = 1; i <= strands; i++) {
                 for (int j = 1; j <= particles; j++) {
@@ -55,7 +55,8 @@ public class SpiralParticle extends ShowAction {
             }
             step += speed;
         }, 0L, 1L);
-        Core.runTaskLater(() -> Core.cancelTask(taskID), duration * 20);
+        Core.runTaskLater(() -> Core.cancelTask(taskID), duration * 20L);
+        return true;
     }
 
     @Override

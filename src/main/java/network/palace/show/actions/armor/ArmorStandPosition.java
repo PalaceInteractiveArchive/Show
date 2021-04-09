@@ -10,7 +10,6 @@ import network.palace.show.handlers.armorstand.PositionType;
 import network.palace.show.handlers.armorstand.ShowStand;
 import network.palace.show.handlers.armorstand.StandAction;
 import network.palace.show.utils.ShowUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
@@ -18,10 +17,10 @@ import org.bukkit.util.Vector;
  * Created by Marc on 10/24/15
  */
 public class ArmorStandPosition extends ShowAction {
-    private ShowStand stand;
-    private PositionType positionType;
-    private EulerAngle angle;
-    private double speed;
+    private final ShowStand stand;
+    private final PositionType positionType;
+    private final EulerAngle angle;
+    private final double speed;
 
     public ArmorStandPosition(Show show, long time, ShowStand stand, PositionType positionType, EulerAngle angle, double speed) {
         super(show, time);
@@ -32,10 +31,10 @@ public class ArmorStandPosition extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         if (!stand.isHasSpawned()) {
             ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has not spawned");
-            return;
+            return true;
         }
         EulerAngle a = null;
         switch (positionType) {
@@ -64,6 +63,7 @@ public class ArmorStandPosition extends ShowAction {
         Vector motion = new Vector(x, y, z);
         stand.addPosition(new Position(motion, speed * 20, positionType));
         ShowPlugin.getInstance().getArmorStandManager().addStand(stand, StandAction.POSITION);
+        return true;
     }
 
     @Override

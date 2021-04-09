@@ -19,12 +19,13 @@ public class GlowDoneAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         ItemStack air = new ItemStack(Material.AIR);
         for (Player tp : Bukkit.getOnlinePlayers()) {
             tp.getInventory().setHelmet(air);
         }
         new GlowDoneEvent(show).call();
+        return true;
     }
 
     @Override

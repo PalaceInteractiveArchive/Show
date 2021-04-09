@@ -7,7 +7,6 @@ import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.actions.ShowAction;
 import network.palace.show.exceptions.ShowParseException;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 /**
@@ -22,12 +21,13 @@ public class AudioSync extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         if (area != null) {
             for (CPlayer tp : nearPlayers) {
                 if (tp != null) area.sync(seconds, tp, 0.25);
             }
         }
+        return true;
     }
 
     @Override

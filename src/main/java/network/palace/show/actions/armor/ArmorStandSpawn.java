@@ -16,8 +16,8 @@ import org.bukkit.metadata.FixedMetadataValue;
  * Created by Marc on 10/11/15
  */
 public class ArmorStandSpawn extends ShowAction {
-    private ShowStand stand;
-    private Location loc;
+    private final ShowStand stand;
+    private final Location loc;
 
     public ArmorStandSpawn(Show show, long time, ShowStand stand, Location loc) {
         super(show, time);
@@ -26,10 +26,10 @@ public class ArmorStandSpawn extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         if (stand.isHasSpawned()) {
             ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has spawned already");
-            return;
+            return true;
         }
         ArmorStand armor = loc.getWorld().spawn(loc, ArmorStand.class);
         stand.spawn();
@@ -60,6 +60,7 @@ public class ArmorStandSpawn extends ShowAction {
             }
         }
         stand.setStand(armor);
+        return true;
     }
 
     @Override

@@ -13,8 +13,9 @@ public class CommandAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        return true;
     }
 
     @Override

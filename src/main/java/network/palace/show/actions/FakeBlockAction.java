@@ -32,7 +32,7 @@ public class FakeBlockAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         try {
             WrapperPlayServerBlockChange p = new WrapperPlayServerBlockChange();
             p.setLocation(new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
@@ -46,6 +46,7 @@ public class FakeBlockAction extends ShowAction {
                     time + " for show " + show.getName());
             e.printStackTrace();
         }
+        return true;
     }
 
     @Override

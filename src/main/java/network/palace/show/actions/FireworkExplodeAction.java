@@ -17,8 +17,9 @@ public class FireworkExplodeAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         fw.detonate();
+        return true;
     }
 
     @Override

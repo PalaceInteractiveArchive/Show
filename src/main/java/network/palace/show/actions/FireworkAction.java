@@ -25,12 +25,13 @@ public class FireworkAction extends ShowAction implements Listener {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         try {
             playFirework();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return true;
     }
 
     public void playFirework() throws Exception {
@@ -56,7 +57,7 @@ public class FireworkAction extends ShowAction implements Listener {
             fw.setVelocity(direction.normalize().multiply(dirPower * 0.05));
         }
         if (instaburst) {
-            show.addLaterAction(new FireworkExplodeAction(show, time + 50, fw));
+            show.addLaterAction(new FireworkExplodeAction(show, show.getShowTime() + 50, fw));
         }
     }
 

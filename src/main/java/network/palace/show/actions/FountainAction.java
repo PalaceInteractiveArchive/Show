@@ -23,8 +23,9 @@ public class FountainAction extends ShowAction {
     }
 
     @Override
-    public void play(CPlayer[] nearPlayers) {
+    public boolean play(CPlayer[] nearPlayers) {
         ShowPlugin.getInstance().getFountainManager().addFountain(new Fountain(loc, duration, type, data, force));
+        return true;
     }
 
     @Override
