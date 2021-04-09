@@ -11,10 +11,14 @@ public class TextAction extends ShowAction {
         super(show, time);
     }
 
+    public TextAction(Show show, long time, String text) {
+        super(show, time);
+        this.text = text;
+    }
+
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         show.displayText(text);
-        return true;
     }
 
     @Override
@@ -26,5 +30,10 @@ public class TextAction extends ShowAction {
             text = new StringBuilder(text.substring(0, text.length() - 1));
         this.text = text.toString();
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new TextAction(show, time, text);
     }
 }

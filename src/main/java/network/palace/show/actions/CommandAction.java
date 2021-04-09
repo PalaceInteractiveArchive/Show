@@ -12,10 +12,14 @@ public class CommandAction extends ShowAction {
         super(show, time);
     }
 
+    public CommandAction(Show show, long time, String command) {
+        super(show, time);
+        this.command = command;
+    }
+
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-        return true;
     }
 
     @Override
@@ -26,5 +30,10 @@ public class CommandAction extends ShowAction {
         if (text.length() > 1) text = new StringBuilder(text.substring(0, text.length() - 1));
         this.command = text.toString();
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new CommandAction(show, time, command);
     }
 }

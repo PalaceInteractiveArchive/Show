@@ -12,15 +12,19 @@ public class ActionBarAction extends ShowAction {
         super(show, time);
     }
 
+    public ActionBarAction(Show show, long time, String text) {
+        super(show, time);
+        this.text = text;
+    }
+
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         for (CPlayer player : nearPlayers) {
             if (player == null) continue;
             if (Show.offset(player.getLocation(), show.getLocation()) < show.getRadius()) {
                 player.getActionBar().show(text);
             }
         }
-        return true;
     }
 
     @Override
@@ -31,5 +35,10 @@ public class ActionBarAction extends ShowAction {
         if (text.length() > 1) text = new StringBuilder(text.substring(0, text.length() - 1));
         this.text = ChatColor.translateAlternateColorCodes('&', text.toString());
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ActionBarAction(show, time, text);
     }
 }

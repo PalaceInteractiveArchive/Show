@@ -43,7 +43,7 @@ public class Show {
     @Getter private final World world;
     private Location location;
     @Getter private String name = "";
-    private LinkedList<ShowSequence> sequences;
+    @Getter private LinkedList<ShowSequence> sequences;
     @Getter private final long startTime;
     @Getter @Setter private long musicTime = 0;
     @Getter @Setter private String areaName = "none";
@@ -193,7 +193,7 @@ public class Show {
                 for (String timeStr : timeToks) {
                     time += (long) (Double.parseDouble(timeStr) * 1000);
                 }
-                ShowAction action = parseAction(strLine, args, time, 1);
+                ShowAction action = parseAction(strLine, args, time, sequences);
                 if (action != null) actions.add(action);
             }
             br.close();
@@ -222,58 +222,58 @@ public class Show {
         actions.clear();
     }
 
-    public ShowAction parseAction(String strLine, String[] args, long time, int start) throws ShowParseException {
+    public ShowAction parseAction(String strLine, String[] args, long time, LinkedList<ShowSequence> sequences) throws ShowParseException {
         ShowAction action;
-        if (args[start].contains("Text")) {
+        if (args[1].contains("Text")) {
             // Text
             TextAction ac = new TextAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("Music")) {
+        } else if (args[1].contains("Music")) {
             // Music
             MusicAction ac = new MusicAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("Pulse")) {
+        } else if (args[1].contains("Pulse")) {
             // Pulse
             PulseAction ac = new PulseAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].equals("ArmorStand")) {
+        } else if (args[1].equals("ArmorStand")) {
             // ArmorStand Movement
             // Show ArmorStand id action param
-            String id = args[start + 1];
+            String id = args[1 + 1];
             ShowStand stand = standmap.get(id);
             if (stand == null) {
                 invalidLines.put(strLine, "No ArmorStand exists with the ID " + id);
                 action = null;
             } else {
-                String actionText = args[start + 2];
+                String actionText = args[3];
                 switch (actionText.toLowerCase()) {
                     case "spawn": {
                         // x,y,z
-                        Location loc = WorldUtil.strToLocWithYaw(world.getName() + "," + args[start + 3]);
+                        Location loc = WorldUtil.strToLocWithYaw(world.getName() + "," + args[4]);
                         action = new ArmorStandSpawn(this, time, stand, loc);
                         break;
                     }
                     case "move": {
                         // x,y,z speed
-                        Location loc = WorldUtil.strToLoc(world.getName() + "," + args[start + 3]);
-                        double speed = Double.parseDouble(args[start + 4]);
+                        Location loc = WorldUtil.strToLoc(world.getName() + "," + args[4]);
+                        double speed = Double.parseDouble(args[5]);
                         action = new ArmorStandMove(this, time, stand, loc, speed);
                         break;
                     }
                     case "position": {
                         // PositionType x,y,z time
-                        double speed = Double.parseDouble(args[start + 5]);
-                        String[] alist = args[start + 4].split(",");
+                        double speed = Double.parseDouble(args[6]);
+                        String[] alist = args[5].split(",");
                         EulerAngle angle = new EulerAngle(rad(Double.parseDouble(alist[0])),
                                 rad(Double.parseDouble(alist[1])), rad(Double.parseDouble(alist[2])));
                         action = new ArmorStandPosition(this, time, stand,
-                                PositionType.fromString(args[start + 3]), angle, speed);
+                                PositionType.fromString(args[4]), angle, speed);
                         break;
                     }
                     case "rotate": {
                         // yaw speed
-                        float yaw = Float.parseFloat(args[start + 3]);
-                        double speed = Double.parseDouble(args[start + 4]);
+                        float yaw = Float.parseFloat(args[4]);
+                        double speed = Double.parseDouble(args[5]);
                         action = new ArmorStandRotate(this, time, stand, yaw, speed);
                         break;
                     }
@@ -285,34 +285,34 @@ public class Show {
                         action = null;
                 }
             }
-        } else if (args[start].contains("GlowDone")) {
+        } else if (args[1].contains("GlowDone")) {
             // Take away GWTS Hats
             action = new GlowDoneAction(this, time);
-        } else if (args[start].contains("Glow")) {
+        } else if (args[1].contains("Glow")) {
             // Glow With The Show
             GlowAction ac = new GlowAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("Lightning")) {
+        } else if (args[1].contains("Lightning")) {
             // Lightning
             LightningAction ac = new LightningAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("FakeBlock")) {
+        } else if (args[1].contains("FakeBlock")) {
             // FakeBlock
             FakeBlockAction ac = new FakeBlockAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].startsWith("Block")) {
+        } else if (args[1].startsWith("Block")) {
             // Block
             BlockAction ac = new BlockAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("PowerFirework")) {
+        } else if (args[1].contains("PowerFirework")) {
             // PowerFirework
             PowerFireworkAction ac = new PowerFireworkAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].startsWith("Firework")) {
+        } else if (args[1].startsWith("Firework")) {
             // Firework
             FireworkAction ac = new FireworkAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("Schematic")) {
+        } else if (args[1].contains("Schematic")) {
             // Schematic
             if (worldEditPlugin == null) {
                 org.bukkit.plugin.Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldEdit");
@@ -325,42 +325,46 @@ public class Show {
             }
             SchematicAction ac = new SchematicAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("Fountain")) {
+        } else if (args[1].contains("Fountain")) {
             // Fountain
             FountainAction ac = new FountainAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("Title")) {
+        } else if (args[1].contains("Title")) {
             // Title
             TitleAction ac = new TitleAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("ActionBar")) {
+        } else if (args[1].contains("ActionBar")) {
             // ActionBar
             ActionBarAction ac = new ActionBarAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("Command")) {
+        } else if (args[1].contains("Command")) {
             // Command
             CommandAction ac = new CommandAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("SpiralParticle")) {
+        } else if (args[1].contains("Repeat")) {
+            // Repeat
+            RepeatAction ac = new RepeatAction(this, time);
+            action = ac.load(strLine, args);
+        } else if (args[1].contains("SpiralParticle")) {
             // SpiralParticle
             SpiralParticle ac = new SpiralParticle(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("Particle")) {
+        } else if (args[1].contains("Particle")) {
             // Particle
             ParticleAction ac = new ParticleAction(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("AudioStart")) {
+        } else if (args[1].contains("AudioStart")) {
             // AudioStart
             AudioStart ac = new AudioStart(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("AudioSync")) {
+        } else if (args[1].contains("AudioSync")) {
             // AudioSync
             AudioSync ac = new AudioSync(this, time);
             action = ac.load(strLine, args);
-        } else if (args[start].contains("Sequence")) {
+        } else if (args[1].contains("Sequence")) {
             // Sequences
             ShowSequence sequence;
-            switch (args[start + 1].toLowerCase()) {
+            switch (args[1 + 1].toLowerCase()) {
                 case "laser": {
                     sequence = new LaserSequence(this, time);
                     break;
@@ -384,7 +388,7 @@ public class Show {
                 default:
                     return null;
             }
-            sequences.add(sequence.load(strLine, args));
+            if (sequence != null) sequences.add(sequence.load(strLine, args));
             action = null;
         } else {
             action = null;
@@ -501,9 +505,7 @@ public class Show {
             try {
                 if (timeDiff < action.getTime()) continue;
                 try {
-                    if (!action.play(nearPlayers)) continue;
-                    // If false, it needs to continue being run
-                    // If true, it will continue down to be removed from the list of actions
+                    action.play(nearPlayers);
                 } catch (Exception e) {
                     Core.logMessage("Show " + action.getShow().getName(), "Error playing action in show " + action.getShow().getName());
                 }

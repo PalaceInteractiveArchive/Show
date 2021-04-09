@@ -20,14 +20,19 @@ public class AudioSync extends ShowAction {
         super(show, time);
     }
 
+    public AudioSync(Show show, long time, float seconds, AudioArea area) {
+        super(show, time);
+        this.seconds = seconds;
+        this.area = area;
+    }
+
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         if (area != null) {
             for (CPlayer tp : nearPlayers) {
                 if (tp != null) area.sync(seconds, tp, 0.25);
             }
         }
-        return true;
     }
 
     @Override
@@ -38,5 +43,10 @@ public class AudioSync extends ShowAction {
             Core.logMessage(ChatColor.RED + "Show Error", "Error finding Audio Area " + args[2] + "!");
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new AudioSync(show, time, seconds, area);
     }
 }

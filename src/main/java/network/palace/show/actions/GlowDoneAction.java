@@ -19,17 +19,21 @@ public class GlowDoneAction extends ShowAction {
     }
 
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         ItemStack air = new ItemStack(Material.AIR);
         for (Player tp : Bukkit.getOnlinePlayers()) {
             tp.getInventory().setHelmet(air);
         }
         new GlowDoneEvent(show).call();
-        return true;
     }
 
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new GlowDoneAction(show, time);
     }
 }

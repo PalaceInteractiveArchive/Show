@@ -20,20 +20,24 @@ public class ArmorStandDespawn extends ShowAction {
     }
 
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         if (!stand.isHasSpawned()) {
             ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has not spawned");
-            return true;
+            return;
         }
         ArmorStand armor = stand.getStand();
         armor.remove();
         stand.setStand(null);
         stand.despawn();
-        return true;
     }
 
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ArmorStandDespawn(show, time, stand);
     }
 }

@@ -16,14 +16,20 @@ public class SchematicAction extends ShowAction {
         super(show, time);
     }
 
+    public SchematicAction(Show show, long time, Location loc, String fname, boolean noAir) {
+        super(show, time);
+        this.loc = loc;
+        this.fname = fname;
+        this.noAir = noAir;
+    }
+
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         try {
             show.getTerrainManager().loadSchematic(show.getWorldEditPlugin(), fname, loc, noAir);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
     }
 
     @Override
@@ -46,5 +52,10 @@ public class SchematicAction extends ShowAction {
             throw new ShowParseException("Invalid X, Y, or Z Coordinates!");
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new SchematicAction(show, time, loc, fname, noAir);
     }
 }

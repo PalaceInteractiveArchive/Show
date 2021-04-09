@@ -31,10 +31,10 @@ public class ArmorStandPosition extends ShowAction {
     }
 
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         if (!stand.isHasSpawned()) {
             ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has not spawned");
-            return true;
+            return;
         }
         EulerAngle a = null;
         switch (positionType) {
@@ -63,11 +63,15 @@ public class ArmorStandPosition extends ShowAction {
         Vector motion = new Vector(x, y, z);
         stand.addPosition(new Position(motion, speed * 20, positionType));
         ShowPlugin.getInstance().getArmorStandManager().addStand(stand, StandAction.POSITION);
-        return true;
     }
 
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ArmorStandPosition(show, time, stand, positionType, angle, speed);
     }
 }

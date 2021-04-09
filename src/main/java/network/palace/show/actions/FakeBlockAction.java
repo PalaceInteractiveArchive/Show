@@ -31,8 +31,15 @@ public class FakeBlockAction extends ShowAction {
         super(show, time);
     }
 
+    public FakeBlockAction(Show show, long time, Location loc, int id, byte data) {
+        super(show, time);
+        this.loc = loc;
+        this.id = id;
+        this.data = data;
+    }
+
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         try {
             WrapperPlayServerBlockChange p = new WrapperPlayServerBlockChange();
             p.setLocation(new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
@@ -46,7 +53,6 @@ public class FakeBlockAction extends ShowAction {
                     time + " for show " + show.getName());
             e.printStackTrace();
         }
-        return true;
     }
 
     @Override
@@ -64,5 +70,10 @@ public class FakeBlockAction extends ShowAction {
             throw new ShowParseException(e.getReason());
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new FakeBlockAction(show, time, loc, id, data);
     }
 }

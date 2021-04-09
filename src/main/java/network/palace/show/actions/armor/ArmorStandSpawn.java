@@ -26,10 +26,10 @@ public class ArmorStandSpawn extends ShowAction {
     }
 
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         if (stand.isHasSpawned()) {
             ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has spawned already");
-            return true;
+            return;
         }
         ArmorStand armor = loc.getWorld().spawn(loc, ArmorStand.class);
         stand.spawn();
@@ -60,11 +60,15 @@ public class ArmorStandSpawn extends ShowAction {
             }
         }
         stand.setStand(armor);
-        return true;
     }
 
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ArmorStandSpawn(show, time, stand, loc);
     }
 }

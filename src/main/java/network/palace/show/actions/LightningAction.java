@@ -1,6 +1,5 @@
 package network.palace.show.actions;
 
-
 import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.exceptions.ShowParseException;
@@ -14,10 +13,14 @@ public class LightningAction extends ShowAction {
         super(show, time);
     }
 
+    public LightningAction(Show show, long time, Location loc) {
+        super(show, time);
+        this.loc = loc;
+    }
+
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         loc.getWorld().strikeLightningEffect(loc);
-        return true;
     }
 
     @Override
@@ -27,5 +30,10 @@ public class LightningAction extends ShowAction {
             throw new ShowParseException("Invalid Location");
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new LightningAction(show, time, loc);
     }
 }

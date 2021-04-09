@@ -16,8 +16,8 @@ import org.bukkit.util.Vector;
  * Created by Marc on 10/11/15
  */
 public class ArmorStandMove extends ShowAction {
-    private final Location loc;
     private final ShowStand stand;
+    private final Location loc;
     private final double speed;
 
     public ArmorStandMove(Show show, long time, ShowStand stand, Location loc, double speed) {
@@ -28,14 +28,14 @@ public class ArmorStandMove extends ShowAction {
     }
 
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         if (!stand.isHasSpawned()) {
             ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has not spawned");
-            return true;
+            return;
         }
         Location l = stand.getStand().getLocation();
         if (loc == null || l == null) {
-            return true;
+            return;
         }
         double x = ((float) (((float) (loc.getX() - l.getX())) / (20 * speed)));
         double y = ((float) (((float) (loc.getY() - l.getY())) / (20 * speed)));
@@ -43,11 +43,15 @@ public class ArmorStandMove extends ShowAction {
         Vector motion = new Vector(x, y, z);
         stand.setMovement(new Movement(motion, speed * 20));
         ShowPlugin.getInstance().getArmorStandManager().addStand(stand, StandAction.MOVE);
-        return true;
     }
 
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ArmorStandMove(show, time, stand, loc, speed);
     }
 }

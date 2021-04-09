@@ -35,8 +35,15 @@ public class GlowAction extends ShowAction {
         helm = new ItemStack(Material.LEATHER_HELMET);
     }
 
+    public GlowAction(Show show, long time, int radius, ItemStack helm, Location loc) {
+        super(show, time);
+        this.radius = radius;
+        this.helm = helm;
+        this.loc = loc;
+    }
+
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         List<AbstractPacket> packets = new ArrayList<>();
         WrapperPlayServerEntityEquipment p = new WrapperPlayServerEntityEquipment();
         p.setSlot(EnumWrappers.ItemSlot.HEAD);
@@ -49,7 +56,6 @@ public class GlowAction extends ShowAction {
                     p.setEntityID(tp.getEntityId());
                     tp.sendPacket(p);
                 });
-        return true;
     }
 
     @Override
@@ -80,5 +86,10 @@ public class GlowAction extends ShowAction {
             throw new ShowParseException("Invalid Glow Line");
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new GlowAction(show, time, radius, helm, loc);
     }
 }

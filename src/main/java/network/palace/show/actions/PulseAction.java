@@ -15,15 +15,19 @@ public class PulseAction extends ShowAction {
         super(show, time);
     }
 
+    public PulseAction(Show show, long time, Location loc) {
+        super(show, time);
+        this.loc = loc;
+    }
+
     @SuppressWarnings("deprecation")
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         Block pre = loc.getBlock();
         final int id = pre.getTypeId();
         final byte data = pre.getData();
         loc.getBlock().setType(Material.REDSTONE_BLOCK);
         show.addLaterAction(new BlockAction(show, show.getShowTime() + 100, loc, id, data));
-        return true;
     }
 
     @Override
@@ -33,5 +37,10 @@ public class PulseAction extends ShowAction {
             throw new ShowParseException("Invalid Location");
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new PulseAction(show, time, loc);
     }
 }

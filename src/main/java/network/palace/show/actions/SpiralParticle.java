@@ -26,7 +26,7 @@ public class SpiralParticle extends ShowAction {
     }
 
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         int taskID = Core.runTaskTimer(() -> {
             for (int i = 1; i <= strands; i++) {
                 for (int j = 1; j <= particles; j++) {
@@ -56,7 +56,6 @@ public class SpiralParticle extends ShowAction {
             step += speed;
         }, 0L, 1L);
         Core.runTaskLater(() -> Core.cancelTask(taskID), duration * 20L);
-        return true;
     }
 
     @Override
@@ -74,5 +73,10 @@ public class SpiralParticle extends ShowAction {
             this.speed = Double.parseDouble(args[10]);
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        throw new ShowParseException("This action doesn't support repeating!");
     }
 }

@@ -24,14 +24,22 @@ public class FireworkAction extends ShowAction implements Listener {
         super(show, time);
     }
 
+    public FireworkAction(Show show, long time, Location loc, ArrayList<FireworkEffect> effects, int power, Vector direction, double dirPower) {
+        super(show, time);
+        this.loc = loc;
+        this.effects = effects;
+        this.power = power;
+        this.direction = direction;
+        this.dirPower = dirPower;
+    }
+
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         try {
             playFirework();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
     }
 
     public void playFirework() throws Exception {
@@ -119,5 +127,10 @@ public class FireworkAction extends ShowAction implements Listener {
         this.direction = dir;
         this.dirPower = dirPower;
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new FireworkAction(show, time, loc, effects, power, direction, dirPower);
     }
 }

@@ -26,21 +26,25 @@ public class ArmorStandRotate extends ShowAction {
     }
 
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         if (!stand.isHasSpawned()) {
             ShowUtil.logDebug(show.getName(), "ArmorStand with ID " + stand.getId() + " has not spawned");
-            return true;
+            return;
         }
 
         double ticks = speed * 20;
         float interval = (float) (this.yaw / ticks);
         stand.setRotation(new Rotation(interval, speed * 20));
         ShowPlugin.getInstance().getArmorStandManager().addStand(stand, StandAction.ROTATION);
-        return true;
     }
 
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ArmorStandRotate(show, time, stand, yaw, speed);
     }
 }

@@ -25,8 +25,15 @@ public class PowerFireworkAction extends ShowAction {
         super(show, time);
     }
 
+    public PowerFireworkAction(Show show, long time, Location loc, Vector motion, List<FireworkEffect> effects) {
+        super(show, time);
+        this.loc = loc;
+        this.motion = motion;
+        this.effects = effects;
+    }
+
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         Firework fw = loc.getWorld().spawn(loc, Firework.class);
         FireworkMeta meta = fw.getFireworkMeta();
         for (FireworkEffect effect : effects) {
@@ -35,7 +42,6 @@ public class PowerFireworkAction extends ShowAction {
         fw.setFireworkMeta(meta);
         fw.setVelocity(motion);
         show.addLaterAction(new FireworkExplodeAction(show, show.getShowTime() + 1, fw));
-        return true;
     }
 
     @Override
@@ -61,5 +67,10 @@ public class PowerFireworkAction extends ShowAction {
         this.motion = motion;
         this.effects = effectList;
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new PowerFireworkAction(show, time, loc, motion, effects);
     }
 }

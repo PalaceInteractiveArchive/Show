@@ -27,11 +27,10 @@ public class BlockAction extends ShowAction {
 
     @SuppressWarnings("deprecation")
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
+    public void play(CPlayer[] nearPlayers) {
         Block block = location.getBlock();
         block.setTypeId(type);
         block.setData(data);
-        return true;
     }
 
     @Override
@@ -49,5 +48,10 @@ public class BlockAction extends ShowAction {
             throw new ShowParseException(e.getReason());
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new BlockAction(show, time, location, type, data);
     }
 }

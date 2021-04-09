@@ -19,15 +19,19 @@ public class AudioStart extends ShowAction {
         super(show, time);
     }
 
+    public AudioStart(Show show, long time, AudioArea area) {
+        super(show, time);
+        this.area = area;
+    }
+
     @Override
-    public boolean play(CPlayer[] nearPlayers) {
-        if (area == null) return true;
+    public void play(CPlayer[] nearPlayers) {
+        if (area == null) return;
         show.setMusicTime(System.currentTimeMillis());
         show.setAreaName(area.getAreaName());
         for (CPlayer tp : nearPlayers) {
             if (tp != null) area.triggerPlayer(tp);
         }
-        return true;
     }
 
     @Override
@@ -35,5 +39,10 @@ public class AudioStart extends ShowAction {
         area = Audio.getInstance().getByName(args[2]);
         if (area == null) Core.logMessage(ChatColor.RED + "Show Error", "Error finding Audio Area " + args[2] + "!");
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new AudioStart(show, time, area);
     }
 }
