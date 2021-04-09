@@ -34,6 +34,8 @@ public class RepeatAction extends ShowAction {
         // 0 Repeat occurrences interval ActionText
         this.occurrences = Integer.parseInt(args[2]);
         this.interval = Integer.parseInt(args[3]);
+        if (occurrences < 1) throw new ShowParseException("'occurrences' value in Repeat action must be at least 1");
+        if (interval < 1) throw new ShowParseException("'interval' value in Repeat action must be at least 1");
         StringBuilder action = new StringBuilder("0\t");
         for (int i = 4; i < args.length; i++) {
             action.append(args[i]).append("\t");
