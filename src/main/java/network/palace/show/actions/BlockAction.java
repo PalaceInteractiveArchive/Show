@@ -49,4 +49,9 @@ public class BlockAction extends ShowAction {
         }
         return this;
     }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new BlockAction(show, time, location, type, data);
+    }
 }

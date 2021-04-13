@@ -22,6 +22,15 @@ public class FountainAction extends ShowAction {
         super(show, time);
     }
 
+    public FountainAction(Show show, long time, double duration, Location loc, int type, byte data, Vector force) {
+        super(show, time);
+        this.duration = duration;
+        this.loc = loc;
+        this.type = type;
+        this.data = data;
+        this.force = force;
+    }
+
     @Override
     public void play(CPlayer[] nearPlayers) {
         ShowPlugin.getInstance().getFountainManager().addFountain(new Fountain(loc, duration, type, data, force));
@@ -44,5 +53,10 @@ public class FountainAction extends ShowAction {
             throw new ShowParseException(e.getReason());
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new FountainAction(show, time, duration, loc, type, data, force);
     }
 }

@@ -21,4 +21,6 @@ public abstract class ShowAction {
     public abstract void play(CPlayer[] nearPlayers);
 
     public abstract ShowAction load(String line, String... args) throws ShowParseException;
+
+    protected abstract ShowAction copy(Show show, long time) throws ShowParseException;
 }

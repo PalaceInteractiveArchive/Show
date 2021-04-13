@@ -10,7 +10,6 @@ import network.palace.show.handlers.armorstand.PositionType;
 import network.palace.show.handlers.armorstand.ShowStand;
 import network.palace.show.handlers.armorstand.StandAction;
 import network.palace.show.utils.ShowUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
@@ -18,10 +17,10 @@ import org.bukkit.util.Vector;
  * Created by Marc on 10/24/15
  */
 public class ArmorStandPosition extends ShowAction {
-    private ShowStand stand;
-    private PositionType positionType;
-    private EulerAngle angle;
-    private double speed;
+    private final ShowStand stand;
+    private final PositionType positionType;
+    private final EulerAngle angle;
+    private final double speed;
 
     public ArmorStandPosition(Show show, long time, ShowStand stand, PositionType positionType, EulerAngle angle, double speed) {
         super(show, time);
@@ -69,5 +68,10 @@ public class ArmorStandPosition extends ShowAction {
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ArmorStandPosition(show, time, stand, positionType, angle, speed);
     }
 }

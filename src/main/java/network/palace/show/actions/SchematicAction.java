@@ -16,6 +16,13 @@ public class SchematicAction extends ShowAction {
         super(show, time);
     }
 
+    public SchematicAction(Show show, long time, Location loc, String fname, boolean noAir) {
+        super(show, time);
+        this.loc = loc;
+        this.fname = fname;
+        this.noAir = noAir;
+    }
+
     @Override
     public void play(CPlayer[] nearPlayers) {
         try {
@@ -45,5 +52,10 @@ public class SchematicAction extends ShowAction {
             throw new ShowParseException("Invalid X, Y, or Z Coordinates!");
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new SchematicAction(show, time, loc, fname, noAir);
     }
 }

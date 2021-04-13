@@ -55,7 +55,7 @@ public class SpiralParticle extends ShowAction {
             }
             step += speed;
         }, 0L, 1L);
-        Core.runTaskLater(() -> Core.cancelTask(taskID), duration * 20);
+        Core.runTaskLater(() -> Core.cancelTask(taskID), duration * 20L);
     }
 
     @Override
@@ -73,5 +73,10 @@ public class SpiralParticle extends ShowAction {
             this.speed = Double.parseDouble(args[10]);
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        throw new ShowParseException("This action doesn't support repeating!");
     }
 }

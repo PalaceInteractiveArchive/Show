@@ -21,6 +21,15 @@ public class TitleAction extends ShowAction {
         super(show, time);
     }
 
+    public TitleAction(Show show, long time, TitleType type, String title, int fadeIn, int stay, int fadeOut) {
+        super(show, time);
+        this.type = type;
+        this.title = title;
+        this.fadeIn = fadeIn;
+        this.stay = stay;
+        this.fadeOut = fadeOut;
+    }
+
     @Override
     public void play(CPlayer[] nearPlayers) {
         for (CPlayer player : nearPlayers) {
@@ -51,5 +60,10 @@ public class TitleAction extends ShowAction {
         this.fadeOut = fadeOut;
         this.stay = stay;
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new TitleAction(show, time, type, title, fadeIn, stay, fadeOut);
     }
 }

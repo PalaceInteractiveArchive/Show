@@ -9,7 +9,6 @@ import network.palace.show.handlers.armorstand.Movement;
 import network.palace.show.handlers.armorstand.ShowStand;
 import network.palace.show.handlers.armorstand.StandAction;
 import network.palace.show.utils.ShowUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
@@ -17,9 +16,9 @@ import org.bukkit.util.Vector;
  * Created by Marc on 10/11/15
  */
 public class ArmorStandMove extends ShowAction {
+    private final ShowStand stand;
     private final Location loc;
-    private ShowStand stand;
-    private double speed;
+    private final double speed;
 
     public ArmorStandMove(Show show, long time, ShowStand stand, Location loc, double speed) {
         super(show, time);
@@ -49,5 +48,10 @@ public class ArmorStandMove extends ShowAction {
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ArmorStandMove(show, time, stand, loc, speed);
     }
 }

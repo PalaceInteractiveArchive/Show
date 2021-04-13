@@ -24,11 +24,20 @@ public class ParticleAction extends ShowAction {
         super(show, time);
     }
 
+    public ParticleAction(Show show, long time, Particle effect, Location loc, double offsetX, double offsetY, double offsetZ, float speed, int amount) {
+        super(show, time);
+        this.effect = effect;
+        this.loc = loc;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        this.offsetZ = offsetZ;
+        this.speed = speed;
+        this.amount = amount;
+    }
+
     @Override
     public void play(CPlayer[] nearPlayers) {
-        if (effect == null) {
-            return;
-        }
+        if (effect == null) return;
         for (CPlayer tp : nearPlayers) {
             if (tp == null) continue;
             tp.getParticles().send(loc, effect, amount, (float) offsetX, (float) offsetY, (float) offsetZ, speed);
@@ -46,5 +55,10 @@ public class ParticleAction extends ShowAction {
         this.speed = Float.parseFloat(args[7]);
         this.amount = Integer.parseInt(args[8]);
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ParticleAction(show, time, effect, loc, offsetX, offsetY, offsetZ, speed, amount);
     }
 }

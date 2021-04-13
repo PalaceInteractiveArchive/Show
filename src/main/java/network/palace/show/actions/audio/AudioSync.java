@@ -7,7 +7,6 @@ import network.palace.core.player.CPlayer;
 import network.palace.show.Show;
 import network.palace.show.actions.ShowAction;
 import network.palace.show.exceptions.ShowParseException;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 /**
@@ -19,6 +18,12 @@ public class AudioSync extends ShowAction {
 
     public AudioSync(Show show, long time) {
         super(show, time);
+    }
+
+    public AudioSync(Show show, long time, float seconds, AudioArea area) {
+        super(show, time);
+        this.seconds = seconds;
+        this.area = area;
     }
 
     @Override
@@ -38,5 +43,10 @@ public class AudioSync extends ShowAction {
             Core.logMessage(ChatColor.RED + "Show Error", "Error finding Audio Area " + args[2] + "!");
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new AudioSync(show, time, seconds, area);
     }
 }

@@ -11,6 +11,11 @@ public class MusicAction extends ShowAction {
         super(show, time);
     }
 
+    public MusicAction(Show show, long time, int record) {
+        super(show, time);
+        this.record = record;
+    }
+
     @Override
     public void play(CPlayer[] nearPlayers) {
         show.playMusic(record);
@@ -24,5 +29,10 @@ public class MusicAction extends ShowAction {
             throw new ShowParseException("Invalid Material");
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new MusicAction(show, time, record);
     }
 }

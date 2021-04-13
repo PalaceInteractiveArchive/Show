@@ -12,7 +12,7 @@ import org.bukkit.entity.ArmorStand;
  * Created by Marc on 10/11/15
  */
 public class ArmorStandDespawn extends ShowAction {
-    private ShowStand stand;
+    private final ShowStand stand;
 
     public ArmorStandDespawn(Show show, long time, ShowStand stand) {
         super(show, time);
@@ -34,5 +34,10 @@ public class ArmorStandDespawn extends ShowAction {
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ArmorStandDespawn(show, time, stand);
     }
 }

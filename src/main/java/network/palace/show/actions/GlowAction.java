@@ -27,12 +27,19 @@ import java.util.stream.Collectors;
 public class GlowAction extends ShowAction {
     public static String name = ChatColor.LIGHT_PURPLE + "Glow With The Show Ears";
     private int radius;
-    private ItemStack helm;
+    private final ItemStack helm;
     private Location loc;
 
     public GlowAction(Show show, long time) {
         super(show, time);
         helm = new ItemStack(Material.LEATHER_HELMET);
+    }
+
+    public GlowAction(Show show, long time, int radius, ItemStack helm, Location loc) {
+        super(show, time);
+        this.radius = radius;
+        this.helm = helm;
+        this.loc = loc;
     }
 
     @Override
@@ -79,5 +86,10 @@ public class GlowAction extends ShowAction {
             throw new ShowParseException("Invalid Glow Line");
         }
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new GlowAction(show, time, radius, helm, loc);
     }
 }

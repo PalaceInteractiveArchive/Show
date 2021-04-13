@@ -16,8 +16,8 @@ import org.bukkit.metadata.FixedMetadataValue;
  * Created by Marc on 10/11/15
  */
 public class ArmorStandSpawn extends ShowAction {
-    private ShowStand stand;
-    private Location loc;
+    private final ShowStand stand;
+    private final Location loc;
 
     public ArmorStandSpawn(Show show, long time, ShowStand stand, Location loc) {
         super(show, time);
@@ -65,5 +65,10 @@ public class ArmorStandSpawn extends ShowAction {
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ArmorStandSpawn(show, time, stand, loc);
     }
 }

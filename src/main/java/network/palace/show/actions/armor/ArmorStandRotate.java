@@ -9,15 +9,14 @@ import network.palace.show.handlers.armorstand.Rotation;
 import network.palace.show.handlers.armorstand.ShowStand;
 import network.palace.show.handlers.armorstand.StandAction;
 import network.palace.show.utils.ShowUtil;
-import org.bukkit.Bukkit;
 
 /**
  * Created by Marc on 3/26/16
  */
 public class ArmorStandRotate extends ShowAction {
-    private ShowStand stand;
-    private float yaw;
-    private double speed;
+    private final ShowStand stand;
+    private final float yaw;
+    private final double speed;
 
     public ArmorStandRotate(Show show, long time, ShowStand stand, float yaw, double speed) {
         super(show, time);
@@ -42,5 +41,10 @@ public class ArmorStandRotate extends ShowAction {
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new ArmorStandRotate(show, time, stand, yaw, speed);
     }
 }

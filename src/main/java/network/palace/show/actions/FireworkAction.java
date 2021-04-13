@@ -24,6 +24,15 @@ public class FireworkAction extends ShowAction implements Listener {
         super(show, time);
     }
 
+    public FireworkAction(Show show, long time, Location loc, ArrayList<FireworkEffect> effects, int power, Vector direction, double dirPower) {
+        super(show, time);
+        this.loc = loc;
+        this.effects = effects;
+        this.power = power;
+        this.direction = direction;
+        this.dirPower = dirPower;
+    }
+
     @Override
     public void play(CPlayer[] nearPlayers) {
         try {
@@ -56,7 +65,7 @@ public class FireworkAction extends ShowAction implements Listener {
             fw.setVelocity(direction.normalize().multiply(dirPower * 0.05));
         }
         if (instaburst) {
-            show.addLaterAction(new FireworkExplodeAction(show, time + 50, fw));
+            show.addLaterAction(new FireworkExplodeAction(show, show.getShowTime() + 50, fw));
         }
     }
 
@@ -118,5 +127,10 @@ public class FireworkAction extends ShowAction implements Listener {
         this.direction = dir;
         this.dirPower = dirPower;
         return this;
+    }
+
+    @Override
+    protected ShowAction copy(Show show, long time) throws ShowParseException {
+        return new FireworkAction(show, time, loc, effects, power, direction, dirPower);
     }
 }
