@@ -17,6 +17,7 @@ public class DiscordAction extends ShowAction {
     private String whereToWatch;
     private String color;
     private String image;
+    private Boolean ping;
 
 
     public DiscordAction(Show show, long time) {
@@ -27,7 +28,7 @@ public class DiscordAction extends ShowAction {
     public void play(CPlayer[] nearPlayers) {
         try {
             if (!Core.getInstanceName().contains("Build")) {
-                Core.getMessageHandler().sendMessage(new BotNotification(channelId, title, desc, startTime, whereToWatch, color, image), Core.getMessageHandler().BOT);
+                Core.getMessageHandler().sendMessage(new BotNotification(channelId, title, desc, startTime, whereToWatch, color, image, ping), Core.getMessageHandler().BOT);
             }
         } catch (IOException e) {
             try {
@@ -40,6 +41,10 @@ public class DiscordAction extends ShowAction {
 
     @Override
     public ShowAction load(String line, String... args) throws ShowParseException {
+        Core.logMessage("Show", String.valueOf(args.length));
+        if (args.length != 10) {
+            throw new ShowParseException("Invalid Discord Line Length");
+        }
         if (args[2] == null) throw new ShowParseException("Invalid channelId " + line);
         if (args[3] == null) throw new ShowParseException("Invalid title " + line);
         if (args[4] == null) throw new ShowParseException("Invalid desc " + line);
@@ -47,6 +52,7 @@ public class DiscordAction extends ShowAction {
         if (args[6] == null) throw new ShowParseException("Invalid whereToWatch " + line);
         if (args[7] == null) throw new ShowParseException("Invalid color" + line);
         if (args[8] == null) throw new ShowParseException("Invalid image" + line);
+        if (args[9] == null) throw new ShowParseException("Invalid ping choice" + line);
         this.channelId = args[2];
         this.title = args[3];
         this.desc = args[4];
@@ -54,6 +60,7 @@ public class DiscordAction extends ShowAction {
         this.whereToWatch = args[6];
         this.color = args[7];
         this.image = args[8];
+        this.ping = Boolean.valueOf(args[9]);
         return this;
     }
 
