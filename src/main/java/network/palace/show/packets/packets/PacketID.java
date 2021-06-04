@@ -15,4 +15,11 @@ public class PacketID {
 
         @Getter private final int id;
     }
+
+    @AllArgsConstructor
+    enum Discord {
+        RANK_CHANGE(1), NOTIFICATION(2);
+
+        @Getter private final int id;
+    }
 }
