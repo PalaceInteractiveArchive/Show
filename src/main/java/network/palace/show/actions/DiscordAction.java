@@ -26,7 +26,9 @@ public class DiscordAction extends ShowAction {
     @Override
     public void play(CPlayer[] nearPlayers) {
         try {
-            Core.getMessageHandler().sendMessage(new BotNotification(channelId, title, desc, startTime, whereToWatch, color, image), Core.getMessageHandler().BOT);
+            if (!Core.getInstanceName().contains("Build")) {
+                Core.getMessageHandler().sendMessage(new BotNotification(channelId, title, desc, startTime, whereToWatch, color, image), Core.getMessageHandler().BOT);
+            }
         } catch (IOException e) {
             try {
                 Core.getMessageHandler().sendStaffMessage(ChatColor.RED + Core.getInstanceName() + " Failed on sending BotNotification packet via Core " + Core.getVersion() + " - Please alert the development team ASAP");
