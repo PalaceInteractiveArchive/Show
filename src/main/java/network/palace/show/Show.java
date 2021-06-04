@@ -345,6 +345,10 @@ public class Show {
             // Repeat
             RepeatAction ac = new RepeatAction(this, time);
             action = ac.load(strLine, args);
+        } else if (args[1].contains("Discord")) {
+            // Discord Ping
+            DiscordAction ac = new DiscordAction(this, time);
+            action = ac.load(strLine, args);
         } else if (args[1].contains("SpiralParticle")) {
             // SpiralParticle
             SpiralParticle ac = new SpiralParticle(this, time);
