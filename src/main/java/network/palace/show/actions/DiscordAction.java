@@ -15,19 +15,12 @@ public class DiscordAction extends ShowAction {
     private String desc;
     private String startTime;
     private String whereToWatch;
+    private String color;
+    private String image;
 
 
     public DiscordAction(Show show, long time) {
         super(show, time);
-    }
-
-    public DiscordAction(Show show, long time, String channelId, String title, String desc, String startTime, String whereToWatch) {
-        super(show, time);
-        this.title = title;
-        this.channelId = channelId;
-        this.desc = desc;
-        this.startTime = startTime;
-        this.whereToWatch = whereToWatch;
     }
 
     @Override
@@ -50,11 +43,15 @@ public class DiscordAction extends ShowAction {
         if (args[4] == null) throw new ShowParseException("Invalid desc " + line);
         if (args[5] == null) throw new ShowParseException("Invalid startTime " + line);
         if (args[6] == null) throw new ShowParseException("Invalid whereToWatch " + line);
+        if (args[7] == null) throw new ShowParseException("Invalid color" + line);
+        if (args[8] == null) throw new ShowParseException("Invalid image" + line);
         this.channelId = args[2];
         this.title = args[3];
         this.desc = args[4];
         this.startTime = args[5];
         this.whereToWatch = args[6];
+        this.color = args[7];
+        this.image = args[8];
         return this;
     }
 
